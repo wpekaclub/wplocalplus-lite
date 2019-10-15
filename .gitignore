@@ -1,0 +1,14 @@
+vendor/
+.idea/
+release/
+.DS_Store
+package-lock.json
+node_modules/
+*.sql
+*.tar.gz
+*.zip
+languages/*.pot
+assets/css/admin/*.min.css
+assets/css/*.min.css
+assets/js/admin/*.min.js
+assets/js/*.min.js

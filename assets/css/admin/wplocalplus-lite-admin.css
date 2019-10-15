@@ -1,0 +1,44 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+
+.js .postbox .hndle {
+	padding: 0 10px;
+}
+.bluebutton {
+	background: #6e98e3;
+	box-shadow: none;
+	border: solid 1px #5b85d0;
+	border-radius: 3px;
+	border-bottom: 2px solid #4877cb;
+	padding: 10px;
+	width: auto;
+	height: auto;
+	color: #fff;
+	font-size: 15px;
+	text-align: center;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.bluebutton:hover {
+	background: #4877cb;
+}
+
+table.wp-list-table td.column-featured span.wplocal-featured {
+	font-size:1.6em;
+	cursor: pointer;
+}
+table.wp-list-table span.wplocal-featured {
+	display:block;
+	position:relative;
+	height:1em;
+	width:1em;
+}
+table.wp-list-table span.wplocal-featured::before {
+	content: "\2605";
+}
+table.wp-list-table span.wplocal-featured.not-featured::before {
+	content: "\2606";
+}
