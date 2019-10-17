@@ -106,7 +106,7 @@ class Wplocalplus_Lite_Admin {
 	 * @since 1.0
 	 */
 	public function wplocalplus_lite_admin_menu() {
-		add_menu_page( __( 'WP LocalPlus Lite', 'wplocalplus-lite' ), __( 'WP LocalPlus Lite', 'wplocalplus-lite' ), 'edit_pages', 'wplocalplus-lite', false, WPLOCALPLUS_LITE_ASSETS_URL . 'images/wplocalplus.png' );
+		add_menu_page( __( 'WP Local Plus', 'wplocalplus-lite' ), __( 'WP Local Plus', 'wplocalplus-lite' ), 'edit_pages', 'wplocalplus-lite', false, WPLOCALPLUS_LITE_ASSETS_URL . 'images/wplocalplus.png' );
 		add_submenu_page( 'wplocalplus-lite', __( 'Settings', 'wplocalplus-lite' ), __( 'Settings', 'wplocalplus-lite' ), 'manage_options', 'wplocalplus-lite', array( $this, 'wplocalplus_lite_settings' ) );
 		add_submenu_page( 'wplocalplus-lite', __( 'Places', 'wplocalplus-lite' ), __( 'Places', 'wplocalplus-lite' ), 'manage_options', 'edit.php?post_type=' . WPLOCALPLUS_PLACE_POST_TYPE );
 		add_submenu_page( 'wplocalplus-lite', __( 'Reviews', 'wplocalplus-lite' ), __( 'Reviews', 'wplocalplus-lite' ), 'manage_options', 'edit.php?post_type=' . WPLOCALPLUS_REVIEW_POST_TYPE );

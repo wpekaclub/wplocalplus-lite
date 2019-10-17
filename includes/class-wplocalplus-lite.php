@@ -260,24 +260,8 @@ class Wplocalplus_Lite {
 	public static function wplocalplus_lite_get_default_settings( $key = '' ) {
 		$settings = array(
 			'show_map'                => '0',
-			'google_maps_api_key'     => 'ABQIAAAAXuX847HLKfJC60JtneDOUhQ8oGF9gkOSJpYWLmRvGTmYZugFaxRX7q0DDCWBSdfC1tIHIXIZqTPM-A',
+			'google_maps_api_key'     => '',
 			'google_maps_sign_secret' => '',
-			'title_color'             => '333333',
-			'title_size'              => '16',
-			'title_format'            => 'normal',
-			'biztitle_color'          => '333333',
-			'biztitle_size'           => '16',
-			'biztitle_format'         => 'normal',
-			'prh_color'               => '333333',
-			'prh_size'                => '12',
-			'prh_format'              => 'normal',
-			'short_text_color'        => '918888',
-			'short_text_size'         => '12',
-			'short_text_format'       => 'normal',
-			'link_color'              => '0066CC',
-			'link_size'               => '12',
-			'link_format'             => 'normal',
-			'separator_color'         => '2DC6FF',
 		);
 		return '' !== $key ? $settings[ $key ] : $settings;
 	}
