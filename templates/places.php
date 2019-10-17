@@ -67,17 +67,8 @@ while ( $q->have_posts() ) :
 	} else {
 		$flag = false;
 	}
-	$imgstr = '';
 	if ( empty( $image_url ) ) {
 		$image_url = WPLOCALPLUS_LITE_ASSETS_URL . 'images/image-not-available.jpg';
-	}
-	$gmap_img = '';
-	$maplink  = "https://www.google.com/lochp?hl=en&biw=1024&bih=580&q=$loc&sll=$lat_long&um=1&ie=UTF-8&sa=N&tab=wl";
-	if ( 1 === $show_map ) {
-		$url_to_sign = 'https://maps.googleapis.com/maps/api/staticmap?center=' . rawurlencode( trim( $loc ) ) . '&zoom=14&size=240x166&maptype=roadmap&markers=color:blue%7Clabel:S%7C' . rawurlencode( trim( $loc ) ) . '&sensor=false&key=' . trim( $google_maps_api_key );
-		$signed_url  = $this->wplocalplus_lite_sign_url( $url_to_sign, $google_maps_sign_secret );
-	} else {
-		$signed_url = '';
 	}
 	?>
 	<li>

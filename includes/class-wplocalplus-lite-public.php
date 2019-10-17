@@ -116,6 +116,7 @@ class Wplocalplus_Lite_Public {
 		if ( is_admin() ) {
 			return;
 		}
+		ob_start();
 		wp_enqueue_style( $this->plugin_name );
 		wp_enqueue_script( $this->plugin_name );
 		wp_localize_script(
@@ -182,14 +183,12 @@ class Wplocalplus_Lite_Public {
 		$q                = new WP_Query( $args );
 		$the_options['q'] = $q;
 		if ( 'wplocal_places' === $list ) {
-			$content = $this->wplocalplus_lite_get_template( 'places.php', $the_options );
+			$this->wplocalplus_lite_get_template( 'places.php', $the_options );
 		} elseif ( 'wplocal_reviews' === $list ) {
-			$content = $this->wplocalplus_lite_get_template( 'reviews.php', $the_options );
-		} else {
-			$content = '';
+			$this->wplocalplus_lite_get_template( 'reviews.php', $the_options );
 		}
-		$big      = 999999;
-		$content .= paginate_links(
+		$big = 999999;
+		echo paginate_links( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			array(
 				'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 				'format'  => '?paged=%#%',
@@ -198,7 +197,7 @@ class Wplocalplus_Lite_Public {
 			)
 		);
 		wp_reset_postdata();
-		return $content;
+		return ob_get_clean();
 	}
 
 	/**
@@ -249,7 +248,7 @@ class Wplocalplus_Lite_Public {
 			}
 		}
 		$data['reviews'] = $reviews_data;
-		$content         = $this->wplocalplus_lite_get_template( 'single-place.php', array_merge( $the_options, $data ) );
+		$this->wplocalplus_lite_get_template( 'single-place.php', array_merge( $the_options, $data ) );
 		die();
 	}
 
@@ -355,6 +354,7 @@ class Wplocalplus_Lite_Public {
 		$google_script_link  = 'https://maps.googleapis.com/maps/api/js?libraries=places&key=' . $google_maps_api_key;
 		wp_enqueue_script( 'mapsapilibrary', $google_script_link, array(), $this->version, true );
 		wp_enqueue_script( $this->plugin_name . '-gmap3' );
+		$gdata = array();
 		while ( $q->have_posts() ) {
 			$q->the_post();
 			$post_id                       = get_the_ID();
@@ -385,7 +385,7 @@ class Wplocalplus_Lite_Public {
 		$min_latitude  = 9999999;
 		$max_longitude = - 9999999;
 		$min_longitude = 9999999;
-
+		$market_str    = '';
 		if ( $gdata ) {
 			$count      = 0;
 			$total_lat  = 0;
@@ -492,64 +492,6 @@ class Wplocalplus_Lite_Public {
 		    })
 		})';
 		echo '</script>';
-	}
-
-	/**
-	 * Return signed url for Google Maps.
-	 *
-	 * @since 1.0
-	 * @param string $url_to_sign Signing URL.
-	 * @param string $google_maps_sign_secret Google Maps Sign secret key.
-	 * @return string
-	 */
-	public function wplocalplus_lite_sign_url( $url_to_sign, $google_maps_sign_secret ) {
-		// Parse the url.
-		$url = wp_parse_url( $url_to_sign );
-
-		$url_part_to_sign = $url['path'] . '?' . $url['query'];
-
-		// Decode the private key into its binary format.
-		$decoded_key = $this->decode_base_64_url_safe( $google_maps_sign_secret );
-
-		// Create a signature using the private key and the URL-encoded.
-		// string using HMAC SHA1. This signature will be binary.
-		$sign_secret = hash_hmac( 'sha1', $url_part_to_sign, $decoded_key, true );
-
-		$encoded_signature = $this->encode_base_64_url_safe( $sign_secret );
-
-		return $url_to_sign . '&signature=' . $encoded_signature;
-	}
-
-	/**
-	 * Encode a string to URL-safe base64.
-	 *
-	 * @since 1.0
-	 * @param string $value Value.
-	 * @return mixed
-	 */
-	public function encode_base_64_url_safe( $value ) {
-		return str_replace(
-			array( '+', '/' ),
-			array( '-', '_' ),
-			base64_encode( $value ) // phpcs:ignore
-		);
-	}
-
-	/**
-	 * Decode a string from URL-safe base64.
-	 *
-	 * @since 1.0
-	 * @param string $value Value.
-	 * @return bool|string
-	 */
-	public function decode_base_64_url_safe( $value ) {
-		return base64_decode(  // phpcs:ignore
-			str_replace(
-				array( '-', '_' ),
-				array( '+', '/' ),
-				$value
-			)
-		);
 	}
 
 }

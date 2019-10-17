@@ -110,6 +110,8 @@ class Wplocalplus_Lite_Admin {
 		add_submenu_page( 'wplocalplus-lite', __( 'Settings', 'wplocalplus-lite' ), __( 'Settings', 'wplocalplus-lite' ), 'manage_options', 'wplocalplus-lite', array( $this, 'wplocalplus_lite_settings' ) );
 		add_submenu_page( 'wplocalplus-lite', __( 'Places', 'wplocalplus-lite' ), __( 'Places', 'wplocalplus-lite' ), 'manage_options', 'edit.php?post_type=' . WPLOCALPLUS_PLACE_POST_TYPE );
 		add_submenu_page( 'wplocalplus-lite', __( 'Reviews', 'wplocalplus-lite' ), __( 'Reviews', 'wplocalplus-lite' ), 'manage_options', 'edit.php?post_type=' . WPLOCALPLUS_REVIEW_POST_TYPE );
+		add_submenu_page( 'wplocalplus-lite', __( 'Place Types', 'wplocalplus-lite' ), __( 'Place Types', 'wplocalplus-lite' ), 'manage_options', 'edit-tags.php?taxonomy=wplocal_place_type&post_type=' . WPLOCALPLUS_PLACE_POST_TYPE );
+		add_submenu_page( 'wplocalplus-lite', __( 'Locations', 'wplocalplus-lite' ), __( 'Locations', 'wplocalplus-lite' ), 'manage_options', 'edit-tags.php?taxonomy=wplocal_location&post_type=' . WPLOCALPLUS_PLACE_POST_TYPE );
 	}
 
 	/**
@@ -224,17 +226,43 @@ class Wplocalplus_Lite_Admin {
 	 * @since 1.0
 	 */
 	public function wplocalplus_lite_register_custom_taxonomies() {
-		$args = array(
+		$labels = array(
+			'name'          => _x( 'Locations', 'taxonomy general name' ),
+			'singular_name' => _x( 'Location', 'taxonomy singular name' ),
+			'search_items'  => __( 'Search Locations' ),
+			'all_items'     => __( 'All Locations' ),
+			'edit_item'     => __( 'Edit Location' ),
+			'update_item'   => __( 'Update Location' ),
+			'add_new_item'  => __( 'Add New Location' ),
+			'new_item_name' => __( 'New Location Name' ),
+			'menu_name'     => __( 'Locations' ),
+		);
+		$args   = array(
 			'label'             => __( 'Location', 'wplocalplus-lite' ),
+			'labels'            => $labels,
 			'hierarchical'      => false,
-			'show_ui'           => false,
+			'show_ui'           => true,
+			'meta_box_cb'       => false,
 			'show_admin_column' => false,
 		);
 		register_taxonomy( 'wplocal_location', array( WPLOCALPLUS_PLACE_POST_TYPE, WPLOCALPLUS_REVIEW_POST_TYPE ), $args );
-		$args = array(
+		$labels = array(
+			'name'          => _x( 'Place Types', 'taxonomy general name' ),
+			'singular_name' => _x( 'Place Type', 'taxonomy singular name' ),
+			'search_items'  => __( 'Search Place Types' ),
+			'all_items'     => __( 'All Place Types' ),
+			'edit_item'     => __( 'Edit Place Type' ),
+			'update_item'   => __( 'Update Place Type' ),
+			'add_new_item'  => __( 'Add New Place Type' ),
+			'new_item_name' => __( 'New Place Type Name' ),
+			'menu_name'     => __( 'Place Types' ),
+		);
+		$args   = array(
 			'label'             => __( 'Place Type', 'wplocalplus-lite' ),
+			'labels'            => $labels,
 			'hierarchical'      => false,
-			'show_ui'           => false,
+			'show_ui'           => true,
+			'meta_box_cb'       => false,
 			'show_admin_column' => false,
 		);
 		register_taxonomy( 'wplocal_place_type', array( WPLOCALPLUS_PLACE_POST_TYPE, WPLOCALPLUS_REVIEW_POST_TYPE ), $args );
@@ -516,6 +544,19 @@ class Wplocalplus_Lite_Admin {
 	}
 
 	/**
+	 * Remove view action from place types and locations.
+	 *
+	 * @since 1.0
+	 * @param Array $actions Actions.
+	 * @param Array $tag Tags.
+	 * @return mixed
+	 */
+	public function wplocalplus_lite_taxonomy_row_actions( $actions, $tag ) {
+		unset( $actions['view'] );
+		return $actions;
+	}
+
+	/**
 	 * Toggle featured place.
 	 *
 	 * @since 1.0
@@ -563,7 +604,7 @@ class Wplocalplus_Lite_Admin {
 	 * @since 1.0
 	 * @param int $post_id Post ID.
 	 */
-	public function wplocal_places_save_custom_post( $post_id ) {
+	public function wplocalplus_lite_places_save_custom_post( $post_id ) {
 		$post = get_post( $post_id );
 		if ( WPLOCALPLUS_PLACE_POST_TYPE !== $post->post_type ) {
 			return;
@@ -601,7 +642,7 @@ class Wplocalplus_Lite_Admin {
 	 * @since 1.0
 	 * @param int $post_id Post ID.
 	 */
-	public function wplocal_reviews_save_custom_post( $post_id ) {
+	public function wplocalplus_lite_reviews_save_custom_post( $post_id ) {
 		$post = get_post( $post_id );
 		if ( WPLOCALPLUS_REVIEW_POST_TYPE !== $post->post_type ) {
 			return;
@@ -618,24 +659,104 @@ class Wplocalplus_Lite_Admin {
 			$review_place = get_field( 'review_place' );
 			if ( $review_place ) {
 				$post_parent = wp_get_post_parent_id( $post_id );
-				if ( '0' === $post_parent ) {
+				if ( 0 === $post_parent ) {
 					wp_update_post(
 						array(
 							'ID'          => $post_id,
 							'post_parent' => $review_place,
 						)
 					);
-					$location = get_field( 'location', $review_place );
-					if ( ! empty( $location ) ) {
-						$term_id = wp_set_object_terms( $post_id, $location->slug, 'wplocal_location', false );
-					}
-					$place_type = get_field( 'place_type', $review_place );
-					if ( ! empty( $place_type ) ) {
-						foreach ( $place_type as $type ) {
-							$term_id = wp_set_object_terms( $post_id, $type->slug, 'wplocal_place_type', false );
-						}
+				}
+				$location = get_field( 'location', $review_place );
+				if ( ! empty( $location ) ) {
+					$term_id = wp_set_object_terms( $post_id, $location->slug, 'wplocal_location', false );
+				}
+				$place_type = get_field( 'place_type', $review_place );
+				if ( ! empty( $place_type ) ) {
+					foreach ( $place_type as $type ) {
+						$term_id = wp_set_object_terms( $post_id, $type->slug, 'wplocal_place_type', false );
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * Trash Custom post review associated with place.
+	 *
+	 * @since 1.0
+	 * @param int $post_id Post ID.
+	 */
+	public function wplocalplus_lite_trash_custom_post( $post_id ) {
+		$post = get_post( $post_id );
+		if ( WPLOCALPLUS_PLACE_POST_TYPE !== $post->post_type ) {
+			return;
+		}
+		$args = array(
+			'post_parent' => $post_id,
+			'post_type'   => WPLOCALPLUS_REVIEW_POST_TYPE,
+		);
+
+		$posts = get_posts( $args );
+
+		if ( is_array( $posts ) && count( $posts ) > 0 ) {
+			// Delete all the Children of the Parent Page.
+			foreach ( $posts as $post ) {
+				wp_trash_post( $post->ID );
+			}
+		}
+	}
+
+	/**
+	 * Delete permanently custom post review associated with place.
+	 *
+	 * @since 1.0
+	 * @param int $post_id Post ID.
+	 */
+	public function wplocalplus_lite_delete_custom_post( $post_id ) {
+		$post = get_post( $post_id );
+		if ( WPLOCALPLUS_PLACE_POST_TYPE !== $post->post_type ) {
+			return;
+		}
+		$args = array(
+			'post_parent' => $post_id,
+			'post_type'   => WPLOCALPLUS_REVIEW_POST_TYPE,
+			'post_status' => 'trash',
+		);
+
+		$posts = get_posts( $args );
+
+		if ( is_array( $posts ) && count( $posts ) > 0 ) {
+			// Delete all the Children of the Parent Page.
+			foreach ( $posts as $post ) {
+				wp_delete_post( $post->ID, true );
+			}
+		}
+	}
+
+	/**
+	 * Restore custom post review associated with place.
+	 *
+	 * @since 1.0
+	 * @param int $post_id Post ID.
+	 */
+	public function wplocalplus_lite_untrash_custom_post( $post_id ) {
+		$post = get_post( $post_id );
+		if ( WPLOCALPLUS_PLACE_POST_TYPE !== $post->post_type ) {
+			return;
+		}
+		$args = array(
+			'post_parent' => $post_id,
+			'post_type'   => WPLOCALPLUS_REVIEW_POST_TYPE,
+			'post_status' => 'trash',
+		);
+
+		$posts = get_posts( $args );
+
+		if ( is_array( $posts ) && count( $posts ) > 0 ) {
+			// Delete all the Children of the Parent Page.
+			foreach ( $posts as $post ) {
+				wp_untrash_post( $post->ID );
 			}
 		}
 	}
@@ -1359,6 +1480,10 @@ class Wplocalplus_Lite_Admin {
 					'description'           => '',
 				)
 			);
+		}
+		if ( function_exists( 'acf_update_setting' ) ) {
+			$the_options = Wplocalplus_Lite::wplocalplus_lite_get_settings();
+			acf_update_setting( 'google_api_key', $the_options['google_maps_api_key'] );
 		}
 	}
 }
