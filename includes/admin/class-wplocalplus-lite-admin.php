@@ -227,15 +227,15 @@ class Wplocalplus_Lite_Admin {
 	 */
 	public function wplocalplus_lite_register_custom_taxonomies() {
 		$labels = array(
-			'name'          => _x( 'Locations', 'taxonomy general name' ),
-			'singular_name' => _x( 'Location', 'taxonomy singular name' ),
-			'search_items'  => __( 'Search Locations' ),
-			'all_items'     => __( 'All Locations' ),
-			'edit_item'     => __( 'Edit Location' ),
-			'update_item'   => __( 'Update Location' ),
-			'add_new_item'  => __( 'Add New Location' ),
-			'new_item_name' => __( 'New Location Name' ),
-			'menu_name'     => __( 'Locations' ),
+			'name'          => __( 'Locations', 'wplocalplus-lite' ),
+			'singular_name' => __( 'Location', 'wplocalplus-lite' ),
+			'search_items'  => __( 'Search Locations', 'wplocalplus-lite' ),
+			'all_items'     => __( 'All Locations', 'wplocalplus-lite' ),
+			'edit_item'     => __( 'Edit Location', 'wplocalplus-lite' ),
+			'update_item'   => __( 'Update Location', 'wplocalplus-lite' ),
+			'add_new_item'  => __( 'Add New Location', 'wplocalplus-lite' ),
+			'new_item_name' => __( 'New Location Name', 'wplocalplus-lite' ),
+			'menu_name'     => __( 'Locations', 'wplocalplus-lite' ),
 		);
 		$args   = array(
 			'label'             => __( 'Location', 'wplocalplus-lite' ),
@@ -247,15 +247,15 @@ class Wplocalplus_Lite_Admin {
 		);
 		register_taxonomy( 'wplocal_location', array( WPLOCALPLUS_PLACE_POST_TYPE, WPLOCALPLUS_REVIEW_POST_TYPE ), $args );
 		$labels = array(
-			'name'          => _x( 'Place Types', 'taxonomy general name' ),
-			'singular_name' => _x( 'Place Type', 'taxonomy singular name' ),
-			'search_items'  => __( 'Search Place Types' ),
-			'all_items'     => __( 'All Place Types' ),
-			'edit_item'     => __( 'Edit Place Type' ),
-			'update_item'   => __( 'Update Place Type' ),
-			'add_new_item'  => __( 'Add New Place Type' ),
-			'new_item_name' => __( 'New Place Type Name' ),
-			'menu_name'     => __( 'Place Types' ),
+			'name'          => __( 'Place Types', 'wplocalplus-lite' ),
+			'singular_name' => __( 'Place Type', 'wplocalplus-lite' ),
+			'search_items'  => __( 'Search Place Types', 'wplocalplus-lite' ),
+			'all_items'     => __( 'All Place Types', 'wplocalplus-lite' ),
+			'edit_item'     => __( 'Edit Place Type', 'wplocalplus-lite' ),
+			'update_item'   => __( 'Update Place Type', 'wplocalplus-lite' ),
+			'add_new_item'  => __( 'Add New Place Type', 'wplocalplus-lite' ),
+			'new_item_name' => __( 'New Place Type Name', 'wplocalplus-lite' ),
+			'menu_name'     => __( 'Place Types', 'wplocalplus-lite' ),
 		);
 		$args   = array(
 			'label'             => __( 'Place Type', 'wplocalplus-lite' ),
