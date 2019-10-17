@@ -170,10 +170,19 @@ class Wplocalplus_Lite {
 		$this->loader->add_action( 'restrict_manage_posts', $plugin_admin, 'wplocalplus_lite_restrict_manage_posts', 10, 2 );
 		$this->loader->add_filter( 'parse_query', $plugin_admin, 'wplocalplus_lite_reviews_posts_filter', 10, 1 );
 		$this->loader->add_filter( 'post_row_actions', $plugin_admin, 'wplocalplus_lite_row_actions', 10, 2 );
+		$this->loader->add_filter( 'wplocal_place_type_row_actions', $plugin_admin, 'wplocalplus_lite_taxonomy_row_actions', 10, 2 );
+		$this->loader->add_filter( 'wplocal_location_row_actions', $plugin_admin, 'wplocalplus_lite_taxonomy_row_actions', 10, 2 );
 		$this->loader->add_action( 'wp_ajax_wplocal_feature_place', $plugin_admin, 'wplocalplus_lite_feature_place' );
 		$this->loader->add_action( 'wp_ajax_wplocal_feature_review', $plugin_admin, 'wplocalplus_lite_feature_review' );
-		$this->loader->add_action( 'save_post', $plugin_admin, 'wplocal_places_save_custom_post' );
-		$this->loader->add_action( 'save_post', $plugin_admin, 'wplocal_reviews_save_custom_post' );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'wplocalplus_lite_places_save_custom_post' );
+		$this->loader->add_action( 'save_post', $plugin_admin, 'wplocalplus_lite_reviews_save_custom_post' );
+		$this->loader->add_action( 'wp_trash_post', $plugin_admin, 'wplocalplus_lite_trash_custom_post' );
+		$this->loader->add_action( 'delete_post', $plugin_admin, 'wplocalplus_lite_delete_custom_post' );
+		$this->loader->add_action( 'untrash_post', $plugin_admin, 'wplocalplus_lite_untrash_custom_post' );
+
+		add_action( 'wp_trash_post', 'wplocal_trash_custom_post' );
+		add_action( 'delete_post', 'wplocal_delete_custom_post' );
+		add_action( 'untrash_post', 'wplocal_untrash_custom_post' );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
