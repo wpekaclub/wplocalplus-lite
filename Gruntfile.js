@@ -78,7 +78,7 @@ module.exports = function (grunt) {
 				target: {
 					options: {
 						domainPath: '/languages',
-						exclude: ['\.git/*', 'bin/*', 'node_modules/*', 'tests/*', 'vendor/**/*', '!includes/libraries/acf/**/*'],
+						exclude: ['\.git/*', 'bin/*', 'node_modules/*', 'tests/*', 'vendor/**/*', 'includes/libraries/acf/**/*'],
 						mainFile: 'wplocalplus-lite.php',
 						potFilename: 'wplocalplus-lite.pot',
 						potHeaders: {

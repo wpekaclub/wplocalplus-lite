@@ -179,10 +179,7 @@ class Wplocalplus_Lite {
 		$this->loader->add_action( 'wp_trash_post', $plugin_admin, 'wplocalplus_lite_trash_custom_post' );
 		$this->loader->add_action( 'delete_post', $plugin_admin, 'wplocalplus_lite_delete_custom_post' );
 		$this->loader->add_action( 'untrash_post', $plugin_admin, 'wplocalplus_lite_untrash_custom_post' );
-
-		add_action( 'wp_trash_post', 'wplocal_trash_custom_post' );
-		add_action( 'delete_post', 'wplocal_delete_custom_post' );
-		add_action( 'untrash_post', 'wplocal_untrash_custom_post' );
+		$this->loader->add_action( 'init', $plugin_admin, 'wplocalplus_lite_register_block_type' );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -261,23 +258,6 @@ class Wplocalplus_Lite {
 		$settings = array(
 			'show_map'                => '0',
 			'google_maps_api_key'     => 'ABQIAAAAXuX847HLKfJC60JtneDOUhQ8oGF9gkOSJpYWLmRvGTmYZugFaxRX7q0DDCWBSdfC1tIHIXIZqTPM-A',
-			'google_maps_sign_secret' => '',
-			'title_color'             => '333333',
-			'title_size'              => '16',
-			'title_format'            => 'normal',
-			'biztitle_color'          => '333333',
-			'biztitle_size'           => '16',
-			'biztitle_format'         => 'normal',
-			'prh_color'               => '333333',
-			'prh_size'                => '12',
-			'prh_format'              => 'normal',
-			'short_text_color'        => '918888',
-			'short_text_size'         => '12',
-			'short_text_format'       => 'normal',
-			'link_color'              => '0066CC',
-			'link_size'               => '12',
-			'link_format'             => 'normal',
-			'separator_color'         => '2DC6FF',
 		);
 		return '' !== $key ? $settings[ $key ] : $settings;
 	}
@@ -312,23 +292,6 @@ class Wplocalplus_Lite {
 				} else {
 					return 0;
 				}
-			case 'title_color':
-			case 'biztitle_color':
-			case 'prh_color':
-			case 'short_text_color':
-			case 'link_color':
-			case 'separator_color':
-				if ( preg_match( '/^[a-f0-9]{6}|#[a-f0-9]{3}$/i', $value ) ) {
-					return $value;
-				} else {
-					return '000';
-				}
-			case 'title_size':
-			case 'biztitle_size':
-			case 'prh_size':
-			case 'short_text_size':
-			case 'link_size':
-				return (int) $value;
 			default:
 				return sanitize_text_field( $value );
 		}

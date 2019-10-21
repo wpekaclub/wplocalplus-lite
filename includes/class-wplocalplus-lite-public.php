@@ -144,7 +144,7 @@ class Wplocalplus_Lite_Public {
 				'location' => 'cambridgema',
 				'type'     => 'hotels',
 				'list'     => 'wplocal_places',
-				'limit'    => -1,
+				'limit'    => 5,
 			),
 			$atts
 		);

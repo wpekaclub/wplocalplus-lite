@@ -101,12 +101,90 @@ class Wplocalplus_Lite_Admin {
 	}
 
 	/**
+	 * Register block.
+	 *
+	 * @since 1.0
+	 */
+	public function wplocalplus_lite_register_block_type() {
+		if ( ! function_exists( 'register_block_type' ) ) {
+			return;
+		}
+		$terms       = get_terms( 'wplocal_place_type' );
+		$place_types = array();
+		foreach ( $terms as $term ) {
+			$place          = array();
+			$place['label'] = $term->name;
+			$place['value'] = $term->slug;
+			$place_types[]  = $place;
+		}
+		$terms     = get_terms( 'wplocal_location' );
+		$locations = array();
+		foreach ( $terms as $term ) {
+			$loc          = array();
+			$loc['label'] = $term->name;
+			$loc['value'] = $term->slug;
+			$locations[]  = $loc;
+		}
+		wp_enqueue_script(
+			$this->plugin_name . '-block',
+			WPLOCALPLUS_LITE_ASSETS_URL . 'js/blocks/wplocalplus-lite-block.js',
+			array(
+				'wp-blocks',
+				'wp-i18n',
+				'wp-editor',
+				'wp-element',
+				'wp-components',
+			),
+			$this->version,
+			false
+		);
+		wp_localize_script( $this->plugin_name . '-block', 'place_types', $place_types );
+		wp_localize_script( $this->plugin_name . '-block', 'locations', $locations );
+		register_block_type(
+			'wplocalplus-lite/block',
+			array(
+				'editor_script'   => $this->plugin_name . '-block',
+				'render_callback' => array( $this, 'wplocalplus_lite_block_render_callback' ),
+				'attributes'      => [
+					'list'     => [
+						'default' => 'wplocal_places',
+						'type'    => 'string,',
+					],
+					'type'     => [
+						'default' => 'hotels',
+						'type'    => 'string,',
+					],
+					'location' => [
+						'default' => 'cambridgema',
+						'type'    => 'string,',
+					],
+					'limit'    => [
+						'default' => 5,
+						'type'    => 'number',
+					],
+				],
+			)
+		);
+	}
+
+	/**
+	 * Render callback for block.
+	 *
+	 * @since 1.0
+	 * @param Array $atts Shortcode attributes.
+	 * @return string
+	 */
+	public function wplocalplus_lite_block_render_callback( $atts ) {
+		return do_shortcode( "[wplocalplus list='" . $atts['list'] . "' type='" . $atts['type'] . "' location='" . $atts['location'] . "' limit='" . $atts['limit'] . "']" );
+	}
+
+	/**
 	 * Registers menu options, hooked into admin_menu.
 	 *
 	 * @since 1.0
 	 */
 	public function wplocalplus_lite_admin_menu() {
-		add_menu_page( __( 'WP LocalPlus Lite', 'wplocalplus-lite' ), __( 'WP LocalPlus Lite', 'wplocalplus-lite' ), 'edit_pages', 'wplocalplus-lite', false, WPLOCALPLUS_LITE_ASSETS_URL . 'images/wplocalplus.png' );
+		add_menu_page( __( 'WP Local Plus', 'wplocalplus-lite' ), __( 'WP Local Plus', 'wplocalplus-lite' ), 'edit_pages', 'wplocalplus-lite', false, WPLOCALPLUS_LITE_ASSETS_URL . 'images/wplocalplus.png' );
 		add_submenu_page( 'wplocalplus-lite', __( 'Settings', 'wplocalplus-lite' ), __( 'Settings', 'wplocalplus-lite' ), 'manage_options', 'wplocalplus-lite', array( $this, 'wplocalplus_lite_settings' ) );
 		add_submenu_page( 'wplocalplus-lite', __( 'Places', 'wplocalplus-lite' ), __( 'Places', 'wplocalplus-lite' ), 'manage_options', 'edit.php?post_type=' . WPLOCALPLUS_PLACE_POST_TYPE );
 		add_submenu_page( 'wplocalplus-lite', __( 'Reviews', 'wplocalplus-lite' ), __( 'Reviews', 'wplocalplus-lite' ), 'manage_options', 'edit.php?post_type=' . WPLOCALPLUS_REVIEW_POST_TYPE );
@@ -183,6 +261,7 @@ class Wplocalplus_Lite_Admin {
 			'exclude_from_search' => true,
 			'show_ui'             => true,
 			'show_in_menu'        => false,
+			'show_in_rest'        => true,
 			'query_var'           => true,
 			'rewrite'             => true,
 			'capabilities'        => array(
@@ -244,6 +323,7 @@ class Wplocalplus_Lite_Admin {
 			'show_ui'           => true,
 			'meta_box_cb'       => false,
 			'show_admin_column' => false,
+			'show_in_rest'      => true,
 		);
 		register_taxonomy( 'wplocal_location', array( WPLOCALPLUS_PLACE_POST_TYPE, WPLOCALPLUS_REVIEW_POST_TYPE ), $args );
 		$labels = array(
@@ -264,6 +344,7 @@ class Wplocalplus_Lite_Admin {
 			'show_ui'           => true,
 			'meta_box_cb'       => false,
 			'show_admin_column' => false,
+			'show_in_rest'      => true,
 		);
 		register_taxonomy( 'wplocal_place_type', array( WPLOCALPLUS_PLACE_POST_TYPE, WPLOCALPLUS_REVIEW_POST_TYPE ), $args );
 	}
