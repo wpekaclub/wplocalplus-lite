@@ -58,15 +58,6 @@ if ( ! defined( 'WPINC' ) ) {
 						</p>
 					</div>
 					<div class="inside" style="width: 800px;overflow: hidden;">
-						<label style="display:block;"><strong>Google Maps URL Signing Secret</strong></label>
-						<input style="width:50%;padding:5px 10px;" class="api_box" type="text" name="field_google_maps_sign_secret" id="google_maps_sign_secret"
-								value="<?php echo esc_attr( $the_options['google_maps_sign_secret'] ); ?>"/>
-						<p class="wplocalplus_citygrid_publisher_key_note">Note: Please visit the link<br> <a
-									target="_blank"
-									href="https://developers.google.com/maps/documentation/maps-static/get-api-key#get-secret">Click
-								Here to create your own Google Maps URL signing secret.</a></p>
-					</div>
-					<div class="inside" style="width: 800px;overflow: hidden;">
 						<p><input type="submit" name="customization_update" value="Update" class="bluebutton"/>
 							<input style="margin-left: 20px;" type="submit" name="customization_restore"
 									value="Restore Default Value" class="bluebutton"/></p>
