@@ -109,21 +109,33 @@ class Wplocalplus_Lite_Admin {
 		if ( ! function_exists( 'register_block_type' ) ) {
 			return;
 		}
-		$terms       = get_terms( 'wplocal_place_type' );
 		$place_types = array();
-		foreach ( $terms as $term ) {
+		$locations   = array();
+		$terms       = get_terms( 'wplocal_place_type' );
+		if ( $terms ) {
 			$place          = array();
-			$place['label'] = $term->name;
-			$place['value'] = $term->slug;
+			$place['label'] = __( 'Select', 'wplocalplus-lite' );
+			$place['value'] = '';
 			$place_types[]  = $place;
+			foreach ( $terms as $term ) {
+				$place          = array();
+				$place['label'] = $term->name;
+				$place['value'] = $term->slug;
+				$place_types[]  = $place;
+			}
 		}
-		$terms     = get_terms( 'wplocal_location' );
-		$locations = array();
-		foreach ( $terms as $term ) {
+		$terms = get_terms( 'wplocal_location' );
+		if ( $terms ) {
 			$loc          = array();
-			$loc['label'] = $term->name;
-			$loc['value'] = $term->slug;
+			$loc['label'] = __( 'Select', 'wplocalplus-lite' );
+			$loc['value'] = '';
 			$locations[]  = $loc;
+			foreach ( $terms as $term ) {
+				$loc          = array();
+				$loc['label'] = $term->name;
+				$loc['value'] = $term->slug;
+				$locations[]  = $loc;
+			}
 		}
 		wp_enqueue_script(
 			$this->plugin_name . '-block',

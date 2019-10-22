@@ -96,7 +96,7 @@ while ( $q->have_posts() ) :
 	<?php endif; ?>
 	</li>
 	<li>
-	<?php if ( isset( $places_source ) && 'google' !== $places_source ) : ?>
+	<?php if ( ! empty( $sample_categories ) && isset( $places_source ) && 'google' !== $places_source ) : ?>
 		<div class="wplocal_places_main_content_categories">Categories : <?php echo esc_attr( $sample_categories ); ?></div>
 	<?php endif; ?>
 	</li>
