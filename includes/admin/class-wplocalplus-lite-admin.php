@@ -193,6 +193,33 @@ class Wplocalplus_Lite_Admin {
 	}
 
 	/**
+	 * Highlight custom post menu.
+	 *
+	 * @since 1.0
+	 */
+	public function wplocalplus_lite_highlight_menu() {
+		global $parent_file, $submenu_file, $post_type, $current_screen;
+
+		if ( WPLOCALPLUS_PLACE_POST_TYPE === $post_type ) {
+			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
+			$submenu_file = 'edit.php?post_type=' . WPLOCALPLUS_PLACE_POST_TYPE; // phpcs:ignore override ok.
+		}
+		if ( WPLOCALPLUS_REVIEW_POST_TYPE === $post_type ) {
+			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
+			$submenu_file = 'edit.php?post_type=' . WPLOCALPLUS_REVIEW_POST_TYPE; // phpcs:ignore override ok.
+		}
+		if ( 'wplocal_place_type' === $current_screen->taxonomy ) {
+			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
+			$submenu_file = 'edit-tags.php?taxonomy=wplocal_place_type&post_type=' . WPLOCALPLUS_PLACE_POST_TYPE; // phpcs:ignore override ok.
+		}
+		if ( 'wplocal_location' === $current_screen->taxonomy ) {
+			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
+			$submenu_file = 'edit-tags.php?taxonomy=wplocal_location&post_type=' . WPLOCALPLUS_PLACE_POST_TYPE; // phpcs:ignore override ok.
+		}
+
+	}
+
+	/**
 	 * Admin settings page.
 	 *
 	 * @since 1.0

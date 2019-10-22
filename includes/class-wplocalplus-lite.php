@@ -180,6 +180,7 @@ class Wplocalplus_Lite {
 		$this->loader->add_action( 'delete_post', $plugin_admin, 'wplocalplus_lite_delete_custom_post' );
 		$this->loader->add_action( 'untrash_post', $plugin_admin, 'wplocalplus_lite_untrash_custom_post' );
 		$this->loader->add_action( 'init', $plugin_admin, 'wplocalplus_lite_register_block_type' );
+		$this->loader->add_action( 'admin_head', $plugin_admin, 'wplocalplus_lite_highlight_menu' );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -256,8 +257,8 @@ class Wplocalplus_Lite {
 	 */
 	public static function wplocalplus_lite_get_default_settings( $key = '' ) {
 		$settings = array(
-			'show_map'                => '0',
-			'google_maps_api_key'     => 'ABQIAAAAXuX847HLKfJC60JtneDOUhQ8oGF9gkOSJpYWLmRvGTmYZugFaxRX7q0DDCWBSdfC1tIHIXIZqTPM-A',
+			'show_map'            => '0',
+			'google_maps_api_key' => 'ABQIAAAAXuX847HLKfJC60JtneDOUhQ8oGF9gkOSJpYWLmRvGTmYZugFaxRX7q0DDCWBSdfC1tIHIXIZqTPM-A',
 		);
 		return '' !== $key ? $settings[ $key ] : $settings;
 	}
