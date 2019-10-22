@@ -163,6 +163,7 @@ class Wplocalplus_Lite {
 		$this->loader->add_action( 'init', $plugin_admin, 'wplocalplus_lite_register_custom_post_type' );
 		$this->loader->add_action( 'init', $plugin_admin, 'wplocalplus_lite_register_custom_taxonomies' );
 		$this->loader->add_action( 'acf/init', $plugin_admin, 'wplocalplus_lite_add_acf_fields' );
+		$this->loader->add_filter( 'acf/input/meta_box_priority', $plugin_admin, 'wplocalplus_lite_filter_acf_priority', 10, 2 );
 		$this->loader->add_action( 'manage_edit-wplocal_places_columns', $plugin_admin, 'wplocalplus_lite_manage_edit_places_columns' );
 		$this->loader->add_action( 'manage_edit-wplocal_reviews_columns', $plugin_admin, 'wplocalplus_lite_manage_edit_reviews_columns' );
 		$this->loader->add_action( 'manage_posts_custom_column', $plugin_admin, 'wplocalplus_lite_places_manage_posts_custom_columns' );
@@ -180,6 +181,8 @@ class Wplocalplus_Lite {
 		$this->loader->add_action( 'delete_post', $plugin_admin, 'wplocalplus_lite_delete_custom_post' );
 		$this->loader->add_action( 'untrash_post', $plugin_admin, 'wplocalplus_lite_untrash_custom_post' );
 		$this->loader->add_action( 'init', $plugin_admin, 'wplocalplus_lite_register_block_type' );
+		$this->loader->add_action( 'admin_head', $plugin_admin, 'wplocalplus_lite_highlight_menu' );
+		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'wplocalplus_lite_add_metaboxes' );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -256,8 +259,8 @@ class Wplocalplus_Lite {
 	 */
 	public static function wplocalplus_lite_get_default_settings( $key = '' ) {
 		$settings = array(
-			'show_map'                => '0',
-			'google_maps_api_key'     => 'ABQIAAAAXuX847HLKfJC60JtneDOUhQ8oGF9gkOSJpYWLmRvGTmYZugFaxRX7q0DDCWBSdfC1tIHIXIZqTPM-A',
+			'show_map'            => '0',
+			'google_maps_api_key' => 'ABQIAAAAXuX847HLKfJC60JtneDOUhQ8oGF9gkOSJpYWLmRvGTmYZugFaxRX7q0DDCWBSdfC1tIHIXIZqTPM-A',
 		);
 		return '' !== $key ? $settings[ $key ] : $settings;
 	}

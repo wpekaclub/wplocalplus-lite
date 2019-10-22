@@ -193,6 +193,80 @@ class Wplocalplus_Lite_Admin {
 	}
 
 	/**
+	 * Highlight custom post menu.
+	 *
+	 * @since 1.0
+	 */
+	public function wplocalplus_lite_highlight_menu() {
+		global $parent_file, $submenu_file, $post_type, $current_screen;
+
+		if ( WPLOCALPLUS_PLACE_POST_TYPE === $post_type ) {
+			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
+			$submenu_file = 'edit.php?post_type=' . WPLOCALPLUS_PLACE_POST_TYPE; // phpcs:ignore override ok.
+		}
+		if ( WPLOCALPLUS_REVIEW_POST_TYPE === $post_type ) {
+			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
+			$submenu_file = 'edit.php?post_type=' . WPLOCALPLUS_REVIEW_POST_TYPE; // phpcs:ignore override ok.
+		}
+		if ( 'wplocal_place_type' === $current_screen->taxonomy ) {
+			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
+			$submenu_file = 'edit-tags.php?taxonomy=wplocal_place_type&post_type=' . WPLOCALPLUS_PLACE_POST_TYPE; // phpcs:ignore override ok.
+		}
+		if ( 'wplocal_location' === $current_screen->taxonomy ) {
+			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
+			$submenu_file = 'edit-tags.php?taxonomy=wplocal_location&post_type=' . WPLOCALPLUS_PLACE_POST_TYPE; // phpcs:ignore override ok.
+		}
+
+	}
+
+	/**
+	 * Add banner metabox.
+	 *
+	 * @since 1.0
+	 */
+	public function wplocalplus_lite_add_metaboxes() {
+		add_meta_box( 'wplocalplus_lite_places_banner', 'Places Banner', array( $this, 'wplocalplus_lite_render_places_banner' ), WPLOCALPLUS_PLACE_POST_TYPE, 'side', 'default' );
+		add_meta_box( 'wplocalplus_lite_reviews_banner', 'Reviews Banner', array( $this, 'wplocalplus_lite_render_reviews_banner' ), WPLOCALPLUS_REVIEW_POST_TYPE, 'side', 'default' );
+	}
+
+	/**
+	 * Render Places banner metabox.
+	 *
+	 * @since 1.0
+	 */
+	public function wplocalplus_lite_render_places_banner() {
+		wp_enqueue_style( $this->plugin_name );
+		echo '<div class="wplocalplus_lite_banner"><a href="https://club.wpeka.com/product/wp-local-plus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=image&utm_content=upgrade-to-wplocalplus-pro" target="_blank"><img src="' . esc_url( WPLOCALPLUS_LITE_ASSETS_URL ) . 'images/places_banner.png" alt="Upgrade to WPLocalPlus Pro"/></a></div>';
+	}
+
+	/**
+	 * Render Reviews banner metabox.
+	 *
+	 * @since 1.0
+	 */
+	public function wplocalplus_lite_render_reviews_banner() {
+		wp_enqueue_style( $this->plugin_name );
+		echo '<div class="wplocalplus_lite_banner"><a href="https://club.wpeka.com/product/wp-local-plus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=image&utm_content=upgrade-to-wplocalplus-pro" target="_blank"><img src="' . esc_url( WPLOCALPLUS_LITE_ASSETS_URL ) . 'images/reviews_banner.png" alt="Upgrade to WPLocalPlus Pro"/></a></div>';
+	}
+
+	/**
+	 * Filter priority for ACF field group.
+	 *
+	 * @since 1.0
+	 * @param String $priority Priority.
+	 * @param Array  $field_group Field Group.
+	 * @return string
+	 */
+	public function wplocalplus_lite_filter_acf_priority( $priority, $field_group ) {
+		$context = isset( $field_group['position'] ) ? $field_group['position'] : '';
+
+		if ( ! empty( $context ) && 'side' === $context ) {
+			$priority = 'default';
+		}
+		return $priority;
+	}
+
+	/**
 	 * Admin settings page.
 	 *
 	 * @since 1.0
@@ -261,7 +335,7 @@ class Wplocalplus_Lite_Admin {
 			'exclude_from_search' => true,
 			'show_ui'             => true,
 			'show_in_menu'        => false,
-			'show_in_rest'        => true,
+			'show_in_rest'        => false,
 			'query_var'           => true,
 			'rewrite'             => true,
 			'capabilities'        => array(
