@@ -42,3 +42,19 @@ table.wp-list-table span.wplocal-featured::before {
 table.wp-list-table span.wplocal-featured.not-featured::before {
 	content: "\2606";
 }
+#wplocalplus_lite_places_banner button,
+#wplocalplus_lite_places_banner h2,
+#wplocalplus_lite_reviews_banner button,
+#wplocalplus_lite_reviews_banner h2 {
+	display:none;
+}
+#wplocalplus_lite_places_banner .inside,
+#wplocalplus_lite_reviews_banner .inside {
+	line-height: unset;
+	padding: 10px;
+	margin: 0px;
+}
+#wplocalplus_lite_places_banner .wplocalplus_lite_banner img,
+#wplocalplus_lite_reviews_banner .wplocalplus_lite_banner img {
+	width:100%;
+}
