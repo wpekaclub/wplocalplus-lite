@@ -236,7 +236,7 @@ class Wplocalplus_Lite_Admin {
 	 */
 	public function wplocalplus_lite_render_places_banner() {
 		wp_enqueue_style( $this->plugin_name );
-		echo '<div class="wplocalplus_lite_banner"><a href="https://club.wpeka.com/product/wp-local-plus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=image&utm_content=upgrade-to-wplocalplus-pro" target="_blank"><img src="' . esc_url( WPLOCALPLUS_LITE_ASSETS_URL ) . 'images/places_banner.png" alt="Upgrade to WPLocalPlus Pro"/></a></div>';
+		echo '<div class="wplocalplus_lite_banner"><a href="https://club.wpeka.com/product/wp-local-plus/?utm_source=wp-local-plus-lite&utm_medium=banner&utm_campaign=wp-local-plus&utm_content=add-edit-place" target="_blank"><img src="' . esc_url( WPLOCALPLUS_LITE_ASSETS_URL ) . 'images/places_banner.png" alt="Upgrade to WPLocalPlus Pro"/></a></div>';
 	}
 
 	/**
@@ -246,7 +246,7 @@ class Wplocalplus_Lite_Admin {
 	 */
 	public function wplocalplus_lite_render_reviews_banner() {
 		wp_enqueue_style( $this->plugin_name );
-		echo '<div class="wplocalplus_lite_banner"><a href="https://club.wpeka.com/product/wp-local-plus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=image&utm_content=upgrade-to-wplocalplus-pro" target="_blank"><img src="' . esc_url( WPLOCALPLUS_LITE_ASSETS_URL ) . 'images/reviews_banner.png" alt="Upgrade to WPLocalPlus Pro"/></a></div>';
+		echo '<div class="wplocalplus_lite_banner"><a href="https://club.wpeka.com/product/wp-local-plus/?utm_source=wp-local-plus-lite&utm_medium=banner&utm_campaign=wp-local-plus&utm_content=add-edit-review" target="_blank"><img src="' . esc_url( WPLOCALPLUS_LITE_ASSETS_URL ) . 'images/reviews_banner.png" alt="Upgrade to WPLocalPlus Pro"/></a></div>';
 	}
 
 	/**
