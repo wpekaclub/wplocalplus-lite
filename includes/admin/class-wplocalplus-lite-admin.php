@@ -109,33 +109,29 @@ class Wplocalplus_Lite_Admin {
 		if ( ! function_exists( 'register_block_type' ) ) {
 			return;
 		}
-		$place_types = array();
-		$locations   = array();
-		$terms       = get_terms( 'wplocal_place_type' );
-		if ( $terms ) {
+		$place_types    = array();
+		$locations      = array();
+		$terms          = get_terms( 'wplocal_place_type' );
+		$place          = array();
+		$place['label'] = __( 'Select', 'wplocalplus-lite' );
+		$place['value'] = '';
+		$place_types[]  = $place;
+		foreach ( $terms as $term ) {
 			$place          = array();
-			$place['label'] = __( 'Select', 'wplocalplus-lite' );
-			$place['value'] = '';
+			$place['label'] = $term->name;
+			$place['value'] = $term->slug;
 			$place_types[]  = $place;
-			foreach ( $terms as $term ) {
-				$place          = array();
-				$place['label'] = $term->name;
-				$place['value'] = $term->slug;
-				$place_types[]  = $place;
-			}
 		}
-		$terms = get_terms( 'wplocal_location' );
-		if ( $terms ) {
+		$terms        = get_terms( 'wplocal_location' );
+		$loc          = array();
+		$loc['label'] = __( 'Select', 'wplocalplus-lite' );
+		$loc['value'] = '';
+		$locations[]  = $loc;
+		foreach ( $terms as $term ) {
 			$loc          = array();
-			$loc['label'] = __( 'Select', 'wplocalplus-lite' );
-			$loc['value'] = '';
+			$loc['label'] = $term->name;
+			$loc['value'] = $term->slug;
 			$locations[]  = $loc;
-			foreach ( $terms as $term ) {
-				$loc          = array();
-				$loc['label'] = $term->name;
-				$loc['value'] = $term->slug;
-				$locations[]  = $loc;
-			}
 		}
 		wp_enqueue_script(
 			$this->plugin_name . '-block',
@@ -187,7 +183,11 @@ class Wplocalplus_Lite_Admin {
 	 * @return string
 	 */
 	public function wplocalplus_lite_block_render_callback( $atts ) {
-		return do_shortcode( "[wplocalplus list='" . $atts['list'] . "' type='" . $atts['type'] . "' location='" . $atts['location'] . "' limit='" . $atts['limit'] . "']" );
+		$list     = isset( $atts['list'] ) ? $atts['list'] : '';
+		$type     = isset( $atts['type'] ) ? ( is_array( $atts['type'] ) && ! empty( $atts['type'] ) ) ? implode( ',', $atts['type'] ) : $atts['type'] : '';
+		$location = isset( $atts['location'] ) ? $atts['location'] : '';
+		$limit    = isset( $atts['limit'] ) ? $atts['limit'] : 5;
+		return do_shortcode( "[wplocalplus list='" . $list . "' type='" . $type . "' location='" . $location . "' limit='" . $limit . "']" );
 	}
 
 	/**
@@ -778,8 +778,8 @@ class Wplocalplus_Lite_Admin {
 		}
 		if ( $post_id ) {
 			$google_map_coordinates = get_field( 'google_map_coordinates' );
-			$latitude               = isset( $google_map_coordinates['lat'] ) ? $google_map_coordinates['lat'] : 0;
-			$longitude              = isset( $google_map_coordinates['lng'] ) ? $google_map_coordinates['lng'] : 0;
+			$latitude               = isset( $google_map_coordinates['lat'] ) ? $google_map_coordinates['lat'] : '';
+			$longitude              = isset( $google_map_coordinates['lng'] ) ? $google_map_coordinates['lng'] : '';
 			update_field( 'latitude', $latitude, $post_id );
 			update_field( 'longitude', $longitude, $post_id );
 			$location = get_field( 'location' );

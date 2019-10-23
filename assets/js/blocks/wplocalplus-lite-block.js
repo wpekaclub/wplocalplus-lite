@@ -73,6 +73,7 @@
                             ]
                         }),
                         createElement(SelectControl, {
+                            multiple: 'multiple',
                             value: attributes.type,
                             label: __( 'Place Type' ),
                             onChange: changeType,

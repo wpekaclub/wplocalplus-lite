@@ -44,16 +44,11 @@ if ( ! defined( 'WPINC' ) ) {
 																								name="field_google_maps_api_key"
 																								id="id2"
 																								value="<?php echo esc_attr( $the_options['google_maps_api_key'] ); ?>"/>
-						<div class="toshow1"><b>Instructions are as follows -</b><br/> 1. Visit the APIs console at
-							https://code.google.com/apis/console and log in with your Google Account.<br/>2. Create
-							new project -> Write your Project name- Project Name -> Click Create<br/>3. Click Enable
-							and Manage -> Search and Click on Google place API Web Services
-							<br/>4. Click on Enable API-> Click on Go to Credentials<br/>5. Click on New Credentials
-							-> API key -> Browser Key<br/>6. Get the API key in pop up window <br/>
+						<div class="toshow1"><b>Instructions are as follows -</b><br/> 1. Go to https://console.developers.google.com/<br/>2. Go to top menu "Select a project" -> Create a new project -> write your project name- "Project Name" -> Click "Create"<br/>3. Click "Enable APIS AND SERVICES" from the top. Search for Maps Static API, Maps JavaScript API, Geocoding API & Geolocation API and enable all of them.<br/>4. Now, go to the "Credentials" tab and click on "Create Credentials-> API Key".<br/>5. Click on "RESTRICT KEY". Under it go to API restrictions tab and choose Places API, Maps JavaScript API, Geocoding API & Geolocation API.<br/>6. Then go to the Application restrictions tab and click on HTTP referrers (web sites). Add following domain referrers values: https://*.yourwebsite.com/*, https://yourwebsite.com/*<br/>7. Save it.<br/>8. Copy the key and paste it in WP Local Plus -> Settings under Google Maps API.<br/>
 						</div>
 						<p class="wplocalplus_citygrid_publisher_key_note">Note: Please don't forget to enter your own
 							API keys above.
-							</br> <a target="_blank" href="https://code.google.com/apis/console/">Click Here to create
+							</br> <a target="_blank" href="https://console.developers.google.com/">Click Here to create
 								your own Google Maps API Key.</a><br/>Default Key: <br>ABQIAAAAXuX847HLKfJC60JtneDOUhQ8oGF9gkOSJpYWLmRvGTmYZugFaxRX7q0DDCWBSdfC1tIHIXIZqTPM-A
 						</p>
 					</div>

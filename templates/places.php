@@ -96,9 +96,13 @@ while ( $q->have_posts() ) :
 	<?php endif; ?>
 	</li>
 	<li>
+		<div class="wplocal_places_main_content_categories">
 	<?php if ( ! empty( $sample_categories ) && isset( $places_source ) && 'google' !== $places_source ) : ?>
-		<div class="wplocal_places_main_content_categories">Categories : <?php echo esc_attr( $sample_categories ); ?></div>
+		Categories : <?php echo esc_attr( $sample_categories ); ?>
+	<?php else : ?>
+		Categories : <?php echo esc_attr( $place_type ); ?>
 	<?php endif; ?>
+		</div>
 	</li>
 	</ul>
 	</div>
