@@ -42,6 +42,11 @@ Places template CSS.
 	display: table-cell;
 	vertical-align:top;
 }
+.wplocal_places .wplocal_places_main .wplocal_places_main_content .wplocal_places_main_content_ratings .jq-star,
+.wplocal_place .wplocal_place_main .wplocal_place_main_content .wplocal_place_main_content_place .wplocal_place_main_content_place_details .wplocal_place_main_content_details_ratings .jq-star,
+.wplocal_reviews .wplocal_reviews_main .wplocal_reviews_main_content .wplocal_reviews_main_content_ratings .jq-star {
+	cursor : unset;
+}
 .wplocal_places .wplocal_places_main .wplocal_places_main_content a {
 	text-decoration: none;
 	outline: none;
