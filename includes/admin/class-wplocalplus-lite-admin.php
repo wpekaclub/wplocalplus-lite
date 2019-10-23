@@ -116,23 +116,23 @@ class Wplocalplus_Lite_Admin {
 		$place['label'] = __( 'Select', 'wplocalplus-lite' );
 		$place['value'] = '';
 		$place_types[]  = $place;
-        foreach ( $terms as $term ) {
-            $place          = array();
-            $place['label'] = $term->name;
-            $place['value'] = $term->slug;
-            $place_types[]  = $place;
-        }
+		foreach ( $terms as $term ) {
+			$place          = array();
+			$place['label'] = $term->name;
+			$place['value'] = $term->slug;
+			$place_types[]  = $place;
+		}
 		$terms        = get_terms( 'wplocal_location' );
 		$loc          = array();
 		$loc['label'] = __( 'Select', 'wplocalplus-lite' );
 		$loc['value'] = '';
 		$locations[]  = $loc;
-        foreach ( $terms as $term ) {
-            $loc          = array();
-            $loc['label'] = $term->name;
-            $loc['value'] = $term->slug;
-            $locations[]  = $loc;
-        }
+		foreach ( $terms as $term ) {
+			$loc          = array();
+			$loc['label'] = $term->name;
+			$loc['value'] = $term->slug;
+			$locations[]  = $loc;
+		}
 		wp_enqueue_script(
 			$this->plugin_name . '-block',
 			WPLOCALPLUS_LITE_ASSETS_URL . 'js/blocks/wplocalplus-lite-block.js',
