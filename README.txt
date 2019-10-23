@@ -79,6 +79,14 @@ WP Local Plus comes with the following features:
 >
 > Get the [pro version](https://club.wpeka.com/products/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=pro-version) of WP Local Plus.
 
+== Screenshots ==
+
+1. Google Static Maps API Settings.
+2. Add/Edit a business.
+3. List of businesses in the admin dashboard.
+4. Add businesses to a page using the WP Local Plus block.
+5. List of businesses on the front end.
+
 == Changelog ==
 = 1.0 =
 Feature: Initial version.
