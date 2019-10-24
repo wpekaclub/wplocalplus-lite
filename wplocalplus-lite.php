@@ -15,7 +15,7 @@
  * Plugin Name:       WP Local Plus
  * Plugin URI:        https://club.wpeka.com/
  * Description:       WordPress Business Directory Plugin
- * Version:           1.0
+ * Version:           1.1
  * Author:            WPeka
  * Author URI:        https://club.wpeka.com
  * License:           GPL-2.0+
@@ -43,7 +43,7 @@ function wplocalplus_lite_acf_settings_url( $url ) {
 	return plugin_dir_url( __FILE__ ) . 'includes/libraries/acf/';
 }
 
-add_filter( 'acf/settings/show_admin', 'wplocalplus_lite_acf_settings_show_admin' );
+// add_filter( 'acf/settings/show_admin', 'wplocalplus_lite_acf_settings_show_admin' );
 /**
  * Hide ACF admin menu item.
  *
@@ -61,7 +61,7 @@ function wplocalplus_lite_acf_settings_show_admin( $show_admin ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 if ( ! defined( 'WPLOCALPLUS_LITE_VERSION' ) ) {
-	define( 'WPLOCALPLUS_LITE_VERSION', '1.0' );
+	define( 'WPLOCALPLUS_LITE_VERSION', '1.1' );
 }
 if ( ! defined( 'WPLOCALPLUS_PLACE_POST_TYPE' ) ) {
 	define( 'WPLOCALPLUS_PLACE_POST_TYPE', 'wplocal_places' );

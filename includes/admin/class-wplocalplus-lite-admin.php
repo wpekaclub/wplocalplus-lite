@@ -789,7 +789,7 @@ class Wplocalplus_Lite_Admin {
 			$place_type = get_field( 'place_type' );
 			if ( ! empty( $place_type ) ) {
 				foreach ( $place_type as $type ) {
-					$term_id = wp_set_object_terms( $post_id, $type->slug, 'wplocal_place_type', false );
+					$term_id = wp_set_object_terms( $post_id, $type->slug, 'wplocal_place_type', true );
 				}
 			}
 			$featured = get_post_meta( $post_id, '_wplocal_places_featured' );
@@ -841,7 +841,7 @@ class Wplocalplus_Lite_Admin {
 				$place_type = get_field( 'place_type', $review_place );
 				if ( ! empty( $place_type ) ) {
 					foreach ( $place_type as $type ) {
-						$term_id = wp_set_object_terms( $post_id, $type->slug, 'wplocal_place_type', false );
+						$term_id = wp_set_object_terms( $post_id, $type->slug, 'wplocal_place_type', true );
 					}
 				}
 			}
@@ -1295,7 +1295,7 @@ class Wplocalplus_Lite_Admin {
 							'label'             => '',
 							'name'              => 'image',
 							'type'              => 'image',
-							'instructions'      => '',
+							'instructions'      => '(Recommended Size : 650X250 pixels)',
 							'required'          => 0,
 							'conditional_logic' => 0,
 							'wrapper'           => array(

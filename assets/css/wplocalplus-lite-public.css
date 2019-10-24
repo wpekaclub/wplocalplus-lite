@@ -35,12 +35,19 @@ Places template CSS.
 	padding-right:20px;
 }
 .wplocal_places .wplocal_places_main .wplocal_places_main_image .wplocal_places_main_image_src {
-	width:240px;
+	width:100%;
 	height:auto;
 }
 .wplocal_places .wplocal_places_main .wplocal_places_main_content {
 	display: table-cell;
 	vertical-align:top;
+}
+.wplocal_places .wplocal_places_main .wplocal_places_main_content .wplocal_places_main_content_website a {
+	width: 15em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+	white-space: nowrap;
 }
 .wplocal_places .wplocal_places_main .wplocal_places_main_content .wplocal_places_main_content_ratings .jq-star,
 .wplocal_place .wplocal_place_main .wplocal_place_main_content .wplocal_place_main_content_place .wplocal_place_main_content_place_details .wplocal_place_main_content_details_ratings .jq-star,
@@ -125,6 +132,9 @@ Place template CSS.
 	margin:0;
 	padding:0;
 }
+.wplocal_place {
+	width: 650px;
+}
 .wplocal_place .wplocal_place_main li {
 	list-style: none;
 }
@@ -135,14 +145,16 @@ Place template CSS.
 	padding:10px;
 }
 .wplocal_place .wplocal_place_main .wplocal_place_main_image .wplocal_place_main_image_src {
-	width:100%;
-	height:250px;
+	margin: 0 auto;
 }
 .wplocal_place .wplocal_place_main .wplocal_place_main_content {
 	display:table;
+	width: 100%;
 }
 .wplocal_place .wplocal_place_main .wplocal_place_main_content .wplocal_place_main_content_place {
-	display:table-cell;vertical-align:top;
+	display:table-cell;
+	vertical-align:top;
+	width: 40%;
 }
 .wplocal_place .wplocal_place_main .wplocal_place_main_content .wplocal_place_main_content_place .wplocal_place_main_content_place_details,
 .wplocal_place .wplocal_place_main .wplocal_place_main_content .wplocal_place_main_content_place .wplocal_place_main_content_place_reviews,
@@ -151,6 +163,7 @@ Place template CSS.
 }
 .wplocal_place .wplocal_place_main .wplocal_place_main_content .wplocal_place_main_content_place .wplocal_place_main_content_place_reviews .wplocal_place_main_content_place_review .wplocal_place_main_content_place_review_author_image {
 	display:table-cell;
+	width: 25%;
 }
 .wplocal_place .wplocal_place_main .wplocal_place_main_content .wplocal_place_main_content_place .wplocal_place_main_content_place_reviews .wplocal_place_main_content_place_review .wplocal_place_main_content_place_review_author_image .wplocal_place_main_content_place_review_author_image_src,
 .wplocal_place .wplocal_place_main .wplocal_place_main_content .wplocal_place_main_content_place .wplocal_place_main_content_place_reviews .wplocal_place_main_content_place_review .wplocal_place_main_content_place_review_author_image .wplocal_place_main_content_place_review_author_image_no_src {
@@ -174,9 +187,9 @@ Place template CSS.
 	display:table-cell;
 	vertical-align:top;
 	padding:10px;
+	width: 60%;
 }
 .wplocal_place .wplocal_place_main .wplocal_place_main_content .wplocal_place_main_content_map .wplocal_place_main_content_map_google {
-	width:350px;
-	height:350px;
+	height:250px;
 	border: 1px dashed #C0C0C0;
 }

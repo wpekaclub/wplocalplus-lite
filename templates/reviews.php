@@ -69,7 +69,13 @@ while ( $q->have_posts() ) :
 					</li>
 					<li>
 						<div class="wplocal_reviews_main_author_name">
-							<strong><a style="text-decoration:none;" target="_blank" href="<?php echo esc_url( $author_url ); ?>"><?php echo esc_attr( $review_author ); ?></a></strong>
+							<strong>
+								<?php if ( isset( $author_url ) && ! empty( $author_url ) ) : ?>
+									<a style="text-decoration:none;" target="_blank" href="<?php echo esc_url( $author_url ); ?>"><?php echo esc_attr( $review_author ); ?></a>
+								<?php else : ?>
+									<a style="text-decoration:none;" href="#"><?php echo esc_attr( $review_author ); ?></a>
+								<?php endif; ?>
+							</strong>
 						</div>
 					</li>
 				</ul>
