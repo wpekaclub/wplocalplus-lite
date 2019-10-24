@@ -67,7 +67,13 @@ do_action( 'wplocalplus_lite_before_single_place_content' );
 								<div class="wplocal_place_main_content_place_review_details">
 									<span class="wplocal_place_main_content_place_review_details_title"><?php echo esc_attr( $review['review_title'] ); ?></span>
 									<span class="wplocal_place_main_content_place_review_details_author">
-										<strong><a target="_blank" href="<?php echo esc_url( $review['author_url'] ); ?>"><?php echo esc_attr( $review['author'] ); ?></a></strong>
+										<strong>
+											<?php if ( isset( $review['author_url'] ) && ! empty( $review['author_url'] ) ) : ?>
+												<a target="_blank" href="<?php echo esc_url( $review['author_url'] ); ?>"><?php echo esc_attr( $review['author'] ); ?></a>
+											<?php else : ?>
+												<a href="#"><?php echo esc_attr( $review['author'] ); ?></a>
+											<?php endif; ?>
+										</strong>
 									</span>
 								</div>
 							</li>

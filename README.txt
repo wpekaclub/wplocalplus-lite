@@ -4,8 +4,8 @@ Donate link: https://club.wpeka.com
 Tags: business directory, business listings, directory plugin, company business directory, local business directory, listings directory, link directory, member directory, staff directory
 Requires at least: 5.0+
 Requires PHP: 5.0
-Tested up to: 5.2.3
-Stable tag: 1.0
+Tested up to: 5.2.4
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,10 @@ WP Local Plus comes with the following features:
 5. List of businesses on the front end.
 
 == Changelog ==
+= 1.1 =
+Bug: Minor bug fixes.
+Update: Improved frontend UI design.
+
 = 1.0 =
 Feature: Initial version.
 

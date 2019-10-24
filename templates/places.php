@@ -40,21 +40,27 @@ endif;
 <?php
 while ( $q->have_posts() ) :
 	$q->the_post();
-	$places_post_id    = get_the_ID();
-	$name              = get_the_title();
-	$address           = get_field( 'address', $places_post_id );
-	$phone_number      = get_field( 'phone_number', $places_post_id );
-	$latitude          = get_field( 'latitude', $places_post_id );
-	$longitude         = get_field( 'longitude', $places_post_id );
-	$profile_url       = get_field( 'urls_profile', $places_post_id );
-	$website_url       = get_field( 'urls_website', $places_post_id );
-	$ratings           = get_field( 'ratings', $places_post_id );
-	$attachment_id     = get_field( 'image', $places_post_id );
-	$image_url         = wp_get_attachment_url( $attachment_id );
-	$location_data     = wp_get_post_terms( $places_post_id, 'wplocal_location' );
-	$place_type_data   = wp_get_post_terms( $places_post_id, 'wplocal_place_type' );
+	$places_post_id  = get_the_ID();
+	$name            = get_the_title();
+	$address         = get_field( 'address', $places_post_id );
+	$phone_number    = get_field( 'phone_number', $places_post_id );
+	$latitude        = get_field( 'latitude', $places_post_id );
+	$longitude       = get_field( 'longitude', $places_post_id );
+	$profile_url     = get_field( 'urls_profile', $places_post_id );
+	$website_url     = get_field( 'urls_website', $places_post_id );
+	$ratings         = get_field( 'ratings', $places_post_id );
+	$attachment_id   = get_field( 'image', $places_post_id );
+	$image_url       = wp_get_attachment_url( $attachment_id );
+	$location_data   = wp_get_post_terms( $places_post_id, 'wplocal_location' );
+	$place_type_data = wp_get_post_terms( $places_post_id, 'wplocal_place_type' );
+	$categories      = '';
+	if ( isset( $place_type_data ) && ! empty( $place_type_data ) ) {
+		foreach ( $place_type_data as $data ) {
+			$categories .= $data->name . ',';
+		}
+		$categories = rtrim( $categories, ', ' );
+	}
 	$location          = $location_data[0]->name;
-	$place_type        = $place_type_data[0]->name;
 	$custom            = get_post_custom( $places_post_id );
 	$place_id          = isset( $custom['_wplocal_places_place_id'][0] ) ? $custom['_wplocal_places_place_id'][0] : '';
 	$review_count      = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
@@ -99,11 +105,18 @@ while ( $q->have_posts() ) :
 		<div class="wplocal_places_main_content_categories">
 	<?php if ( ! empty( $sample_categories ) && isset( $places_source ) && 'google' !== $places_source ) : ?>
 		Categories : <?php echo esc_attr( $sample_categories ); ?>
-	<?php else : ?>
-		Categories : <?php echo esc_attr( $place_type ); ?>
+	<?php elseif ( ! empty( $categories ) ) : ?>
+		Categories : <?php echo esc_attr( $categories ); ?>
 	<?php endif; ?>
 		</div>
 	</li>
+    <?php if(isset($website_url) && !empty($website_url)) : ?>
+    <li>
+        <div class="wplocal_places_main_content_website">
+            <a target="_blank" href="<?php echo esc_url( $website_url ); ?>"><i class="fa fa-globe fa-1x"></i> <?php echo esc_url($website_url);?></a>
+        </div>
+    </li>
+    <?php endif; ?>
 	</ul>
 	</div>
 	</div>
