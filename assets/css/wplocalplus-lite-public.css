@@ -15,6 +15,9 @@ Places template CSS.
 	margin:0;
 	padding:0;
 }
+.wplocal_places .dashicons {
+	vertical-align: middle;
+}
 .wplocal_places li,
 .wplocal_places .wplocal_places_main .wplocal_places_main_content li {
 	list-style:none;
@@ -95,6 +98,9 @@ Reviews template CSS.
 }
 .wplocal_reviews .wplocal_reviews_main .wplocal_reviews_main_author li {
 	list-style:none;
+}
+.wplocal_reviews .wplocal_reviews_main .wplocal_reviews_main_author .wplocal_reviews_main_author_image {
+	text-align: center;
 }
 .wplocal_reviews .wplocal_reviews_main .wplocal_reviews_main_author .wplocal_reviews_main_author_image .wplocal_place_main_content_place_review_author_image_src {
 	width:75px;height:75px;margin:0 auto;

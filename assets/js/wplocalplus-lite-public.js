@@ -73,7 +73,25 @@
 					);
 				}
 			);
+			$( ".wplocal_places_sort" ).change(
+				function(){
+					var choice = $( this ).children( "option:selected" ).val();
+					$( "#wplocal_places_form" ).submit();
+				}
+			);
+			if (navigator && navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition( successCallback, errorCallback );
+			} else {
+				console.log( 'Geolocation is not supported' );
+			}
 		}
 	);
+	function errorCallback() {}
+
+	function successCallback(position) {
+		var lat = position.coords.latitude,
+			lon = position.coords.longitude;
+		$( ".wplocal_places_location" ).val( lat + ',' + lon );
+	}
 
 })( jQuery );

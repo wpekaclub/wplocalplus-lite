@@ -116,6 +116,13 @@ class Wplocalplus_Lite_Public {
 		if ( is_admin() ) {
 			return;
 		}
+		$choice = isset( $_GET['choice'] ) ? sanitize_text_field( wp_unslash( $_GET['choice'] ) ) : '';
+		$latlon = isset( $_GET['latlon'] ) ? sanitize_text_field( wp_unslash( $_GET['latlon'] ) ) : '';
+		if ( isset( $_POST['wplocal_places_sort'] ) ) {
+			check_admin_referer( 'places_sort' );
+			$choice = isset( $_POST['wplocal_places_sort'] ) ? sanitize_text_field( wp_unslash( $_POST['wplocal_places_sort'] ) ) : '';
+			$latlon = isset( $_POST['wplocal_places_location'] ) ? sanitize_text_field( wp_unslash( $_POST['wplocal_places_location'] ) ) : '';
+		}
 		ob_start();
 		wp_enqueue_style( $this->plugin_name );
 		wp_enqueue_script( $this->plugin_name );
@@ -135,11 +142,11 @@ class Wplocalplus_Lite_Public {
 		$req     = $wp->request;
 		$req_arr = explode( '/', $req );
 		if ( $req_arr ) {
-			$paged = array_pop( $req_arr );
+			$paged = (int) array_pop( $req_arr );
 		} else {
 			$paged = 1;
 		}
-		$atts       = shortcode_atts(
+		$atts        = shortcode_atts(
 			array(
 				'location' => 'cambridgema',
 				'type'     => 'hotels',
@@ -148,16 +155,12 @@ class Wplocalplus_Lite_Public {
 			),
 			$atts
 		);
-		$location   = $atts['location'];
-		$place_type = explode( ',', $atts['type'] );
-		$limit      = $atts['limit'];
-		$list       = $atts['list'];
-		$meta_key   = '_wplocal_places_featured';
-		if ( 'wplocal_reviews' === $list ) {
-			$meta_key = '_wplocal_reviews_featured';
-		}
-		$the_options      = Wplocalplus_Lite::wplocalplus_lite_get_settings();
-		$args             = array(
+		$location    = $atts['location'];
+		$place_type  = explode( ',', $atts['type'] );
+		$limit       = $atts['limit'];
+		$list        = $atts['list'];
+		$the_options = Wplocalplus_Lite::wplocalplus_lite_get_settings();
+		$args        = array(
 			'post_type'      => $list,
 			'numberposts'    => -1,
 			'post_status'    => 'publish',
@@ -176,28 +179,115 @@ class Wplocalplus_Lite_Public {
 					'terms'    => $place_type,
 				),
 			),
-			'meta_key'       => $meta_key, // phpcs:ignore slow query
-			'orderby'        => 'meta_value',
-			'order'          => 'DESC',
 		);
-		$q                = new WP_Query( $args );
+		if ( isset( $choice ) && '0' !== $choice ) {
+			$the_options['choice'] = $choice;
+			switch ( $choice ) {
+				case 'name':
+					$args['orderby'] = 'post_title';
+					$args['order']   = 'ASC';
+					break;
+				case 'ratings':
+					$args['meta_key'] = '_ratings'; // phpcs:ignore slow query
+					break;
+				case 'reviews':
+					$args['meta_key'] = '_wplocal_places_review_count'; // phpcs:ignore slow query
+					break;
+			}
+		}
+		$q = new WP_Query( $args );
+		if ( isset( $latlon ) && isset( $choice ) && 'latlon' === $choice ) {
+			$the_options['latlon'] = $latlon;
+			$q                     = apply_filters( 'wplocalplus_lite_filter_by_location', $q, $latlon );
+		}
 		$the_options['q'] = $q;
 		if ( 'wplocal_places' === $list ) {
 			$this->wplocalplus_lite_get_template( 'places.php', $the_options );
 		} elseif ( 'wplocal_reviews' === $list ) {
 			$this->wplocalplus_lite_get_template( 'reviews.php', $the_options );
 		}
-		$big = 999999;
+		$big           = 999999;
+		$paginate_args = array(
+			'base'    => str_replace( $big, '%#%', html_entity_decode( get_pagenum_link( $big ) ) ),
+			'format'  => '?paged=%#%',
+			'current' => max( 1, $paged ),
+			'total'   => $q->max_num_pages, // $q is your custom query.
+		);
+		if ( 'wplocal_places' === $list ) {
+			$paginate_args['add_args'] = array(
+				'choice' => $choice,
+				'latlon' => $latlon,
+			);
+		}
 		echo paginate_links( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			array(
-				'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-				'format'  => '?paged=%#%',
-				'current' => max( 1, $paged ),
-				'total'   => $q->max_num_pages, // $q is your custom query.
-			)
+			$paginate_args
 		);
 		wp_reset_postdata();
 		return ob_get_clean();
+	}
+
+	/**
+	 * Filter posts by location.
+	 *
+	 * @since 1.2
+	 * @param Object $q Query post.
+	 * @param String $latlon Latitude and Longitude.
+	 * @return mixed
+	 */
+	public function wplocalplus_lite_filter_by_location( $q, $latlon ) {
+		$position  = explode( ',', $latlon );
+		$latitude  = $position[0];
+		$longitude = $position[1];
+		$places    = $q->posts;
+		foreach ( $places as $place ) {
+			$place_id        = $place->ID;
+			$place_latitude  = get_field( 'latitude', $place_id );
+			$place_longitude = get_field( 'longitude', $place_id );
+			$place->distance = $this->wplocalplus_lite_calculate_distance( $latitude, $longitude, $place_latitude, $place_longitude, 'K' );
+		}
+		usort(
+			$places,
+			function( $place1, $place2 ) {
+				if ( $place1->distance === $place2->distance ) {
+					return 0;
+				}
+				return $place1->distance < $place2->distance ? -1 : 1;
+			}
+		);
+		$q->posts = $places;
+		return $q;
+	}
+
+	/**
+	 * Calculate distance between two points.
+	 *
+	 * @since 1.2
+	 * @param int    $lat1 Latitude 1.
+	 * @param int    $lon1 Longitude 1.
+	 * @param int    $lat2 Latitude 2.
+	 * @param int    $lon2 Longitude 2.
+	 * @param string $unit Unit.
+	 * @return float|int
+	 */
+	public function wplocalplus_lite_calculate_distance( $lat1, $lon1, $lat2, $lon2, $unit ) {
+		if ( ( $lat1 === $lat2 ) && ( $lon1 === $lon2 ) ) {
+			return 0;
+		} else {
+			$theta = $lon1 - $lon2;
+			$dist  = sin( deg2rad( $lat1 ) ) * sin( deg2rad( $lat2 ) ) + cos( deg2rad( $lat1 ) ) * cos( deg2rad( $lat2 ) ) * cos( deg2rad( $theta ) );
+			$dist  = acos( $dist );
+			$dist  = rad2deg( $dist );
+			$miles = $dist * 60 * 1.1515;
+			$unit  = strtoupper( $unit );
+
+			if ( 'K' === $unit ) {
+				return ( $miles * 1.609344 );
+			} elseif ( 'N' === $unit ) {
+				return ( $miles * 0.8684 );
+			} else {
+				return $miles;
+			}
+		}
 	}
 
 	/**
