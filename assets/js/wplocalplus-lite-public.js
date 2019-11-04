@@ -77,7 +77,7 @@
 				function(){
 					var choice = $( this ).children( "option:selected" ).val();
 					if (choice == 'latlon') {
-						if (navigator && navigator.geolocation) {
+						if (navigator && navigator.geolocation && navigator.geolocation.getCurrentPosition(successCallback, errorCallback)) {
 							$( "#wplocal_places_form" ).submit();
 						} else {
 							console.log('To use this feature, you should consider switching your application to a secure origin, such as HTTPS. See https://goo.gl/rStTGz for more details.');
@@ -87,15 +87,6 @@
 					}
 				}
 			);
-			if (navigator && navigator.geolocation) {
-				if(navigator.geolocation.getCurrentPosition( successCallback, errorCallback )) {
-
-				} else {
-					console.log('To use this feature, you should consider switching your application to a secure origin, such as HTTPS. See https://goo.gl/rStTGz for more details.');
-				}
-			} else {
-				console.log( 'Geolocation is not supported' );
-			}
 		}
 	);
 	function errorCallback() {}
