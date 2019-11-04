@@ -15,8 +15,13 @@ Places template CSS.
 	margin:0;
 	padding:0;
 }
-.wplocal_places .dashicons {
+.wplocal_places .dashicons,
+.wplocal_place .dashicons {
 	vertical-align: middle;
+}
+.wplocal_places .dashicons.dashicons-phone,
+.wplocal_place .dashicons.dashicons-phone {
+	transform: scaleX(-0.9);
 }
 .wplocal_places li,
 .wplocal_places .wplocal_places_main .wplocal_places_main_content li {

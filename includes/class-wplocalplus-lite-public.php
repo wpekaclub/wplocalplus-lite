@@ -118,10 +118,10 @@ class Wplocalplus_Lite_Public {
 		}
 		$choice = isset( $_GET['choice'] ) ? sanitize_text_field( wp_unslash( $_GET['choice'] ) ) : '';
 		$latlon = isset( $_GET['latlon'] ) ? sanitize_text_field( wp_unslash( $_GET['latlon'] ) ) : '';
-		if ( isset( $_POST['wplocal_places_sort'] ) ) {
+		if ( isset( $_GET['wplocal_places_sort'] ) ) {
 			check_admin_referer( 'places_sort' );
-			$choice = isset( $_POST['wplocal_places_sort'] ) ? sanitize_text_field( wp_unslash( $_POST['wplocal_places_sort'] ) ) : '';
-			$latlon = isset( $_POST['wplocal_places_location'] ) ? sanitize_text_field( wp_unslash( $_POST['wplocal_places_location'] ) ) : '';
+			$choice = isset( $_GET['wplocal_places_sort'] ) ? sanitize_text_field( wp_unslash( $_GET['wplocal_places_sort'] ) ) : '';
+			$latlon = isset( $_GET['wplocal_places_location'] ) ? sanitize_text_field( wp_unslash( $_GET['wplocal_places_location'] ) ) : '';
 		}
 		ob_start();
 		wp_enqueue_style( $this->plugin_name );
@@ -188,10 +188,12 @@ class Wplocalplus_Lite_Public {
 					$args['order']   = 'ASC';
 					break;
 				case 'ratings':
-					$args['meta_key'] = '_ratings'; // phpcs:ignore slow query
+					$args['meta_key'] = 'ratings'; // phpcs:ignore slow query
+					$args['orderby']  = 'meta_value_num';
 					break;
 				case 'reviews':
 					$args['meta_key'] = '_wplocal_places_review_count'; // phpcs:ignore slow query
+					$args['orderby']  = 'meta_value_num';
 					break;
 			}
 		}

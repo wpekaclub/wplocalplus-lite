@@ -37,7 +37,7 @@ if ( 1 === $show_map ) :
 endif;
 ?>
 <div class="wplocal_places_form">
-	<form id="wplocal_places_form" method="post" action="">
+	<form id="wplocal_places_form" method="get" action="">
 		<?php
 		if ( function_exists( 'wp_nonce_field' ) ) {
 			wp_nonce_field( 'places_sort' );

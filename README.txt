@@ -1,5 +1,5 @@
 === WP Local Plus: WordPress Business Directory Plugin ===
-Contributors: sandyr, WPEka Club
+Contributors: WPEka Club
 Donate link: https://club.wpeka.com
 Tags: business directory, business listings, directory plugin, company business directory, local business directory, listings directory, link directory, member directory, staff directory
 Requires at least: 5.0+
@@ -88,6 +88,11 @@ WP Local Plus comes with the following features:
 5. List of businesses on the front end.
 
 == Changelog ==
+= 1.2 =
+Feature: Sort functionality for listing on frontend.
+Fix: Lite and Pro activation issue.
+Fix: Reviews count not showing correctly for Places after adding new Reviews
+
 = 1.1 =
 Bug: Minor bug fixes.
 Update: Improved frontend UI design.

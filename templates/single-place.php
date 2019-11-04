@@ -47,7 +47,7 @@ do_action( 'wplocalplus_lite_before_single_place_content' );
 							</li>
 							<?php if ( isset( $phone_number ) && ! empty( $phone_number ) ) : ?>
 							<li>
-								<div class="wplocal_place_main_content_details_phone"><a href="tel://<?php echo esc_attr( rtrim( trim( $phone_number ), '()' ) ); ?>"><i class="fa fa-phone fa-1x"></i> <?php echo esc_attr( rtrim( trim( $phone_number ), '()' ) ); ?></a></div>
+								<div class="wplocal_place_main_content_details_phone"><a href="tel://<?php echo esc_attr( rtrim( trim( $phone_number ), '()' ) ); ?>"><span class="dashicons dashicons-phone"></span> <?php echo esc_attr( rtrim( trim( $phone_number ), '()' ) ); ?></a></div>
 							</li>
 							<?php endif; ?>
 						</ul>
