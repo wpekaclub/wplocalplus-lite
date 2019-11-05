@@ -448,17 +448,16 @@ class Wplocalplus_Lite_Admin {
 		}
 		wp_enqueue_style( $this->plugin_name );
 		$columns = array(
-			'cb'             => '<input type="checkbox" />',
-			'title'          => 'Name',
-			'place_type'     => 'Place Type',
-			'location'       => 'Location',
-			'address'        => 'Address',
-			'phone_number'   => 'Phone Number',
-			'ratings'        => 'Ratings',
-			'review_count'   => 'Review Count',
-			'place_featured' => 'Featured',
-			'source'         => 'Source',
-			'date'           => 'Date',
+			'cb'           => '<input type="checkbox" />',
+			'title'        => 'Name',
+			'place_type'   => 'Place Type',
+			'location'     => 'Location',
+			'address'      => 'Address',
+			'phone_number' => 'Phone Number',
+			'ratings'      => 'Ratings',
+			'review_count' => 'Review Count',
+			'source'       => 'Source',
+			'date'         => 'Date',
 		);
 		return $columns;
 	}
@@ -476,14 +475,13 @@ class Wplocalplus_Lite_Admin {
 		}
 		wp_enqueue_style( $this->plugin_name );
 		$columns = array(
-			'cb'              => '<input type="checkbox" />',
-			'title'           => 'Title',
-			'business_name'   => 'Business Name',
-			'review_rating'   => 'Ratings',
-			'review_author'   => 'Author',
-			'review_date'     => 'Review Date',
-			'review_featured' => 'Featured',
-			'review_source'   => 'Source',
+			'cb'            => '<input type="checkbox" />',
+			'title'         => 'Title',
+			'business_name' => 'Business Name',
+			'review_rating' => 'Ratings',
+			'review_author' => 'Author',
+			'review_date'   => 'Review Date',
+			'review_source' => 'Source',
 		);
 		return $columns;
 	}
@@ -535,18 +533,6 @@ class Wplocalplus_Lite_Admin {
 				$review_count = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
 				echo esc_attr( $review_count );
 				break;
-			case 'place_featured':
-				$custom   = get_post_custom();
-				$featured = isset( $custom['_wplocal_places_featured'][0] ) ? $custom['_wplocal_places_featured'][0] : '';
-				$url      = wp_nonce_url( admin_url( 'admin-ajax.php?action=wplocal_feature_place&place_id=' . $post->ID ), 'wplocal-feature-place' );
-				echo '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr__( 'Toggle featured', 'wplocalplus-lite' ) . '">';
-				if ( $featured && '1' === $featured ) {
-					echo '<span class="wplocal-featured" data-tip="' . esc_attr__( 'Yes', 'wplocalplus-lite' ) . '"></span>';
-				} else {
-					echo '<span class="wplocal-featured not-featured" data-tip="' . esc_attr__( 'No', 'wplocalplus-lite' ) . '"></span>';
-				}
-				echo '</a>';
-				break;
 			case 'source':
 				$custom = get_post_custom();
 				$source = isset( $custom['_wplocal_places_source'][0] ) ? $custom['_wplocal_places_source'][0] : '';
@@ -597,18 +583,6 @@ class Wplocalplus_Lite_Admin {
 				break;
 			case 'review_date':
 				echo esc_attr( get_field( 'review_date' ) );
-				break;
-			case 'review_featured':
-				$custom   = get_post_custom();
-				$featured = isset( $custom['_wplocal_reviews_featured'][0] ) ? $custom['_wplocal_reviews_featured'][0] : '';
-				$url      = wp_nonce_url( admin_url( 'admin-ajax.php?action=wplocal_feature_review&review_id=' . $post->ID ), 'wplocal-feature-review' );
-				echo '<a href="' . esc_url( $url ) . '" aria-label="' . esc_attr__( 'Toggle featured', 'wplocalplus-lite' ) . '">';
-				if ( $featured && '1' === $featured ) {
-					echo '<span class="wplocal-featured" data-tip="' . esc_attr__( 'Yes', 'wplocalplus-lite' ) . '"></span>';
-				} else {
-					echo '<span class="wplocal-featured not-featured" data-tip="' . esc_attr__( 'No', 'wplocalplus-lite' ) . '"></span>';
-				}
-				echo '</a>';
 				break;
 			case 'review_source':
 				$custom = get_post_custom();
@@ -724,48 +698,6 @@ class Wplocalplus_Lite_Admin {
 	}
 
 	/**
-	 * Toggle featured place.
-	 *
-	 * @since 1.0
-	 */
-	public function wplocalplus_lite_feature_place() {
-
-		if ( check_admin_referer( 'wplocal-feature-place' ) && isset( $_GET['place_id'] ) ) {
-			$post_id  = absint( $_GET['place_id'] );
-			$p_meta   = get_post_meta( $post_id, '_wplocal_places_featured' );
-			$featured = isset( $p_meta[0] ) ? $p_meta[0] : '0';
-			if ( ! $featured && '0' === $featured ) {
-				update_post_meta( $post_id, '_wplocal_places_featured', '1' );
-			} else {
-				update_post_meta( $post_id, '_wplocal_places_featured', '0' );
-			}
-		}
-		wp_safe_redirect( wp_get_referer() ? remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'ids' ), wp_get_referer() ) : admin_url( 'edit.php?post_type=wplocal_places' ) );
-		exit;
-	}
-
-	/**
-	 * Toggle featured review.
-	 *
-	 * @since 1.0
-	 */
-	public function wplocalplus_lite_feature_review() {
-
-		if ( check_admin_referer( 'wplocal-feature-review' ) && isset( $_GET['review_id'] ) ) {
-			$post_id  = absint( $_GET['review_id'] );
-			$p_meta   = get_post_meta( $post_id, '_wplocal_reviews_featured' );
-			$featured = isset( $p_meta[0] ) ? $p_meta[0] : '0';
-			if ( ! $featured && '0' === $featured ) {
-				update_post_meta( $post_id, '_wplocal_reviews_featured', '1' );
-			} else {
-				update_post_meta( $post_id, '_wplocal_reviews_featured', '0' );
-			}
-		}
-		wp_safe_redirect( wp_get_referer() ? remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'ids' ), wp_get_referer() ) : admin_url( 'edit.php?post_type=wplocal_reviews' ) );
-		exit;
-	}
-
-	/**
 	 * Save place.
 	 *
 	 * @since 1.0
@@ -800,6 +732,11 @@ class Wplocalplus_Lite_Admin {
 			if ( ! $source ) {
 				update_post_meta( $post_id, '_wplocal_places_source', 'manual' );
 			}
+			$custom       = get_post_custom( $post_id );
+			$review_count = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
+			if ( empty( $review_count ) ) {
+				update_post_meta( $post_id, '_wplocal_places_review_count', 0 );
+			}
 		}
 	}
 
@@ -827,6 +764,14 @@ class Wplocalplus_Lite_Admin {
 			if ( $review_place ) {
 				$post_parent = wp_get_post_parent_id( $post_id );
 				if ( 0 === $post_parent ) {
+					$custom       = get_post_custom( $review_place );
+					$review_count = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
+					if ( ! empty( $review_count ) ) {
+						$review_count++;
+					} else {
+						$review_count = 1;
+					}
+					update_post_meta( $review_place, '_wplocal_places_review_count', $review_count );
 					wp_update_post(
 						array(
 							'ID'          => $post_id,
@@ -867,7 +812,7 @@ class Wplocalplus_Lite_Admin {
 		$posts = get_posts( $args );
 
 		if ( is_array( $posts ) && count( $posts ) > 0 ) {
-			// Delete all the Children of the Parent Page.
+			// Trash all the Children of the Parent Page.
 			foreach ( $posts as $post ) {
 				wp_trash_post( $post->ID );
 			}
@@ -921,11 +866,47 @@ class Wplocalplus_Lite_Admin {
 		$posts = get_posts( $args );
 
 		if ( is_array( $posts ) && count( $posts ) > 0 ) {
-			// Delete all the Children of the Parent Page.
+			// Untrash all the Children of the Parent Page.
 			foreach ( $posts as $post ) {
 				wp_untrash_post( $post->ID );
 			}
 		}
+	}
+
+	/**
+	 * Trash custom post review count associated with place.
+	 *
+	 * @since 1.2
+	 * @param int $post_id Post ID.
+	 */
+	public function wplocalplus_lite_trash_custom_review_post( $post_id ) {
+		$post = get_post( $post_id );
+		if ( WPLOCALPLUS_REVIEW_POST_TYPE !== $post->post_type ) {
+			return;
+		}
+		$parent_post  = get_post( $post->post_parent );
+		$custom       = get_post_custom( $parent_post->ID );
+		$review_count = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
+		$review_count--;
+		update_post_meta( $parent_post->ID, '_wplocal_places_review_count', $review_count );
+	}
+
+	/**
+	 * Restore custom post review count associated with place.
+	 *
+	 * @since 1.2
+	 * @param int $post_id Post ID.
+	 */
+	public function wplocalplus_lite_untrash_custom_review_post( $post_id ) {
+		$post = get_post( $post_id );
+		if ( WPLOCALPLUS_REVIEW_POST_TYPE !== $post->post_type ) {
+			return;
+		}
+		$parent_post  = get_post( $post->post_parent );
+		$custom       = get_post_custom( $parent_post->ID );
+		$review_count = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
+		$review_count++;
+		update_post_meta( $parent_post->ID, '_wplocal_places_review_count', $review_count );
 	}
 
 	/**

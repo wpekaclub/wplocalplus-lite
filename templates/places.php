@@ -36,6 +36,47 @@ if ( 1 === $show_map ) :
 	do_action( 'wplocalplus_lite_make_google_map', $q );
 endif;
 ?>
+<div class="wplocal_places_form">
+	<form id="wplocal_places_form" method="get" action="">
+		<?php
+		if ( function_exists( 'wp_nonce_field' ) ) {
+			wp_nonce_field( 'places_sort' );
+		}
+		?>
+		<input type="hidden" class="wplocal_places_location" name="wplocal_places_location" value="" />
+		<select class="wplocal_places_sort" name="wplocal_places_sort">
+			<option value="0">Sort By</option>
+			<option value="latlon" 
+			<?php
+			if ( isset( $choice ) && 'latlon' === $choice ) :
+				echo 'selected';
+			endif;
+			?>
+			>Distance</option>
+			<option value="name" 
+			<?php
+			if ( isset( $choice ) && 'name' === $choice ) :
+				echo 'selected';
+endif;
+			?>
+			>Business Title</option>
+			<option value="ratings" 
+			<?php
+			if ( isset( $choice ) && 'ratings' === $choice ) :
+				echo 'selected';
+endif;
+			?>
+			>Ratings</option>
+			<option value="reviews" 
+			<?php
+			if ( isset( $choice ) && 'reviews' === $choice ) :
+				echo 'selected';
+endif;
+			?>
+			>Reviews</option>
+		</select>
+	</form>
+</div>
 <ul class="wplocal_places">
 <?php
 while ( $q->have_posts() ) :
@@ -63,7 +104,7 @@ while ( $q->have_posts() ) :
 	$location          = $location_data[0]->name;
 	$custom            = get_post_custom( $places_post_id );
 	$place_id          = isset( $custom['_wplocal_places_place_id'][0] ) ? $custom['_wplocal_places_place_id'][0] : '';
-	$review_count      = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
+	$review_count      = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : 0;
 	$sample_categories = isset( $custom['_wplocal_places_sample_categories'][0] ) ? $custom['_wplocal_places_sample_categories'][0] : '';
 	$places_source     = isset( $custom['_wplocal_places_source'][0] ) ? $custom['_wplocal_places_source'][0] : '';
 	$lat_long          = $latitude . ',' . $longitude;
@@ -98,7 +139,7 @@ while ( $q->have_posts() ) :
 	</li>
 	<li>
 	<?php if ( isset( $phone_number ) && ! empty( $phone_number ) ) : ?>
-		<div class="wplocal_places_main_content_phone"><a href="tel://<?php echo esc_attr( rtrim( trim( $phone_number ), '()' ) ); ?>"><i class="fa fa-phone fa-1x"></i> <?php echo esc_attr( rtrim( trim( $phone_number ), '()' ) ); ?></a></div>
+		<div class="wplocal_places_main_content_phone"><a href="tel://<?php echo esc_attr( rtrim( trim( $phone_number ), '()' ) ); ?>"><span class="dashicons dashicons-phone"></span> <?php echo esc_attr( rtrim( trim( $phone_number ), '()' ) ); ?></a></div>
 	<?php endif; ?>
 	</li>
 	<li>
@@ -110,13 +151,13 @@ while ( $q->have_posts() ) :
 	<?php endif; ?>
 		</div>
 	</li>
-    <?php if(isset($website_url) && !empty($website_url)) : ?>
-    <li>
-        <div class="wplocal_places_main_content_website">
-            <a target="_blank" href="<?php echo esc_url( $website_url ); ?>"><i class="fa fa-globe fa-1x"></i> <?php echo esc_url($website_url);?></a>
-        </div>
-    </li>
-    <?php endif; ?>
+	<?php if ( isset( $website_url ) && ! empty( $website_url ) ) : ?>
+	<li>
+		<div class="wplocal_places_main_content_website">
+			<a target="_blank" href="<?php echo esc_url( $website_url ); ?>"><span class="dashicons dashicons-admin-site-alt3"></span> <?php echo esc_url( $website_url ); ?></a>
+		</div>
+	</li>
+	<?php endif; ?>
 	</ul>
 	</div>
 	</div>

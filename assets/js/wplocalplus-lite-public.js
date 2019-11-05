@@ -73,7 +73,33 @@
 					);
 				}
 			);
+			$( ".wplocal_places_sort" ).change(
+				function(){
+					if (navigator && navigator.geolocation) {
+						navigator.geolocation.getCurrentPosition( successCallback, errorCallback );
+					} else {
+						console.log( 'To use this feature, you should consider switching your application to a secure origin, such as HTTPS. See https://goo.gl/rStTGz for more details.' );
+					}
+				}
+			);
 		}
 	);
+	function errorCallback(error) {
+		if (error.PERMISSION_DENIED) {
+			var choice = $( '.wplocal_places_sort' ).children( "option:selected" ).val();
+			if (choice == 'latlon') {
+				alert( 'Geolocation is not enabled. Please enable to use this feature.' );
+			} else {
+				$( "#wplocal_places_form" ).submit();
+			}
+		}
+	}
+
+	function successCallback(position) {
+		var lat = position.coords.latitude,
+			lon = position.coords.longitude;
+		$( ".wplocal_places_location" ).val( lat + ',' + lon );
+		$( "#wplocal_places_form" ).submit();
+	}
 
 })( jQuery );

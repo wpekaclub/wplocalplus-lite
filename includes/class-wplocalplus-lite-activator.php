@@ -29,7 +29,9 @@ class Wplocalplus_Lite_Activator {
 	 * @since    1.0
 	 */
 	public static function activate() {
-
+		if ( is_plugin_active( 'wplocalplus/wplocalplus.php' ) ) {
+			deactivate_plugins( 'wplocalplus/wplocalplus.php' );
+		}
 	}
 
 }

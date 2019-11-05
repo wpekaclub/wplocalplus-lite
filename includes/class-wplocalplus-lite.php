@@ -69,7 +69,7 @@ class Wplocalplus_Lite {
 		if ( defined( 'WPLOCALPLUS_LITE_VERSION' ) ) {
 			$this->version = WPLOCALPLUS_LITE_VERSION;
 		} else {
-			$this->version = '1.1';
+			$this->version = '1.2';
 		}
 		$this->plugin_name = 'wplocalplus-lite';
 
@@ -173,13 +173,13 @@ class Wplocalplus_Lite {
 		$this->loader->add_filter( 'post_row_actions', $plugin_admin, 'wplocalplus_lite_row_actions', 10, 2 );
 		$this->loader->add_filter( 'wplocal_place_type_row_actions', $plugin_admin, 'wplocalplus_lite_taxonomy_row_actions', 10, 2 );
 		$this->loader->add_filter( 'wplocal_location_row_actions', $plugin_admin, 'wplocalplus_lite_taxonomy_row_actions', 10, 2 );
-		$this->loader->add_action( 'wp_ajax_wplocal_feature_place', $plugin_admin, 'wplocalplus_lite_feature_place' );
-		$this->loader->add_action( 'wp_ajax_wplocal_feature_review', $plugin_admin, 'wplocalplus_lite_feature_review' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'wplocalplus_lite_places_save_custom_post' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'wplocalplus_lite_reviews_save_custom_post' );
 		$this->loader->add_action( 'wp_trash_post', $plugin_admin, 'wplocalplus_lite_trash_custom_post' );
+		$this->loader->add_action( 'wp_trash_post', $plugin_admin, 'wplocalplus_lite_trash_custom_review_post' );
 		$this->loader->add_action( 'delete_post', $plugin_admin, 'wplocalplus_lite_delete_custom_post' );
 		$this->loader->add_action( 'untrash_post', $plugin_admin, 'wplocalplus_lite_untrash_custom_post' );
+		$this->loader->add_action( 'untrash_post', $plugin_admin, 'wplocalplus_lite_untrash_custom_review_post' );
 		$this->loader->add_action( 'init', $plugin_admin, 'wplocalplus_lite_register_block_type' );
 		$this->loader->add_action( 'admin_head', $plugin_admin, 'wplocalplus_lite_highlight_menu' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'wplocalplus_lite_add_metaboxes' );
@@ -203,7 +203,8 @@ class Wplocalplus_Lite {
 		$this->loader->add_action( 'wplocalplus_lite_make_google_map', $plugin_public, 'wplocalplus_lite_make_google_map', 10, 1 );
 		$this->loader->add_action( 'wp_ajax_wplocalplus_lite_place_details', $plugin_public, 'wplocalplus_lite_place_details' );
 		$this->loader->add_action( 'wp_ajax_nopriv_wplocalplus_lite_place_details', $plugin_public, 'wplocalplus_lite_place_details' );
-		$this->loader->add_action( 'wplocalplus_lite_after_single_place_content', $plugin_public, 'wplocalplus_lite_after_single_place_content', 10, 2 );
+		$this->loader->add_action( 'wplocalplus_lite_after_single_place_content', $plugin_public, 'wplocalplus_lite_after_single_place_content', 10, 3 );
+		$this->loader->add_filter( 'wplocalplus_lite_filter_by_location', $plugin_public, 'wplocalplus_lite_filter_by_location', 10, 2 );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
