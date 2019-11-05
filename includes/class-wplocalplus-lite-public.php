@@ -350,8 +350,9 @@ class Wplocalplus_Lite_Public {
 	 * @since 1.0
 	 * @param int $latitude Latitude.
 	 * @param int $longitude Longitude.
+	 * @param int $show_map Show Map.
 	 */
-	public function wplocalplus_lite_after_single_place_content( $latitude, $longitude ) {
+	public function wplocalplus_lite_after_single_place_content( $latitude, $longitude, $show_map ) {
 		echo '<script type="text/javascript">';
 		echo 'jQuery(".wplocal_place_main_content_details_ratings").starRating({
             totalStars: 5,
@@ -360,7 +361,8 @@ class Wplocalplus_Lite_Public {
             starSize: 15,
             readOnly: true
         });';
-		echo 'jQuery("#gmap3").gmap3(
+		if ( 1 === $show_map ) {
+			echo 'jQuery("#gmap3").gmap3(
               { action:"init",
                 options:{
                   center:[' . esc_attr( $latitude ) . ',' . esc_attr( $longitude ) . '],
@@ -371,6 +373,7 @@ class Wplocalplus_Lite_Public {
                 latLng:[' . esc_attr( $latitude ) . ', ' . esc_attr( $longitude ) . ']
               }
             );';
+		}
 		echo '</script>';
 	}
 

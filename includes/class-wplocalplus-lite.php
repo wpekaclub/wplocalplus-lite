@@ -203,7 +203,7 @@ class Wplocalplus_Lite {
 		$this->loader->add_action( 'wplocalplus_lite_make_google_map', $plugin_public, 'wplocalplus_lite_make_google_map', 10, 1 );
 		$this->loader->add_action( 'wp_ajax_wplocalplus_lite_place_details', $plugin_public, 'wplocalplus_lite_place_details' );
 		$this->loader->add_action( 'wp_ajax_nopriv_wplocalplus_lite_place_details', $plugin_public, 'wplocalplus_lite_place_details' );
-		$this->loader->add_action( 'wplocalplus_lite_after_single_place_content', $plugin_public, 'wplocalplus_lite_after_single_place_content', 10, 2 );
+		$this->loader->add_action( 'wplocalplus_lite_after_single_place_content', $plugin_public, 'wplocalplus_lite_after_single_place_content', 10, 3 );
 		$this->loader->add_filter( 'wplocalplus_lite_filter_by_location', $plugin_public, 'wplocalplus_lite_filter_by_location', 10, 2 );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );

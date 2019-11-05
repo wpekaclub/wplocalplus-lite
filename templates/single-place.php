@@ -98,6 +98,6 @@ do_action( 'wplocalplus_lite_before_single_place_content' );
 /**
  * Hook - wplocalplus_lite_after_main_content.
  */
-do_action( 'wplocalplus_lite_after_single_place_content', $latitude, $longitude );
+do_action( 'wplocalplus_lite_after_single_place_content', $latitude, $longitude, $show_map );
 
 /* Omit closing PHP tag at the end of PHP files to avoid "headers already sent" issues. */
