@@ -176,8 +176,10 @@ class Wplocalplus_Lite {
 		$this->loader->add_action( 'save_post', $plugin_admin, 'wplocalplus_lite_places_save_custom_post' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'wplocalplus_lite_reviews_save_custom_post' );
 		$this->loader->add_action( 'wp_trash_post', $plugin_admin, 'wplocalplus_lite_trash_custom_post' );
+		$this->loader->add_action( 'wp_trash_post', $plugin_admin, 'wplocalplus_lite_trash_custom_review_post' );
 		$this->loader->add_action( 'delete_post', $plugin_admin, 'wplocalplus_lite_delete_custom_post' );
 		$this->loader->add_action( 'untrash_post', $plugin_admin, 'wplocalplus_lite_untrash_custom_post' );
+		$this->loader->add_action( 'untrash_post', $plugin_admin, 'wplocalplus_lite_untrash_custom_review_post' );
 		$this->loader->add_action( 'init', $plugin_admin, 'wplocalplus_lite_register_block_type' );
 		$this->loader->add_action( 'admin_head', $plugin_admin, 'wplocalplus_lite_highlight_menu' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'wplocalplus_lite_add_metaboxes' );

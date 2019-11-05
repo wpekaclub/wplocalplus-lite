@@ -764,25 +764,20 @@ class Wplocalplus_Lite_Admin {
 			if ( $review_place ) {
 				$post_parent = wp_get_post_parent_id( $post_id );
 				if ( 0 === $post_parent ) {
+					$custom       = get_post_custom( $review_place );
+					$review_count = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
+					if ( ! empty( $review_count ) ) {
+						$review_count++;
+					} else {
+						$review_count = 1;
+					}
+					update_post_meta( $review_place, '_wplocal_places_review_count', $review_count );
 					wp_update_post(
 						array(
 							'ID'          => $post_id,
 							'post_parent' => $review_place,
 						)
 					);
-				} else {
-					$custom       = get_post_custom( $review_place );
-					$review_count = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
-					if ( ! empty( $review_count ) ) {
-						if ( 'publish' === $post->post_status ) {
-							$review_count++;
-						} elseif ( 'trash' === $post->post_status ) {
-							$review_count--;
-						}
-					} else {
-						$review_count = 1;
-					}
-					update_post_meta( $review_place, '_wplocal_places_review_count', $review_count );
 				}
 				$location = get_field( 'location', $review_place );
 				if ( ! empty( $location ) ) {
@@ -876,6 +871,42 @@ class Wplocalplus_Lite_Admin {
 				wp_untrash_post( $post->ID );
 			}
 		}
+	}
+
+	/**
+	 * Trash custom post review count associated with place.
+	 *
+	 * @since 1.2
+	 * @param int $post_id Post ID.
+	 */
+	public function wplocalplus_lite_trash_custom_review_post( $post_id ) {
+		$post = get_post( $post_id );
+		if ( WPLOCALPLUS_REVIEW_POST_TYPE !== $post->post_type ) {
+			return;
+		}
+		$parent_post  = get_post( $post->post_parent );
+		$custom       = get_post_custom( $parent_post->ID );
+		$review_count = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
+		$review_count--;
+		update_post_meta( $parent_post->ID, '_wplocal_places_review_count', $review_count );
+	}
+
+	/**
+	 * Restore custom post review count associated with place.
+	 *
+	 * @since 1.2
+	 * @param int $post_id Post ID.
+	 */
+	public function wplocalplus_lite_untrash_custom_review_post( $post_id ) {
+		$post = get_post( $post_id );
+		if ( WPLOCALPLUS_REVIEW_POST_TYPE !== $post->post_type ) {
+			return;
+		}
+		$parent_post  = get_post( $post->post_parent );
+		$custom       = get_post_custom( $parent_post->ID );
+		$review_count = isset( $custom['_wplocal_places_review_count'][0] ) ? $custom['_wplocal_places_review_count'][0] : '';
+		$review_count++;
+		update_post_meta( $parent_post->ID, '_wplocal_places_review_count', $review_count );
 	}
 
 	/**
