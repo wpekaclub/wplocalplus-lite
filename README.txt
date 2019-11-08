@@ -1,4 +1,4 @@
-=== WP Local Plus: WordPress Business Directory Plugin ===
+=== WP Local Plus: WordPress Directory Plugin ===
 Contributors: WPEka Club
 Donate link: https://club.wpeka.com
 Tags: business directory, business listings, directory plugin, company business directory, local business directory, listings directory, link directory, member directory, staff directory
@@ -9,19 +9,21 @@ Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Popular WordPress business directory plugin that you can use to add a revenue generating business directory to your  website.
+Create a business directory and show it on your website using this easy-to-use, free business directory plugin for WordPress.
 
 == Description ==
 
-= WordPress Local Business Directory Plugin =
+= WordPress Directory Plugin =
 
-[WP Local Plus](https://club.wpeka.com/products/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=wp-local-plus) is the most powerful and user-friendly WordPress business directory plugin.
+[WP Local Plus](https://club.wpeka.com/products/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=wp-local-plus) is a powerful and user-friendly WordPress directory plugin.
 
-This business listing plugin helps you showcase businesses in your locality along with contact details. You can also show business reviews and ratings.
+Create businesses
+
+This WordPress business directory plugin helps you showcase businesses in your locality along with contact details. You can also show business reviews and ratings.
 
 WP Local Plus can be used for:
 
-- Building business directory websites
+- Building business directory WordPress websites
 
 - Show hotels and facilities near an event venue on event websites
 
