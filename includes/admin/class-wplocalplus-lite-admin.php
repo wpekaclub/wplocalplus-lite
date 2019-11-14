@@ -137,6 +137,7 @@ class Wplocalplus_Lite_Admin {
 			$this->plugin_name . '-block',
 			WPLOCALPLUS_LITE_ASSETS_URL . 'js/blocks/wplocalplus-lite-block.js',
 			array(
+				'jquery',
 				'wp-blocks',
 				'wp-i18n',
 				'wp-editor',
