@@ -103,4 +103,4 @@
             return null; // Save has to exist. This all we need.
         }
     });
-})();
+})( jQuery );
