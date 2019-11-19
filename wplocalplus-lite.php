@@ -44,7 +44,7 @@ if ( ! function_exists( 'wlp_fs' ) ) {
 					'slug'            => 'wplocalplus-lite',
 					'product_name'    => 'WP Local Plus Lite',
 					'module_type'     => 'plugin',
-					'version'         => '1.7',
+					'version'         => '1.4',
 					'plugin_basename' => 'wplocalplus-lite/wplocalplus-lite.php',
 				)
 			);
