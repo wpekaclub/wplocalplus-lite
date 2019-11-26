@@ -5,7 +5,7 @@ Tags: business directory, business listings, directory plugin, company business 
 Requires at least: 5.0+
 Requires PHP: 5.0
 Tested up to: 5.3
-Stable tag: 1.4
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,6 +90,9 @@ WP Local Plus comes with the following features:
 5. List of businesses on the front end.
 
 == Changelog ==
+= 1.4.1 =
+Fix: Fatal error if Analytics SDK is included in two or more plugins installed on same instance
+
 = 1.4 =
 Feature: Added feedback form on Plugin deactivation
 
