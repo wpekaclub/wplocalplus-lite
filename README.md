@@ -1,19 +1,19 @@
-=== WP Local Plus: WordPress Directory Plugin ===
-Contributors: WPEka Club
-Donate link: https://club.wpeka.com
-Tags: business directory, business listings, directory plugin, company business directory, local business directory, listings directory, link directory, member directory, staff directory
-Requires at least: 5.0+
-Requires PHP: 5.0
-Tested up to: 5.3
-Stable tag: 1.4.2
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+# WP Local Plus: WordPress Directory Plugin #
+**Contributors:** [WPEka Club](https://profiles.wordpress.org/WPEka Club)  
+**Donate link:** https://club.wpeka.com  
+**Tags:** business directory, business listings, directory plugin, company business directory, local business directory, listings directory, link directory, member directory, staff directory  
+**Requires at least:** 5.0+  
+**Requires PHP:** 5.0  
+**Tested up to:** 5.3  
+**Stable tag:** 1.4.2  
+**License:** GPLv2 or later  
+**License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
 Create a business directory and show it on your website using this easy-to-use, free business directory plugin for WordPress.
 
-== Description ==
+## Description ##
 
-= WordPress Directory Plugin =
+### WordPress Directory Plugin ###
 
 [WP Local Plus](https://club.wpeka.com/products/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=wp-local-plus) is a powerful and user-friendly WordPress directory plugin.
 
@@ -37,7 +37,7 @@ In short, WP Local Plus helps you build a local business directory, showcase bus
 > WP Local Plus works differently. By pulling data from Google you can create a directory almost instantly whereas normally you would spend weeks or months trying to fill your directory with data.
 > Kevin Muldoon from WPHub
 
-== Features ==
+## Features ##
 
 WP Local Plus comes with the following features:
 
@@ -81,7 +81,7 @@ WP Local Plus comes with the following features:
 >
 > Get the [pro version](https://club.wpeka.com/products/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=pro-version) of WP Local Plus.
 
-== Screenshots ==
+## Screenshots ##
 
 1. Google Static Maps API Settings.
 2. Add/Edit a business.
@@ -89,32 +89,32 @@ WP Local Plus comes with the following features:
 4. Add businesses to a page using the WP Local Plus block.
 5. List of businesses on the front end.
 
-== Changelog ==
-= 1.4.2 =
+## Changelog ##
+### 1.4.2 ###
 Feature: Added wizard for user consent on plugin activation.
 
-= 1.4.1 =
+### 1.4.1 ###
 Fix: Fatal error if Analytics SDK is included in two or more plugins installed on same instance
 
-= 1.4 =
+### 1.4 ###
 Feature: Added feedback form on Plugin deactivation
 
-= 1.3 =
+### 1.3 ###
 Fix: Compatibility with WordPress 5.3
 
-= 1.2 =
+### 1.2 ###
 Feature: Sort functionality for listing on frontend.
 Fix: Lite and Pro activation issue.
 Fix: Reviews count not showing correctly for Places after adding new Reviews
 
-= 1.1 =
+### 1.1 ###
 Bug: Minor bug fixes.
 Update: Improved frontend UI design.
 
-= 1.0 =
+### 1.0 ###
 Feature: Initial version.
 
-== What Next? ==
+## What Next? ##
 
 If you like this plugin, then consider checking out our other projects:
 

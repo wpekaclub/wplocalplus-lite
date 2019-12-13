@@ -15,7 +15,7 @@
  * Plugin Name:       WP Local Plus
  * Plugin URI:        https://club.wpeka.com/
  * Description:       WordPress Business Directory Plugin
- * Version:           1.4.1
+ * Version:           1.4.2
  * Author:            WPeka
  * Author URI:        https://club.wpeka.com
  * License:           GPL-2.0+
@@ -44,7 +44,7 @@ if ( ! function_exists( 'wlp_fs' ) ) {
 					'slug'            => 'wplocalplus-lite',
 					'product_name'    => 'WP Local Plus Lite',
 					'module_type'     => 'plugin',
-					'version'         => '1.4.1',
+					'version'         => '1.4.2',
 					'plugin_basename' => 'wplocalplus-lite/wplocalplus-lite.php',
 				)
 			);
@@ -92,7 +92,7 @@ function wplocalplus_lite_acf_settings_show_admin( $show_admin ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 if ( ! defined( 'WPLOCALPLUS_LITE_VERSION' ) ) {
-	define( 'WPLOCALPLUS_LITE_VERSION', '1.4.1' );
+	define( 'WPLOCALPLUS_LITE_VERSION', '1.4.2' );
 }
 if ( ! defined( 'WPLOCALPLUS_PLACE_POST_TYPE' ) ) {
 	define( 'WPLOCALPLUS_PLACE_POST_TYPE', 'wplocal_places' );
@@ -120,6 +120,7 @@ if ( ! defined( 'WPLOCALPLUS_LITE_SETTINGS_FIELD' ) ) {
 function activate_wplocalplus_lite() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-wplocalplus-lite-activator.php';
 	Wplocalplus_Lite_Activator::activate();
+	add_option( 'analytics_activation_redirect_wplocalplus-lite', true );
 }
 
 /**
