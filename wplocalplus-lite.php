@@ -29,6 +29,10 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+if ( ! defined( 'WPLOCALPLUS_LITE_PLUGIN_URL' ) ) {
+    define( 'WPLOCALPLUS_LITE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+}
+
 if ( ! function_exists( 'wlp_fs' ) ) {
 	// Helper function to access SDK.
 	function wlp_fs() {
@@ -46,6 +50,7 @@ if ( ! function_exists( 'wlp_fs' ) ) {
 					'module_type'     => 'plugin',
 					'version'         => '1.4.2',
 					'plugin_basename' => 'wplocalplus-lite/wplocalplus-lite.php',
+                    'plugin_url'      => WPLOCALPLUS_LITE_PLUGIN_URL,
 				)
 			);
 		}
@@ -105,9 +110,6 @@ if ( ! defined( 'WPLOCALPLUS_LITE_ASSETS_URL' ) ) {
 }
 if ( ! defined( 'WPLOCALPLUS_LITE_PLUGIN_PATH' ) ) {
 	define( 'WPLOCALPLUS_LITE_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-}
-if ( ! defined( 'WPLOCALPLUS_LITE_PLUGIN_URL' ) ) {
-	define( 'WPLOCALPLUS_LITE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 }
 if ( ! defined( 'WPLOCALPLUS_LITE_SETTINGS_FIELD' ) ) {
 	define( 'WPLOCALPLUS_LITE_SETTINGS_FIELD', 'wplocalplus_1.0' );
