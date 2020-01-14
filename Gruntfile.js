@@ -62,7 +62,7 @@ module.exports = function (grunt) {
 					options: {
 						updateDomains: true
 					},
-					src: ['*.php', '**/*.php', '!\.git/**/*', '!bin/**/*', '!node_modules/**/*', '!tests/**/*', '!vendor/**/*', '!includes/libraries/acf/**/*']
+					src: ['*.php', '**/*.php', '!\.git/**/*', '!bin/**/*', '!node_modules/**/*', '!tests/**/*', '!vendor/**/*', '!analytics/**/*', '!includes/libraries/acf/**/*']
 				}
 			},
 
@@ -78,7 +78,7 @@ module.exports = function (grunt) {
 				target: {
 					options: {
 						domainPath: '/languages',
-						exclude: ['\.git/*', 'bin/*', 'node_modules/*', 'tests/*', '!vendor/**/*', '!includes/libraries/acf/**/*'],
+						exclude: ['\.git/*', 'bin/*', 'node_modules/*', 'tests/*', '!vendor/**/*', '!includes/libraries/acf/**/*', '!analytics/**/*'],
 						mainFile: 'wplocalplus-lite.php',
 						potFilename: 'wplocalplus-lite.pot',
 						potHeaders: {

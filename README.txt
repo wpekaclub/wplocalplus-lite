@@ -91,7 +91,7 @@ WP Local Plus comes with the following features:
 
 == Changelog ==
 = 1.4.2 =
-Feature: Added wizard for user consent on plugin activation.
+Update: Minor plugin updates.
 
 = 1.4.1 =
 Fix: Fatal error if Analytics SDK is included in two or more plugins installed on same instance
