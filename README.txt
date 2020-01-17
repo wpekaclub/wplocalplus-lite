@@ -61,7 +61,7 @@ WP Local Plus comes with the following features:
 
 - Compatible with the latest PHP & WordPress versions.
 
-> == Pro Features ==
+== Pro Features ==
 >
 > - <strong>Google Places support:</strong> Import businesses from Google Places. Save hours of work adding new businesses.
 >
