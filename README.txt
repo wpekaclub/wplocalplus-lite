@@ -15,7 +15,7 @@ Create a business directory and show it on your website using this easy-to-use, 
 
 = WordPress Directory Plugin =
 
-[WP Local Plus](https://club.wpeka.com/products/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=wp-local-plus) is a powerful and user-friendly WordPress directory plugin.
+[WP Local Plus](https://club.wpeka.com/product/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=wp-local-plus) is a powerful and user-friendly WordPress directory plugin.
 
 Create businesses
 
@@ -79,7 +79,7 @@ WP Local Plus comes with the following features:
 >
 > - <strong>Reviews & Ratings:</strong> Show business reviews and ratings.
 >
-> Get the [pro version](https://club.wpeka.com/products/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=pro-version) of WP Local Plus.
+> Get the [pro version](https://club.wpeka.com/product/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=pro-version) of WP Local Plus.
 
 == Screenshots ==
 
