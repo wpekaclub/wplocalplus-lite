@@ -1,4 +1,4 @@
-# WP Local Plus: WordPress Directory Plugin #
+# WordPress Directory Plugin For Business Listings -  WP Local Plus #
 **Contributors:** [WPEka Club](https://profiles.wordpress.org/WPEka Club)  
 **Donate link:** https://club.wpeka.com  
 **Tags:** business directory, business listings, directory plugin, company business directory, local business directory, listings directory, link directory, member directory, staff directory  
@@ -9,13 +9,13 @@
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
-Create a business directory and show it on your website using this easy-to-use, free business directory plugin for WordPress.
+WP Local Plus is a WordPress directory plugin that helps you build Professional Business Listings directory for local businesses like Google Places, Yelp.com, or Yahoo! Local.
 
 ## Description ##
 
-### WordPress Directory Plugin ###
+### WordPress Business Directory Plugin : Free Version ###
 
-[WP Local Plus](https://club.wpeka.com/product/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=wp-local-plus) is a powerful and user-friendly WordPress directory plugin.
+[WP Local Plus](https://club.wpeka.com/product/wplocalplus/?utm_source=wporg&utm_medium=wp-local-plus-lite&utm_campaign=link&utm_content=wp-local-plus) is a powerful and easy to setup WordPress Directory Plugin.
 
 Create businesses
 
@@ -23,7 +23,7 @@ This WordPress business directory plugin helps you showcase businesses in your l
 
 WP Local Plus can be used for:
 
-- Building business directory WordPress websites
+- Building business directory on WordPress websites
 
 - Show hotels and facilities near an event venue on event websites
 
@@ -40,6 +40,16 @@ In short, WP Local Plus helps you build a local business directory, showcase bus
 ## Features ##
 
 WP Local Plus comes with the following features:
+
+- EASILY MANAGE YOUR BUSINESS DIRECTORY
+
+- Create Unlimited Directories
+
+- Create / Update Place Types - Categories, Locations, Reviews per directory listing
+
+- Import and Export directory content
+
+- No Coding Required: Use WordPress Editor to create / update directory content
 
 - Fully customizable business place that you can edit just like a WordPress post or page.
 
@@ -62,7 +72,7 @@ WP Local Plus comes with the following features:
 - Compatible with the latest PHP & WordPress versions.
 
 ## Pro Features ##
->
+
 > - <strong>Google Places support:</strong> Import businesses from Google Places. Save hours of work adding new businesses.
 >
 > - <strong>City Grid support:</strong> Import businesses from City Grid (for US only).
