@@ -39,17 +39,17 @@ In short, WP Local Plus helps you build a local business directory, showcase bus
 
 == Features ==
 
+= EASILY MANAGE YOUR BUSINESS DIRECTORY =
+
+- Create Unlimited Directories.
+
+- Create / Update Place Types - Categories, Locations, Reviews per directory listing.
+
+- Import and Export directory content.
+
+- No Coding Required: Use WordPress Editor to create / update directory content.
+
 WP Local Plus comes with the following features:
-
-- EASILY MANAGE YOUR BUSINESS DIRECTORY
-
-- Create Unlimited Directories
-
-- Create / Update Place Types - Categories, Locations, Reviews per directory listing
-
-- Import and Export directory content
-
-- No Coding Required: Use WordPress Editor to create / update directory content
 
 - Fully customizable business place that you can edit just like a WordPress post or page.
 
@@ -98,6 +98,29 @@ WP Local Plus comes with the following features:
 3. List of businesses in the admin dashboard.
 4. Add businesses to a page using the WP Local Plus block.
 5. List of businesses on the front end.
+
+== Frequently Asked Questions ==
+
+= How can I export my Business Directory Listings? =
+From the WordPress Admin Dashboard -> Go Tools, Click the Export button. Select and Export Listings and Reviews. The same data can be imported to another WordPress instance by using Tools -> Import.
+
+= Will the Business Directory Plugin work with my theme? =
+Yes. The Directory Plugin can work with any WordPress Theme which following the WordPress Theme Coding Standards.
+
+= Can I customize my business directory listing templates in my theme? =
+Yes, you can easily customize the existing templates. The existing templates are in /templates directory.
+- Copy the templates you want to modify into your theme.
+- Create a directory inside your theme folder (wplocalplus-lite).
+For e.g. If you want to change the listings template (places.php), copy it to <your-theme-folder>/wplocalplus-lite/places.php
+
+= Does WP Local Plus Business Directory Listings provide a REST API? =
+The listings/reviews are custom post types and categories ( Business Types / Locations ) are custom taxonomies. They support WP’s core REST API.
+
+= Can WP Local Plus Business Directory be translated to other languages? =
+Yes it can. The translation template files (pot) are under the /languages folder.
+
+= Is Business Directory Plugin WordPress Multisite (WPMU) compatible? =
+Yes it is. You can network activate the plugin or activate per site where you need to make the business directory.
 
 == Changelog ==
 = 1.4.2 =
