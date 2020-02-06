@@ -5,7 +5,7 @@
 **Requires at least:** 5.0+  
 **Requires PHP:** 5.0  
 **Tested up to:** 5.3  
-**Stable tag:** 1.4.2  
+**Stable tag:** 1.4.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -123,6 +123,9 @@ Yes it can. The translation template files (pot) are under the /languages folder
 Yes it is. You can network activate the plugin or activate per site where you need to make the business directory.
 
 ## Changelog ##
+### 1.4.3 ###
+Feature: Add listings for multiple locations.
+
 ### 1.4.2 ###
 Update: Minor plugin updates.
 

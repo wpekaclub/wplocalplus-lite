@@ -186,7 +186,7 @@ class Wplocalplus_Lite_Admin {
 	public function wplocalplus_lite_block_render_callback( $atts ) {
 		$list     = isset( $atts['list'] ) ? $atts['list'] : '';
 		$type     = isset( $atts['type'] ) ? ( is_array( $atts['type'] ) && ! empty( $atts['type'] ) ) ? implode( ',', $atts['type'] ) : $atts['type'] : '';
-		$location = isset( $atts['location'] ) ? $atts['location'] : '';
+		$location = isset( $atts['location'] ) ? ( is_array( $atts['location'] ) && ! empty( $atts['location'] ) ) ? implode( ',', $atts['location'] ) : $atts['location'] : '';
 		$limit    = isset( $atts['limit'] ) ? $atts['limit'] : 5;
 		return do_shortcode( "[wplocalplus list='" . $list . "' type='" . $type . "' location='" . $location . "' limit='" . $limit . "']" );
 	}
