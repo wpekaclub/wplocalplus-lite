@@ -81,6 +81,7 @@
                             options: place_types,
                         }),
                         createElement(SelectControl, {
+                            multiple: 'multiple',
                             value: attributes.location,
                             label: __( 'Location' ),
                             onChange: changeLocation,

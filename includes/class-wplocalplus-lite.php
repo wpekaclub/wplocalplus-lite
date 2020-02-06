@@ -69,7 +69,7 @@ class Wplocalplus_Lite {
 		if ( defined( 'WPLOCALPLUS_LITE_VERSION' ) ) {
 			$this->version = WPLOCALPLUS_LITE_VERSION;
 		} else {
-			$this->version = '1.4.2';
+			$this->version = '1.4.3';
 		}
 		$this->plugin_name = 'wplocalplus-lite';
 

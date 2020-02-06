@@ -155,7 +155,7 @@ class Wplocalplus_Lite_Public {
 			),
 			$atts
 		);
-		$location    = $atts['location'];
+		$location    = explode( ',', $atts['location'] );
 		$place_type  = explode( ',', $atts['type'] );
 		$limit       = $atts['limit'];
 		$list        = $atts['list'];
