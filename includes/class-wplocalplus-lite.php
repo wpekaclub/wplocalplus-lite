@@ -183,6 +183,7 @@ class Wplocalplus_Lite {
 		$this->loader->add_action( 'init', $plugin_admin, 'wplocalplus_lite_register_block_type' );
 		$this->loader->add_action( 'admin_head', $plugin_admin, 'wplocalplus_lite_highlight_menu' );
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'wplocalplus_lite_add_metaboxes' );
+		$this->loader->add_filter( 'plugin_action_links_' . WPLOCALPLUS_LITE_PLUGIN_BASENAME, $plugin_admin, 'wplocalplus_lite_plugin_action_links' );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );

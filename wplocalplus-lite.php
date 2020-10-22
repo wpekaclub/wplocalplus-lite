@@ -118,6 +118,9 @@ if ( ! defined( 'WPLOCALPLUS_LITE_PLUGIN_PATH' ) ) {
 if ( ! defined( 'WPLOCALPLUS_LITE_SETTINGS_FIELD' ) ) {
 	define( 'WPLOCALPLUS_LITE_SETTINGS_FIELD', 'wplocalplus_1.0' );
 }
+if ( ! defined( 'WPLOCALPLUS_LITE_PLUGIN_BASENAME' ) ) {
+	define( 'WPLOCALPLUS_LITE_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+}
 
 /**
  * The code that runs during plugin activation.
