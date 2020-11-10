@@ -101,6 +101,22 @@ class Wplocalplus_Lite_Admin {
 	}
 
 	/**
+	 * Returns plugin action links.
+	 *
+	 * @param array $links Plugin actions links.
+	 * @return array
+	 */
+	public function wplocalplus_lite_plugin_action_links( $links ) {
+		$links = array_merge(
+			array(
+				'<a href="' . esc_url( 'https://club.wpeka.com/product/wplocalplus/?utm_source=wplocalplus&utm_medium=plugins&utm_campaign=link&utm_content=upgrade-to-pro' ) . '" target="_blank" rel="noopener noreferrer"><strong style="color: #11967A; display: inline;">' . __( 'Upgrade to Pro', 'wplocalplus-lite' ) . '</strong></a>',
+			),
+			$links
+		);
+		return $links;
+	}
+
+	/**
 	 * Register block.
 	 *
 	 * @since 1.0
@@ -154,24 +170,24 @@ class Wplocalplus_Lite_Admin {
 			array(
 				'editor_script'   => $this->plugin_name . '-block',
 				'render_callback' => array( $this, 'wplocalplus_lite_block_render_callback' ),
-				'attributes'      => [
-					'list'     => [
+				'attributes'      => array(
+					'list'     => array(
 						'default' => 'wplocal_places',
 						'type'    => 'string,',
-					],
-					'type'     => [
+					),
+					'type'     => array(
 						'default' => 'hotels',
 						'type'    => 'string,',
-					],
-					'location' => [
+					),
+					'location' => array(
 						'default' => 'cambridgema',
 						'type'    => 'string,',
-					],
-					'limit'    => [
+					),
+					'limit'    => array(
 						'default' => 5,
 						'type'    => 'number',
-					],
-				],
+					),
+				),
 			)
 		);
 	}

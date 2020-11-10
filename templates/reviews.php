@@ -89,7 +89,7 @@ while ( $q->have_posts() ) :
 					</li>
 					<li>
 						<div class="wplocal_reviews_main_content_ratings" data-rating="<?php echo esc_attr( $review_rating ); ?>"></div>
-						<div class="wplocal_reviews_main_content_review_date"> <?php echo esc_attr( date( 'M j, Y', strtotime( $review_date ) ) ); ?></div>
+						<div class="wplocal_reviews_main_content_review_date"> <?php echo esc_attr( gmdate( 'M j, Y', strtotime( $review_date ) ) ); ?></div>
 					</li>
 					<li>
 						<div class="wplocal_reviews_main_content_description">
