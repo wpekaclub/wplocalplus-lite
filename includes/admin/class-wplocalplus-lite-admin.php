@@ -173,15 +173,15 @@ class Wplocalplus_Lite_Admin {
 				'attributes'      => array(
 					'list'     => array(
 						'default' => 'wplocal_places',
-						'type'    => 'string,',
+						'type'    => 'string',
 					),
 					'type'     => array(
 						'default' => 'hotels',
-						'type'    => 'string,',
+						'type'    => 'array',
 					),
 					'location' => array(
 						'default' => 'cambridgema',
-						'type'    => 'string,',
+						'type'    => 'array',
 					),
 					'limit'    => array(
 						'default' => 5,
@@ -228,7 +228,6 @@ class Wplocalplus_Lite_Admin {
 	 */
 	public function wplocalplus_lite_highlight_menu() {
 		global $parent_file, $submenu_file, $post_type, $current_screen;
-
 		if ( WPLOCALPLUS_PLACE_POST_TYPE === $post_type ) {
 			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
 			$submenu_file = 'edit.php?post_type=' . WPLOCALPLUS_PLACE_POST_TYPE; // phpcs:ignore override ok.
