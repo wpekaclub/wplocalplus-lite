@@ -557,75 +557,54 @@ if ( ! class_exists( 'acf_field__group' ) ) :
 
 		}
 
-
-		/*
-		*  prepare_field_for_export
-		*
-		*  description
-		*
-		*  @type    function
-		*  @date    11/03/2014
-		*  @since   5.0.0
-		*
-		*  @param   $post_id (int)
-		*  @return  $post_id (int)
-		*/
-
+		/**
+		 * prepare_field_for_export
+		 *
+		 * Prepares the field for export.
+		 *
+		 * @date    11/03/2014
+		 * @since   5.0.0
+		 *
+		 * @param   array $field The field settings.
+		 * @return  array
+		 */
 		function prepare_field_for_export( $field ) {
 
-			// bail early if no sub fields
-			if ( empty( $field['sub_fields'] ) ) {
-				return $field;
+			// Check for sub fields.
+			if ( ! empty( $field['sub_fields'] ) ) {
+				$field['sub_fields'] = acf_prepare_fields_for_export( $field['sub_fields'] );
 			}
-
-			// prepare
-			$field['sub_fields'] = acf_prepare_fields_for_export( $field['sub_fields'] );
-
-			// return
 			return $field;
-
 		}
 
-
-		/*
-		*  prepare_field_for_import
-		*
-		*  description
-		*
-		*  @type    function
-		*  @date    11/03/2014
-		*  @since   5.0.0
-		*
-		*  @param   $post_id (int)
-		*  @return  $post_id (int)
-		*/
-
+		/**
+		 * prepare_field_for_import
+		 *
+		 * Returns a flat array of fields containing all sub fields ready for import.
+		 *
+		 * @date    11/03/2014
+		 * @since   5.0.0
+		 *
+		 * @param   array $field The field settings.
+		 * @return  array
+		 */
 		function prepare_field_for_import( $field ) {
 
-			// bail early if no sub fields
-			if ( empty( $field['sub_fields'] ) ) {
-				return $field;
-			}
+			// Check for sub fields.
+			if ( ! empty( $field['sub_fields'] ) ) {
+				$sub_fields = acf_extract_var( $field, 'sub_fields' );
 
-			// vars
-			$sub_fields = $field['sub_fields'];
+				// Modify sub fields.
+				foreach ( $sub_fields as $i => $sub_field ) {
+					$sub_fields[ $i ]['parent']     = $field['key'];
+					$sub_fields[ $i ]['menu_order'] = $i;
+				}
 
-			// reset field setting
-			$field['sub_fields'] = array();
-
-			// loop
-			foreach ( $sub_fields as &$sub_field ) {
-
-				$sub_field['parent'] = $field['key'];
+				// Return array of [field, sub_1, sub_2, ...].
+				return array_merge( array( $field ), $sub_fields );
 
 			}
-
-			// merge
-			array_unshift( $sub_fields, $field );
-
-			// return
-			return $sub_fields;
-
+			return $field;
 		}
 
 
@@ -678,6 +657,56 @@ if ( ! class_exists( 'acf_field__group' ) ) :
 					acf_delete_field( $sub_field['ID'] );
 				}
 			}
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			$schema = array(
+				'type'       => array( 'object', 'null' ),
+				'properties' => array(),
+				'required'   => ! empty( $field['required'] ),
+			);
+
+			foreach ( $field['sub_fields'] as $sub_field ) {
+				if ( $sub_field_schema = acf_get_field_rest_schema( $sub_field ) ) {
+					$schema['properties'][ $sub_field['name'] ] = $sub_field_schema;
+				}
+			}
+
+			return $schema;
+		}
+
+		/**
+		 * Apply basic formatting to prepare the value for default REST output.
+		 *
+		 * @param mixed      $value
+		 * @param int|string $post_id
+		 * @param array      $field
+		 * @return array|mixed
+		 */
+		public function format_value_for_rest( $value, $post_id, array $field ) {
+			if ( empty( $value ) || ! is_array( $value ) || empty( $field['sub_fields'] ) ) {
+				return $value;
+			}
+
+			// Loop through each row and within that, each sub field to process sub fields individually.
+			foreach ( $field['sub_fields'] as $sub_field ) {
+
+				// Extract the sub field 'field_key'=>'value' pair from the $value and format it.
+				$sub_value = acf_extract_var( $value, $sub_field['key'] );
+				$sub_value = acf_format_value_for_rest( $sub_value, $post_id, $sub_field );
+
+				// Add the sub field value back to the $value but mapped to the field name instead
+				// of the key reference.
+				$value[ $sub_field['name'] ] = $sub_value;
+			}
+
+			return $value;
 		}
 
 	}

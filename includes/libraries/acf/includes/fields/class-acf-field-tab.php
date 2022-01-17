@@ -4,6 +4,7 @@ if ( ! class_exists( 'acf_field_tab' ) ) :
 
 	class acf_field_tab extends acf_field {
 
+		public $show_in_rest = false;
 
 		/*
 		*  __construct
@@ -87,11 +88,11 @@ if ( ! class_exists( 'acf_field_tab' ) ) :
 
 			// default_value
 			acf_render_field_setting( $field, array(
-			'label'			=> __('Instructions','acf'),
-			'instructions'	=> '',
-			'name'			=> 'notes',
-			'type'			=> 'message',
-			'message'		=> $message,
+			'label'         => __('Instructions','acf'),
+			'instructions'  => '',
+			'name'          => 'notes',
+			'type'          => 'message',
+			'message'       => $message,
 			));
 			*/
 

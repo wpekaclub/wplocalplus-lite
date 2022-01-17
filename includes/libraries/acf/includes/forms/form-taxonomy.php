@@ -5,9 +5,9 @@
 *
 *  All the logic for adding fields to taxonomy terms
 *
-*  @class 		acf_form_taxonomy
-*  @package		ACF
-*  @subpackage	Forms
+*  @class       acf_form_taxonomy
+*  @package     ACF
+*  @subpackage  Forms
 */
 
 if ( ! class_exists( 'acf_form_taxonomy' ) ) :
@@ -129,7 +129,7 @@ if ( ! class_exists( 'acf_form_taxonomy' ) ) :
 		function add_term( $taxonomy ) {
 
 			// vars
-			$post_id = acf_get_term_post_id( $taxonomy, 0 );
+			$post_id = 'term_0';
 
 			// update vars
 			$this->view = 'add';
@@ -185,7 +185,7 @@ if ( ! class_exists( 'acf_form_taxonomy' ) ) :
 		function edit_term( $term, $taxonomy ) {
 
 			// vars
-			$post_id = acf_get_term_post_id( $term->taxonomy, $term->term_id );
+			$post_id = 'term_' . $term->term_id;
 
 			// update vars
 			$this->view = 'edit';
@@ -315,7 +315,7 @@ if ( ! class_exists( 'acf_form_taxonomy' ) ) :
 		acf.unload.reset();
 	});
 	
-				<?php endif; ?>
+		<?php endif; ?>
 	
 })(jQuery);	
 </script>
@@ -340,7 +340,7 @@ if ( ! class_exists( 'acf_form_taxonomy' ) ) :
 		function save_term( $term_id, $tt_id, $taxonomy ) {
 
 			// vars
-			$post_id = acf_get_term_post_id( $taxonomy, $term_id );
+			$post_id = 'term_' . $term_id;
 
 			// verify and remove nonce
 			if ( ! acf_verify_nonce( 'taxonomy' ) ) {

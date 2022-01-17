@@ -217,14 +217,28 @@ if ( ! class_exists( 'acf_field_textarea' ) ) :
 		function validate_value( $valid, $value, $field, $input ) {
 
 			// Check maxlength.
-			// Note: Due to the way strlen (and mb_strlen) work, line breaks count as two characters in PHP, but not in Javascript (or HTML).
-			// To avoid incorrectly calculating the length, replace double line breaks.
-			if ( $field['maxlength'] && mb_strlen( str_replace( "\r\n", "\n", wp_unslash( $value ) ) ) > $field['maxlength'] ) {
+			if ( $field['maxlength'] && ( acf_strlen( $value ) > $field['maxlength'] ) ) {
 				return sprintf( __( 'Value must not exceed %d characters', 'acf' ), $field['maxlength'] );
 			}
 
 			// Return.
 			return $valid;
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		function get_rest_schema( array $field ) {
+			$schema = parent::get_rest_schema( $field );
+
+			if ( ! empty( $field['maxlength'] ) ) {
+				$schema['maxLength'] = (int) $field['maxlength'];
+			}
+
+			return $schema;
 		}
 	}
 

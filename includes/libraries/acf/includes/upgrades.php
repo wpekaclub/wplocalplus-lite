@@ -93,11 +93,11 @@ function acf_get_db_version() {
 *
 *  Updates the ACF DB version.
 *
-*  @date	10/09/2016
-*  @since	5.4.0
+*  @date    10/09/2016
+*  @since   5.4.0
 *
-*  @param	string $version The new version.
-*  @return	void
+*  @param   string $version The new version.
+*  @return  void
 */
 function acf_update_db_version( $version = '' ) {
 	update_option( 'acf_version', $version );
@@ -438,12 +438,12 @@ function acf_upgrade_550_termmeta() {
 *
 *  When the database is updated to support term meta, migrate ACF term meta data across.
 *
-*  @date	23/8/18
-*  @since	5.7.4
+*  @date    23/8/18
+*  @since   5.7.4
 *
-*  @param	string $wp_db_version The new $wp_db_version.
-*  @param	string $wp_current_db_version The old (current) $wp_db_version.
-*  @return	void
+*  @param   string $wp_db_version The new $wp_db_version.
+*  @param   string $wp_current_db_version The old (current) $wp_db_version.
+*  @return  void
 */
 function acf_wp_upgrade_550_termmeta( $wp_db_version, $wp_current_db_version ) {
 	if ( $wp_db_version >= 34370 && $wp_current_db_version < 34370 ) {

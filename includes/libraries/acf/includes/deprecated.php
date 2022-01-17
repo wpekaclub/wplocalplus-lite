@@ -63,12 +63,12 @@ function acf_render_field_wrap_description( $field ) {
  *
  * Returns and array of fields for the given $parent_id.
  *
- * @date	27/02/2014
- * @since	5.0.0.
- * @deprecated	5.7.11
+ * @date    27/02/2014
+ * @since   5.0.0.
+ * @deprecated  5.7.11
  *
- * @param	int $parent_id The parent ID.
- * @return	array
+ * @param   int $parent_id The parent ID.
+ * @return  array
  */
 function acf_get_fields_by_id( $parent_id = 0 ) {
 

@@ -156,6 +156,41 @@ if ( ! class_exists( 'acf_field_email' ) ) :
 
 		}
 
+		/**
+		 * Validate the email value. If this method returns TRUE, the input value is valid. If
+		 * FALSE or a string is returned, the input value is invalid and the user is shown a
+		 * notice. If a string is returned, the string is show as the message text.
+		 *
+		 * @param bool   $valid Whether the value is valid.
+		 * @param mixed  $value The field value.
+		 * @param array  $field The field array.
+		 * @param string $input The request variable name for the inbound field.
+		 *
+		 * @return bool|string
+		 */
+		public function validate_value( $valid, $value, $field, $input ) {
+			$flags = defined( 'FILTER_FLAG_EMAIL_UNICODE' ) ? FILTER_FLAG_EMAIL_UNICODE : 0;
+
+			if ( $value && filter_var( wp_unslash( $value ), FILTER_VALIDATE_EMAIL, $flags ) === false ) {
+				return sprintf( __( "'%s' is not a valid email address", 'acf' ), esc_html( $value ) );
+			}
+
+			return $valid;
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			$schema           = parent::get_rest_schema( $field );
+			$schema['format'] = 'email';
+
+			return $schema;
+		}
+
 	}
 
 

@@ -291,14 +291,14 @@ if ( ! class_exists( 'ACF_Admin_Tool_Export' ) ) :
 
 				/*
 				acf_render_field_wrap(array(
-					'label'		=> __('Empty settings', 'acf'),
-					'type'		=> 'select',
-					'name'		=> 'minimal',
-					'prefix'	=> false,
-					'value'		=> '',
-					'choices'	=> array(
-						'all'		=> __('Include all settings', 'acf'),
-						'minimal'	=> __('Ignore empty settings', 'acf'),
+					'label'     => __('Empty settings', 'acf'),
+					'type'      => 'select',
+					'name'      => 'minimal',
+					'prefix'    => false,
+					'value'     => '',
+					'choices'   => array(
+						'all'       => __('Include all settings', 'acf'),
+						'minimal'   => __('Ignore empty settings', 'acf'),
 					)
 				));
 				*/

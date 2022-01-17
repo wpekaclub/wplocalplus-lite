@@ -1,74 +1,14 @@
 <?php
 
 /**
- * acf_decode_post_id
- *
- * Returns an array containing the object type and id for the given post_id string.
- *
- * @date    25/1/19
- * @since   5.7.11
- *
- * @param   (int|string) $post_id The post id.
- * @return  array()
- */
-function acf_decode_post_id( $post_id = 0 ) {
-
-	// Default data
-	$data = array(
-		'type' => 'post',
-		'id'   => 0,
-	);
-
-	// Check if is numeric.
-	if ( is_numeric( $post_id ) ) {
-		$data['id'] = (int) $post_id;
-
-		// Check if is string.
-	} elseif ( is_string( $post_id ) ) {
-
-		// Determine "{$type}_{$id}" from string.
-		$bits = explode( '_', $post_id );
-		$id   = array_pop( $bits );
-		$type = implode( '_', $bits );
-
-		// Check if is meta type.
-		if ( function_exists( "get_{$type}_meta" ) && is_numeric( $id ) ) {
-			$data['type'] = $type;
-			$data['id']   = (int) $id;
-
-			// Check if is taxonomy name.
-		} elseif ( taxonomy_exists( $type ) && is_numeric( $id ) ) {
-			$data['type'] = 'term';
-			$data['id']   = (int) $id;
-
-			// Otherwise, default to option.
-		} else {
-			$data['type'] = 'option';
-			$data['id']   = $post_id;
-		}
-	}
-
-	/**
-	 * Filters the $data array after it has been decoded.
-	 *
-	 * @date    12/02/2014
-	 * @since   5.0.0
-	 *
-	 * @param   array $data The type and id array.
-	 */
-	return apply_filters( 'acf/decode_post_id', $data, $post_id );
-}
-
-/**
- * acf_get_meta
- *
  * Returns an array of "ACF only" meta for the given post_id.
  *
  * @date    9/10/18
  * @since   5.8.0
  *
- * @param   mixed $post_id The post_id for this data.
- * @return  array
+ * @param mixed $post_id The post_id for this data.
+ *
+ * @return array
  */
 function acf_get_meta( $post_id = 0 ) {
 
@@ -79,15 +19,18 @@ function acf_get_meta( $post_id = 0 ) {
 	}
 
 	// Decode $post_id for $type and $id.
-	extract( acf_decode_post_id( $post_id ) );
+	$decoded = acf_decode_post_id( $post_id );
 
-	// Use get_$type_meta() function when possible.
-	if ( function_exists( "get_{$type}_meta" ) ) {
-		$allmeta = call_user_func( "get_{$type}_meta", $id, '' );
-
-		// Default to wp_options.
+	/**
+	 * Determine CRUD function.
+	 *
+	 * - Relies on decoded post_id result to identify option or meta types.
+	 * - Uses xxx_metadata(type) instead of xxx_type_meta() to bypass additional logic that could alter the ID.
+	 */
+	if ( $decoded['type'] === 'option' ) {
+		$allmeta = acf_get_option_meta( $decoded['id'] );
 	} else {
-		$allmeta = acf_get_option_meta( $id );
+		$allmeta = get_metadata( $decoded['type'], $decoded['id'], '' );
 	}
 
 	// Loop over meta and check that a reference exists for each value.
@@ -112,8 +55,8 @@ function acf_get_meta( $post_id = 0 ) {
 	 * @date    25/1/19
 	 * @since   5.7.11
 	 *
-	 * @param   array $meta The arary of loaded meta.
-	 * @param   string $post_id The $post_id for this meta.
+	 * @param array  $meta    The array of loaded meta.
+	 * @param string $post_id The $post_id for this meta.
 	 */
 	return apply_filters( 'acf/load_meta', $meta, $post_id );
 }
@@ -168,20 +111,18 @@ function acf_get_option_meta( $prefix = '' ) {
 }
 
 /**
- * acf_get_metadata
- *
  * Retrieves specific metadata from the database.
  *
  * @date    16/10/2015
  * @since   5.2.3
  *
- * @param   (int|string) $post_id The post id.
- * @param   string       $name The meta name.
- * @param   bool         $hidden If the meta is hidden (starts with an underscore).
+ * @param   int|string $post_id The post id.
+ * @param   string     $name    The meta name.
+ * @param   bool       $hidden  If the meta is hidden (starts with an underscore).
+ *
  * @return  mixed
  */
 function acf_get_metadata( $post_id = 0, $name = '', $hidden = false ) {
-
 	// Allow filter to short-circuit logic.
 	$null = apply_filters( 'acf/pre_load_metadata', null, $post_id, $name, $hidden );
 	if ( $null !== null ) {
@@ -189,7 +130,9 @@ function acf_get_metadata( $post_id = 0, $name = '', $hidden = false ) {
 	}
 
 	// Decode $post_id for $type and $id.
-	extract( acf_decode_post_id( $post_id ) );
+	$decoded = acf_decode_post_id( $post_id );
+	$id      = $decoded['id'];
+	$type    = $decoded['type'];
 
 	// Hidden meta uses an underscore prefix.
 	$prefix = $hidden ? '_' : '';
@@ -199,11 +142,11 @@ function acf_get_metadata( $post_id = 0, $name = '', $hidden = false ) {
 		return null;
 	}
 
-	// Check option.
+	// Determine CRUD function.
+	// - Relies on decoded post_id result to identify option or meta types.
+	// - Uses xxx_metadata(type) instead of xxx_type_meta() to bypass additional logic that could alter the ID.
 	if ( $type === 'option' ) {
 		return get_option( "{$prefix}{$id}_{$name}", null );
-
-		// Check meta.
 	} else {
 		$meta = get_metadata( $type, $id, "{$prefix}{$name}", false );
 		return isset( $meta[0] ) ? $meta[0] : null;
@@ -211,21 +154,19 @@ function acf_get_metadata( $post_id = 0, $name = '', $hidden = false ) {
 }
 
 /**
- * acf_update_metadata
- *
  * Updates metadata in the database.
  *
  * @date    16/10/2015
  * @since   5.2.3
  *
- * @param   (int|string) $post_id The post id.
- * @param   string       $name The meta name.
- * @param   mixed        $value The meta value.
- * @param   bool         $hidden If the meta is hidden (starts with an underscore).
- * @return  (int|bool) Meta ID if the key didn't exist, true on successful update, false on failure.
+ * @param   int|string $post_id The post id.
+ * @param   string     $name    The meta name.
+ * @param   mixed      $value   The meta value.
+ * @param   bool       $hidden  If the meta is hidden (starts with an underscore).
+ *
+ * @return  int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
  */
 function acf_update_metadata( $post_id = 0, $name = '', $value = '', $hidden = false ) {
-
 	// Allow filter to short-circuit logic.
 	$pre = apply_filters( 'acf/pre_update_metadata', null, $post_id, $name, $value, $hidden );
 	if ( $pre !== null ) {
@@ -233,7 +174,9 @@ function acf_update_metadata( $post_id = 0, $name = '', $value = '', $hidden = f
 	}
 
 	// Decode $post_id for $type and $id.
-	extract( acf_decode_post_id( $post_id ) );
+	$decoded = acf_decode_post_id( $post_id );
+	$id      = $decoded['id'];
+	$type    = $decoded['type'];
 
 	// Hidden meta uses an underscore prefix.
 	$prefix = $hidden ? '_' : '';
@@ -243,35 +186,31 @@ function acf_update_metadata( $post_id = 0, $name = '', $value = '', $hidden = f
 		return false;
 	}
 
-	// Update option.
+	// Determine CRUD function.
+	// - Relies on decoded post_id result to identify option or meta types.
+	// - Uses xxx_metadata(type) instead of xxx_type_meta() to bypass additional logic that could alter the ID.
 	if ( $type === 'option' ) {
-
-		// Unslash value to match update_metadata() functionality.
 		$value    = wp_unslash( $value );
 		$autoload = (bool) acf_get_setting( 'autoload' );
 		return update_option( "{$prefix}{$id}_{$name}", $value, $autoload );
-
-		// Update meta.
 	} else {
 		return update_metadata( $type, $id, "{$prefix}{$name}", $value );
 	}
 }
 
 /**
- * acf_delete_metadata
- *
  * Deletes metadata from the database.
  *
  * @date    16/10/2015
  * @since   5.2.3
  *
- * @param   (int|string) $post_id The post id.
- * @param   string       $name The meta name.
- * @param   bool         $hidden If the meta is hidden (starts with an underscore).
+ * @param   int|string $post_id The post id.
+ * @param   string     $name The meta name.
+ * @param   bool       $hidden If the meta is hidden (starts with an underscore).
+ *
  * @return  bool
  */
 function acf_delete_metadata( $post_id = 0, $name = '', $hidden = false ) {
-
 	// Allow filter to short-circuit logic.
 	$pre = apply_filters( 'acf/pre_delete_metadata', null, $post_id, $name, $hidden );
 	if ( $pre !== null ) {
@@ -279,7 +218,9 @@ function acf_delete_metadata( $post_id = 0, $name = '', $hidden = false ) {
 	}
 
 	// Decode $post_id for $type and $id.
-	extract( acf_decode_post_id( $post_id ) );
+	$decoded = acf_decode_post_id( $post_id );
+	$id      = $decoded['id'];
+	$type    = $decoded['type'];
 
 	// Hidden meta uses an underscore prefix.
 	$prefix = $hidden ? '_' : '';
@@ -289,12 +230,11 @@ function acf_delete_metadata( $post_id = 0, $name = '', $hidden = false ) {
 		return false;
 	}
 
-	// Update option.
+	// Determine CRUD function.
+	// - Relies on decoded post_id result to identify option or meta types.
+	// - Uses xxx_metadata(type) instead of xxx_type_meta() to bypass additional logic that could alter the ID.
 	if ( $type === 'option' ) {
-		$autoload = (bool) acf_get_setting( 'autoload' );
 		return delete_option( "{$prefix}{$id}_{$name}" );
-
-		// Update meta.
 	} else {
 		return delete_metadata( $type, $id, "{$prefix}{$name}" );
 	}

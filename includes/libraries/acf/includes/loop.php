@@ -277,12 +277,12 @@ endif; // class_exists check
 *
 *  alias of acf()->loop->add_loop()
 *
-*  @type	function
-*  @date	6/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    6/10/13
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_add_loop( $loop = array() ) {
@@ -297,12 +297,12 @@ function acf_add_loop( $loop = array() ) {
 *
 *  alias of acf()->loop->update_loop()
 *
-*  @type	function
-*  @date	6/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    6/10/13
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_update_loop( $i = 'active', $key = null, $value = null ) {
@@ -317,12 +317,12 @@ function acf_update_loop( $i = 'active', $key = null, $value = null ) {
 *
 *  alias of acf()->loop->get_loop()
 *
-*  @type	function
-*  @date	6/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    6/10/13
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_get_loop( $i = 'active', $key = null ) {
@@ -337,12 +337,12 @@ function acf_get_loop( $i = 'active', $key = null ) {
 *
 *  alias of acf()->loop->remove_loop()
 *
-*  @type	function
-*  @date	6/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    6/10/13
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_remove_loop( $i = 'active' ) {

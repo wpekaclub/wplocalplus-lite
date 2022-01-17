@@ -32,7 +32,7 @@ if ( ! class_exists( 'ACF_Walker_Nav_Menu_Edit' ) ) :
 
 			// inject custom field HTML
 			$output .= preg_replace(
-				// NOTE: Check this regex from time to time!
+			// NOTE: Check this regex from time to time!
 				'/(?=<(fieldset|p)[^>]+class="[^"]*field-move)/',
 				$this->get_fields( $item, $depth, $args, $id ),
 				$item_output

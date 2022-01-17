@@ -104,42 +104,43 @@ if ( ! class_exists( 'acf_field_date_and_time_picker' ) ) :
 
 		function render_field( $field ) {
 
-			// format value
+			// Set value.
 			$hidden_value  = '';
 			$display_value = '';
 
 			if ( $field['value'] ) {
-
 				$hidden_value  = acf_format_date( $field['value'], 'Y-m-d H:i:s' );
 				$display_value = acf_format_date( $field['value'], $field['display_format'] );
-
 			}
 
-			// convert display_format to date and time
-			// the letter 'm' is used for date and minute in JS, so this must be done here in PHP
+			// Convert "display_format" setting to individual date and time formats.
 			$formats = acf_split_date_time( $field['display_format'] );
 
-			// vars
-			$div = array(
+			// Elements.
+			$div          = array(
 				'class'            => 'acf-date-time-picker acf-input-wrap',
 				'data-date_format' => acf_convert_date_to_js( $formats['date'] ),
 				'data-time_format' => acf_convert_time_to_js( $formats['time'] ),
 				'data-first_day'   => $field['first_day'],
 			);
-
 			$hidden_input = array(
 				'id'    => $field['id'],
 				'class' => 'input-alt',
 				'name'  => $field['name'],
 				'value' => $hidden_value,
 			);
-
-			$text_input = array(
-				'class' => 'input',
+			$text_input   = array(
+				'class' => $field['class'] . ' input',
 				'value' => $display_value,
 			);
+			foreach ( array( 'readonly', 'disabled' ) as $k ) {
+				if ( ! empty( $field[ $k ] ) ) {
+					$hidden_input[ $k ] = $k;
+					$text_input[ $k ]   = $k;
+				}
+			}
 
-			// html
+			// Output.
 			?>
 		<div <?php acf_esc_attr_e( $div ); ?>>
 			<?php acf_hidden_input( $hidden_input ); ?>
@@ -247,6 +248,45 @@ if ( ! class_exists( 'acf_field_date_and_time_picker' ) ) :
 
 			return acf_format_date( $value, $field['return_format'] );
 
+		}
+		
+
+		/**
+		 *  This filter is applied to the $field after it is loaded from the database
+		 *  and ensures the return and display values are set.
+		 *
+		 *  @type    filter
+		 *  @since   5.11.0
+		 *  @date    28/09/21
+		 *
+		 *  @param array $field The field array holding all the field options.
+		 *
+		 *  @return array
+		 */
+		function load_field( $field ) {
+			if ( empty( $field['display_format'] ) ) {
+				$field['display_format'] = $this->defaults['display_format'];
+			}
+
+			if ( empty( $field['return_format'] ) ) {
+				$field['return_format'] = $this->defaults['return_format'];
+			}
+
+			return $field;
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			return array(
+				'type'        => array( 'string', 'null' ),
+				'description' => 'A `Y-m-d H:i:s` formatted date string.',
+				'required'    => ! empty( $field['required'] ),
+			);
 		}
 
 	}

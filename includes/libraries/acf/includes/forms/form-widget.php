@@ -5,9 +5,9 @@
 *
 *  All the logic for adding fields to widgets
 *
-*  @class 		acf_form_widget
-*  @package		ACF
-*  @subpackage	Forms
+*  @class       acf_form_widget
+*  @package     ACF
+*  @subpackage  Forms
 */
 
 if ( ! class_exists( 'acf_form_widget' ) ) :
@@ -223,8 +223,16 @@ if ( ! class_exists( 'acf_form_widget' ) ) :
 
 		function save_widget( $instance, $new_instance, $old_instance, $widget ) {
 
-			// bail ealry if not valid (!customize + acf values + nonce)
-			if ( isset( $_POST['wp_customize'] ) || ! isset( $new_instance['acf'] ) || ! acf_verify_nonce( 'widget' ) ) {
+			// validate nonce if we're not a REST API request.
+			// the $_POST object is not available to us to validate if we're in a REST API call.
+			if ( ! ( function_exists( 'wp_is_json_request' ) && wp_is_json_request() ) ) {
+				if ( ! acf_verify_nonce( 'widget' ) ) {
+					return $instance;
+				}
+			}
+
+			// bail early if not valid (!customize + acf values + nonce).
+			if ( isset( $_POST['wp_customize'] ) || ! isset( $new_instance['acf'] ) ) {
 				return $instance;
 			}
 

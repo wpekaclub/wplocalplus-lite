@@ -3,8 +3,8 @@
 Plugin Name: Advanced Custom Fields
 Plugin URI: https://www.advancedcustomfields.com
 Description: Customize WordPress with powerful, professional and intuitive fields.
-Version: 5.8.5
-Author: Elliot Condon
+Version: 5.11.4
+Author: Delicious Brains
 Author URI: https://www.advancedcustomfields.com
 Text Domain: acf
 Domain Path: /lang
@@ -19,7 +19,7 @@ if ( ! class_exists( 'ACF' ) ) :
 	class ACF {
 
 		/** @var string The plugin version number. */
-		var $version = '5.8.5';
+		var $version = '5.11.4';
 
 		/** @var array The plugin settings array. */
 		var $settings = array();
@@ -97,6 +97,9 @@ if ( ! class_exists( 'ACF' ) ) :
 				'select2_version'        => 4,
 				'row_index_offset'       => 1,
 				'remove_wp_meta_box'     => true,
+				'rest_api_enabled'       => true,
+				'rest_api_format'        => 'light',
+				'rest_api_embed_links'   => true,
 			);
 
 			// Include utility functions.
@@ -110,7 +113,8 @@ if ( ! class_exists( 'ACF' ) ) :
 			// Include classes.
 			acf_include( 'includes/class-acf-data.php' );
 			acf_include( 'includes/fields/class-acf-field.php' );
-			acf_include( 'includes/locations/class-acf-location.php' );
+			acf_include( 'includes/locations/abstract-acf-legacy-location.php' );
+			acf_include( 'includes/locations/abstract-acf-location.php' );
 
 			// Include functions.
 			acf_include( 'includes/acf-helper-functions.php' );
@@ -123,6 +127,7 @@ if ( ! class_exists( 'ACF' ) ) :
 			acf_include( 'includes/acf-user-functions.php' );
 			acf_include( 'includes/acf-value-functions.php' );
 			acf_include( 'includes/acf-input-functions.php' );
+			acf_include( 'includes/acf-wp-functions.php' );
 
 			// Include core.
 			acf_include( 'includes/fields.php' );
@@ -130,22 +135,26 @@ if ( ! class_exists( 'ACF' ) ) :
 			acf_include( 'includes/assets.php' );
 			acf_include( 'includes/compatibility.php' );
 			acf_include( 'includes/deprecated.php' );
-			acf_include( 'includes/json.php' );
 			acf_include( 'includes/l10n.php' );
 			acf_include( 'includes/local-fields.php' );
 			acf_include( 'includes/local-meta.php' );
+			acf_include( 'includes/local-json.php' );
 			acf_include( 'includes/loop.php' );
 			acf_include( 'includes/media.php' );
 			acf_include( 'includes/revisions.php' );
 			acf_include( 'includes/updates.php' );
 			acf_include( 'includes/upgrades.php' );
 			acf_include( 'includes/validation.php' );
+			acf_include( 'includes/rest-api.php' );
 
 			// Include ajax.
 			acf_include( 'includes/ajax/class-acf-ajax.php' );
 			acf_include( 'includes/ajax/class-acf-ajax-check-screen.php' );
 			acf_include( 'includes/ajax/class-acf-ajax-user-setting.php' );
 			acf_include( 'includes/ajax/class-acf-ajax-upgrade.php' );
+			acf_include( 'includes/ajax/class-acf-ajax-query.php' );
+			acf_include( 'includes/ajax/class-acf-ajax-query-users.php' );
+			acf_include( 'includes/ajax/class-acf-ajax-local-json-diff.php' );
 
 			// Include forms.
 			acf_include( 'includes/forms/form-attachment.php' );
@@ -167,8 +176,10 @@ if ( ! class_exists( 'ACF' ) ) :
 				acf_include( 'includes/admin/admin-notices.php' );
 				acf_include( 'includes/admin/admin-tools.php' );
 				acf_include( 'includes/admin/admin-upgrade.php' );
-				acf_include( 'includes/admin/settings-info.php' );
 			}
+
+			// Include legacy.
+			acf_include( 'includes/legacy/legacy-locations.php' );
 
 			// Include PRO.
 			acf_include( 'pro/acf-pro.php' );
@@ -423,12 +434,12 @@ if ( ! class_exists( 'ACF' ) ) :
 			register_post_status(
 				'acf-disabled',
 				array(
-					'label'                     => __( 'Inactive', 'acf' ),
+					'label'                     => _x( 'Disabled', 'post status', 'acf' ),
 					'public'                    => true,
 					'exclude_from_search'       => false,
 					'show_in_admin_all_list'    => true,
 					'show_in_admin_status_list' => true,
-					'label_count'               => _n_noop( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', 'acf' ),
+					'label_count'               => _n_noop( 'Disabled <span class="count">(%s)</span>', 'Disabled <span class="count">(%s)</span>', 'acf' ),
 				)
 			);
 		}
@@ -594,6 +605,38 @@ if ( ! class_exists( 'ACF' ) ) :
 			$name                     = strtolower( $class );
 			$this->instances[ $name ] = $instance;
 			return $instance;
+		}
+
+		/**
+		 * Magic __isset method for backwards compatibility.
+		 *
+		 * @date    24/4/20
+		 * @since   5.9.0
+		 *
+		 * @param   string $key Key name.
+		 * @return  bool
+		 */
+		public function __isset( $key ) {
+			return in_array( $key, array( 'locations', 'json' ) );
+		}
+
+		/**
+		 * Magic __get method for backwards compatibility.
+		 *
+		 * @date    24/4/20
+		 * @since   5.9.0
+		 *
+		 * @param   string $key Key name.
+		 * @return  mixed
+		 */
+		public function __get( $key ) {
+			switch ( $key ) {
+				case 'locations':
+					return acf_get_instance( 'ACF_Legacy_Locations' );
+				case 'json':
+					return acf_get_instance( 'ACF_Local_JSON' );
+			}
+			return null;
 		}
 	}
 

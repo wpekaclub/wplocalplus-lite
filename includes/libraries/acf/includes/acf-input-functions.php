@@ -64,27 +64,43 @@ function acf_esc_attrs( $attrs ) {
 	return trim( $html );
 }
 
+
 /**
- * acf_esc_html
+ * Sanitizes text content and strips out disallowed HTML.
  *
- * Encodes <script> tags for safe HTML output.
+ * This function emulates `wp_kses_post()` with a context of "acf" for extensibility.
  *
- * @date    12/6/19
- * @since   5.8.1
+ * @date    16/4/21
+ * @since   5.9.6
  *
  * @param   string $string
  * @return  string
  */
 function acf_esc_html( $string = '' ) {
-	$string = strval( $string );
-
-	// Encode "<script" tags to invalidate DOM elements.
-	if ( strpos( $string, '<script' ) !== false ) {
-		$string = str_replace( '<script', htmlspecialchars( '<script' ), $string );
-		$string = str_replace( '</script', htmlspecialchars( '</script' ), $string );
-	}
-	return $string;
+	return wp_kses( (string) $string, 'acf' );
 }
+
+/**
+ * Private callback for the "wp_kses_allowed_html" filter used to return allowed HTML for "acf" context.
+ *
+ * @date    16/4/21
+ * @since   5.9.6
+ *
+ * @param   array  $tags An array of allowed tags.
+ * @param   string $context The context name.
+ * @return  array.
+ */
+
+function _acf_kses_allowed_html( $tags, $context ) {
+	global $allowedposttags;
+
+	if ( $context === 'acf' ) {
+		return $allowedposttags;
+	}
+	return $tags;
+}
+
+add_filter( 'wp_kses_allowed_html', '_acf_kses_allowed_html', 0, 2 );
 
 /**
  * acf_html_input
@@ -164,6 +180,9 @@ function acf_get_text_input( $attrs = array() ) {
 			'type' => 'text',
 		)
 	);
+	if ( isset( $attrs['value'] ) && is_string( $attrs['value'] ) ) {
+		$attrs['value'] = htmlspecialchars( $attrs['value'] );
+	}
 	return sprintf( '<input %s/>', acf_esc_attrs( $attrs ) );
 }
 

@@ -4,6 +4,7 @@ if ( ! class_exists( 'acf_field__accordion' ) ) :
 
 	class acf_field__accordion extends acf_field {
 
+		public $show_in_rest = false;
 
 		/**
 		 *  initialize
@@ -86,11 +87,11 @@ if ( ! class_exists( 'acf_field__accordion' ) ) :
 
 			// default_value
 			acf_render_field_setting( $field, array(
-			'label'			=> __('Instructions','acf'),
-			'instructions'	=> '',
-			'name'			=> 'notes',
-			'type'			=> 'message',
-			'message'		=> $message,
+			'label'         => __('Instructions','acf'),
+			'instructions'  => '',
+			'name'          => 'notes',
+			'type'          => 'message',
+			'message'       => $message,
 			));
 			*/
 

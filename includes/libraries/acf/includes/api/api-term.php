@@ -5,11 +5,11 @@
 *
 *  Returns an array of taxonomy names.
 *
-*  @date	7/10/13
-*  @since	5.0.0
+*  @date    7/10/13
+*  @since   5.0.0
 *
-*  @param	array $args An array of args used in the get_taxonomies() function.
-*  @return	array An array of taxonomy names.
+*  @param   array $args An array of args used in the get_taxonomies() function.
+*  @return  array An array of taxonomy names.
 */
 
 function acf_get_taxonomies( $args = array() ) {
@@ -81,11 +81,11 @@ function acf_get_taxonomies_for_post_type( $post_types = 'post' ) {
 *
 *  Returns an array of taxonomies in the format "name => label" for use in a select field.
 *
-*  @date	3/8/18
-*  @since	5.7.2
+*  @date    3/8/18
+*  @since   5.7.2
 *
-*  @param	array $taxonomies Optional. An array of specific taxonomies to return.
-*  @return	array
+*  @param   array $taxonomies Optional. An array of specific taxonomies to return.
+*  @return  array
 */
 
 function acf_get_taxonomy_labels( $taxonomies = array() ) {
@@ -140,22 +140,19 @@ function acf_get_taxonomy_labels( $taxonomies = array() ) {
  */
 
 function acf_get_term_title( $term ) {
-
-	// set to term name
 	$title = $term->name;
 
-	// allow for empty name
+	// Allow for empty name.
 	if ( $title === '' ) {
 		$title = __( '(no title)', 'acf' );
 	}
 
-	// prepent ancestors indentation
+	// Prepend ancestors indentation.
 	if ( is_taxonomy_hierarchical( $term->taxonomy ) ) {
 		$ancestors = get_ancestors( $term->term_id, $term->taxonomy );
 		$title     = str_repeat( '- ', count( $ancestors ) ) . $title;
 	}
 
-	// return
 	return $title;
 }
 
@@ -373,10 +370,7 @@ function acf_encode_term( $term ) {
 function acf_decode_term( $string ) {
 	if ( is_string( $string ) && strpos( $string, ':' ) ) {
 		list( $taxonomy, $slug ) = explode( ':', $string );
-		return array(
-			'taxonomy' => $taxonomy,
-			'slug'     => $slug,
-		);
+		return compact( 'taxonomy', 'slug' );
 	}
 	return false;
 }
@@ -510,6 +504,19 @@ function acf_get_choice_from_term( $term, $format = 'term_id' ) {
 	);
 }
 
-
-
-
+/**
+ * Returns a valid post_id string for a given term and taxonomy.
+ * No longer needed since WP introduced the termmeta table in WP 4.4.
+ *
+ * @date    6/2/17
+ * @since   5.5.6
+ * @deprecated 5.9.2
+ *
+ * @param   $taxonomy (string) The taxonomy type.
+ * @param   $term_id (int) The term ID.
+ * @return  (string)
+ */
+function acf_get_term_post_id( $taxonomy, $term_id ) {
+	_deprecated_function( __FUNCTION__, '5.9.2', 'string format term_%d' );
+	return 'term_' . $term_id;
+}

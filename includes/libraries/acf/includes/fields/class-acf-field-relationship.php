@@ -239,7 +239,7 @@ if ( ! class_exists( 'acf_field_relationship' ) ) :
 				}
 
 				// order posts by search
-				if ( $is_search && empty( $args['orderby'] ) ) {
+				if ( $is_search && empty( $args['orderby'] ) && isset( $args['s'] ) ) {
 
 					$posts = acf_order_by_search( $posts, $args['s'] );
 
@@ -463,16 +463,14 @@ if ( ! class_exists( 'acf_field_relationship' ) ) :
 				if ( in_array( 'search', $filters ) ) :
 					?>
 		<div class="filter -search">
-			<span>
-						<?php
-						acf_text_input(
-							array(
-								'placeholder' => __( 'Search...', 'acf' ),
-								'data-filter' => 's',
-							)
-						);
-						?>
-			</span>
+					<?php
+					acf_text_input(
+						array(
+							'placeholder' => __( 'Search...', 'acf' ),
+							'data-filter' => 's',
+						)
+					);
+					?>
 		</div>
 					<?php
 			endif;
@@ -481,16 +479,14 @@ if ( ! class_exists( 'acf_field_relationship' ) ) :
 				if ( in_array( 'post_type', $filters ) ) :
 					?>
 		<div class="filter -post_type">
-			<span>
-						<?php
-						acf_select_input(
-							array(
-								'choices'     => $filter_post_type_choices,
-								'data-filter' => 'post_type',
-							)
-						);
-						?>
-			</span>
+					<?php
+					acf_select_input(
+						array(
+							'choices'     => $filter_post_type_choices,
+							'data-filter' => 'post_type',
+						)
+					);
+					?>
 		</div>
 					<?php
 			endif;
@@ -499,16 +495,14 @@ if ( ! class_exists( 'acf_field_relationship' ) ) :
 				if ( in_array( 'taxonomy', $filters ) ) :
 					?>
 		<div class="filter -taxonomy">
-			<span>
-						<?php
-						acf_select_input(
-							array(
-								'choices'     => $filter_taxonomy_choices,
-								'data-filter' => 'taxonomy',
-							)
-						);
-						?>
-			</span>
+					<?php
+					acf_select_input(
+						array(
+							'choices'     => $filter_taxonomy_choices,
+							'data-filter' => 'taxonomy',
+						)
+					);
+					?>
 		</div>
 				<?php endif; ?>		
 	</div>
@@ -535,16 +529,16 @@ if ( ! class_exists( 'acf_field_relationship' ) ) :
 					foreach ( $posts as $post ) :
 						?>
 					<li>
-								<?php
-								acf_hidden_input(
-									array(
-										'name'  => $field['name'] . '[]',
-										'value' => $post->ID,
-									)
-								);
-								?>
+						<?php
+							acf_hidden_input(
+								array(
+									'name'  => $field['name'] . '[]',
+									'value' => $post->ID,
+								)
+							);
+						?>
 						<span data-id="<?php echo esc_attr( $post->ID ); ?>" class="acf-rel-item">
-								<?php echo $this->get_post_title( $post, $field ); ?>
+								<?php echo acf_esc_html( $this->get_post_title( $post, $field ) ); ?>
 							<a href="#" class="acf-icon -minus small dark" data-name="remove_item"></a>
 						</span>
 					</li>
@@ -683,7 +677,7 @@ if ( ! class_exists( 'acf_field_relationship' ) ) :
 		/*
 		*  format_value()
 		*
-		*  This filter is appied to the $value after it is loaded from the db and before it is returned to the template
+		*  This filter is applied to the $value after it is loaded from the db and before it is returned to the template
 		*
 		*  @type    filter
 		*  @since   3.6
@@ -766,24 +760,22 @@ if ( ! class_exists( 'acf_field_relationship' ) ) :
 		}
 
 
-		/*
-		*  update_value()
-		*
-		*  This filter is appied to the $value before it is updated in the db
-		*
-		*  @type    filter
-		*  @since   3.6
-		*  @date    23/01/13
-		*
-		*  @param   $value - the value which will be saved in the database
-		*  @param   $post_id - the $post_id of which the value will be saved
-		*  @param   $field - the field array holding all the field options
-		*
-		*  @return  $value - the modified value
-		*/
-
+		/**
+		 *  update_value()
+		 *
+		 *  This filter is applied to the $value before it is updated in the db
+		 *
+		 *  @type    filter
+		 *  @since   3.6
+		 *  @date    23/01/13
+		 *
+		 *  @param   $value - the value which will be saved in the database
+		 *  @param   $post_id - the $post_id of which the value will be saved
+		 *  @param   $field - the field array holding all the field options
+		 *
+		 *  @return  $value - the modified value
+		 */
 		function update_value( $value, $post_id, $field ) {
-
 			// Bail early if no value.
 			if ( empty( $value ) ) {
 				return $value;
@@ -803,6 +795,90 @@ if ( ! class_exists( 'acf_field_relationship' ) ) :
 
 			// Return value.
 			return $value;
+		}
+
+		/**
+		 * Validates relationship fields updated via the REST API.
+		 *
+		 * @param bool  $valid
+		 * @param int   $value
+		 * @param array $field
+		 *
+		 * @return bool|WP_Error
+		 */
+		public function validate_rest_value( $valid, $value, $field ) {
+			return acf_get_field_type( 'post_object' )->validate_rest_value( $valid, $value, $field );
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			$schema = array(
+				'type'     => array( 'integer', 'array', 'null' ),
+				'required' => ! empty( $field['required'] ),
+				'items'    => array(
+					'type' => 'integer',
+				),
+			);
+
+			if ( empty( $field['allow_null'] ) ) {
+				$schema['minItems'] = 1;
+			}
+
+			if ( ! empty( $field['min'] ) ) {
+				$schema['minItems'] = (int) $field['min'];
+			}
+
+			if ( ! empty( $field['max'] ) ) {
+				$schema['maxItems'] = (int) $field['max'];
+			}
+
+			return $schema;
+		}
+
+		/**
+		 * @see \acf_field::get_rest_links()
+		 * @param mixed      $value The raw (unformatted) field value.
+		 * @param int|string $post_id
+		 * @param array      $field
+		 * @return array
+		 */
+		public function get_rest_links( $value, $post_id, array $field ) {
+			$links = array();
+
+			if ( empty( $value ) ) {
+				return $links;
+			}
+
+			foreach ( (array) $value as $object_id ) {
+				if ( ! $post_type = get_post_type( $object_id ) or ! $post_type = get_post_type_object( $post_type ) ) {
+					continue;
+				}
+				$rest_base = acf_get_object_type_rest_base( $post_type );
+				$links[]   = array(
+					'rel'        => $post_type->name === 'attachment' ? 'acf:attachment' : 'acf:post',
+					'href'       => rest_url( sprintf( '/wp/v2/%s/%s', $rest_base, $object_id ) ),
+					'embeddable' => true,
+				);
+			}
+
+			return $links;
+		}
+
+		/**
+		 * Apply basic formatting to prepare the value for default REST output.
+		 *
+		 * @param mixed      $value
+		 * @param string|int $post_id
+		 * @param array      $field
+		 * @return mixed
+		 */
+		public function format_value_for_rest( $value, $post_id, array $field ) {
+			return acf_format_numerics( $value );
 		}
 
 	}

@@ -5,11 +5,11 @@
  *
  * Returns true if the value provided is considered "empty". Allows numbers such as 0.
  *
- * @date	6/7/16
- * @since	5.4.0
+ * @date    6/7/16
+ * @since   5.4.0
  *
- * @param	mixed $var The value to check.
- * @return	bool
+ * @param   mixed $var The value to check.
+ * @return  bool
  */
 function acf_is_empty( $var ) {
 	return ( ! $var && ! is_numeric( $var ) );
@@ -122,6 +122,20 @@ function acf_request_args( $args = array() ) {
 		$args[ $k ] = isset( $_REQUEST[ $k ] ) ? $_REQUEST[ $k ] : $args[ $k ];
 	}
 	return $args;
+}
+
+/**
+ * Returns a single $_REQUEST arg with fallback.
+ *
+ * @date    23/10/20
+ * @since   5.9.2
+ *
+ * @param   string $key The property name.
+ * @param   mixed  $default The default value to fallback to.
+ * @return  mixed
+ */
+function acf_request_arg( $name = '', $default = null ) {
+	return isset( $_REQUEST[ $name ] ) ? $_REQUEST[ $name ] : $default;
 }
 
 // Register store.
@@ -303,7 +317,27 @@ function acf_maybe_idval( $value ) {
 }
 
 /**
- * acf_numericval
+ * Convert any numeric strings into their equivalent numeric type. This function will
+ * work with both single values and arrays.
+ *
+ * @param mixed $value Either a single value or an array of values.
+ * @return mixed
+ */
+function acf_format_numerics( $value ) {
+	if ( is_array( $value ) ) {
+		return array_map(
+			function ( $v ) {
+				return is_numeric( $v ) ? $v + 0 : $v;
+			},
+			$value
+		);
+	}
+
+	return is_numeric( $value ) ? $value + 0 : $value;
+}
+
+/**
+ * acf_numval
  *
  * Casts the provided value as eiter an int or float using a simple hack.
  *
@@ -333,24 +367,34 @@ function acf_idify( $str = '' ) {
 }
 
 /**
- * acf_slugify
- *
  * Returns a slug friendly string.
  *
  * @date    24/12/17
  * @since   5.6.5
  *
  * @param   string $str The string to convert.
+ * @param   string $glue The glue between each slug piece.
  * @return  string
  */
-function acf_slugify( $str = '' ) {
-	return str_replace( array( '_', '/', ' ' ), '-', strtolower( $str ) );
+function acf_slugify( $str = '', $glue = '-' ) {
+	$raw  = $str;
+	$slug = str_replace( array( '_', '-', '/', ' ' ), $glue, strtolower( remove_accents( $raw ) ) );
+	$slug = preg_replace( "/[^A-Za-z0-9" . preg_quote( $glue ) . "]/", '', $slug );
+
+	/**
+	 * Filters the slug created by acf_slugify().
+	 *
+	 * @since 5.11.4
+	 *
+	 * @param string $slug The newly created slug.
+	 * @param string $raw  The original string.
+	 * @param string $glue The separator used to join the string into a slug.
+	 */
+	return apply_filters( 'acf/slugify', $slug, $raw, $glue );
 }
 
 /**
- * acf_punctify
- *
- * Returns a string with correct full stop puctuation.
+ * Returns a string with correct full stop punctuation.
  *
  * @date    12/7/19
  * @since   5.8.2
@@ -359,7 +403,10 @@ function acf_slugify( $str = '' ) {
  * @return  string
  */
 function acf_punctify( $str = '' ) {
-	return trim( $str, '.' ) . '.';
+	if ( substr( trim( strip_tags( $str ) ), -1 ) !== '.' ) {
+		return trim( $str ) . '.';
+	}
+	return trim( $str );
 }
 
 /**
@@ -384,4 +431,71 @@ function acf_did( $name ) {
 		acf_set_data( "acf_did_$name", true );
 		return false;
 	}
+}
+
+/**
+ * Returns the length of a string that has been submitted via $_POST.
+ *
+ * Uses the following process:
+ * 1. Unslash the string because posted values will be slashed.
+ * 2. Decode special characters because wp_kses() will normalize entities.
+ * 3. Treat line-breaks as a single character instead of two.
+ * 4. Use mb_strlen() to accomodate special characters.
+ *
+ * @date    04/06/2020
+ * @since   5.9.0
+ *
+ * @param   string $str The string to review.
+ * @return  int
+ */
+function acf_strlen( $str ) {
+	return mb_strlen( str_replace( "\r\n", "\n", wp_specialchars_decode( wp_unslash( $str ) ) ) );
+}
+
+/**
+ * Returns a value with default fallback.
+ *
+ * @date    6/4/20
+ * @since   5.9.0
+ *
+ * @param   mixed $value The value.
+ * @param   mixed $default_value The default value.
+ * @return  mixed
+ */
+function acf_with_default( $value, $default_value ) {
+	return $value ? $value : $default_value;
+}
+
+/**
+ * Returns the current priority of a running action.
+ *
+ * @date    14/07/2020
+ * @since   5.9.0
+ *
+ * @param   string $action The action name.
+ * @return  int|bool
+ */
+function acf_doing_action( $action ) {
+	global $wp_filter;
+	if ( isset( $wp_filter[ $action ] ) ) {
+		return $wp_filter[ $action ]->current_priority();
+	}
+	return false;
+}
+
+/**
+ * Returns the current URL.
+ *
+ * @date    23/01/2015
+ * @since   5.1.5
+ *
+ * @param   void
+ * @return  string
+ */
+function acf_get_current_url() {
+	// Ensure props exist to avoid PHP Notice during CLI commands.
+	if ( isset( $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'] ) ) {
+		return ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+	}
+	return '';
 }

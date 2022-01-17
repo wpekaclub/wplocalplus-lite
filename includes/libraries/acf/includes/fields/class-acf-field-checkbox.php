@@ -435,8 +435,10 @@ if ( ! class_exists( 'acf_field_checkbox' ) ) :
 
 		function update_field( $field ) {
 
-			return acf_get_field_type( 'select' )->update_field( $field );
-
+			// Decode choices (convert to array).
+			$field['choices']       = acf_decode_choices( $field['choices'] );
+			$field['default_value'] = acf_decode_choices( $field['default_value'], true );
+			return $field;
 		}
 
 
@@ -472,7 +474,10 @@ if ( ! class_exists( 'acf_field_checkbox' ) ) :
 				// get raw $field (may have been changed via repeater field)
 				// if field is local, it won't have an ID
 				$selector = $field['ID'] ? $field['ID'] : $field['key'];
-				$field    = acf_get_field( $selector, true );
+				$field    = acf_get_field( $selector );
+				if ( ! $field ) {
+					return false;
+				}
 
 				// bail early if no ID (JSON only)
 				if ( ! $field['ID'] ) {
@@ -557,6 +562,45 @@ if ( ! class_exists( 'acf_field_checkbox' ) ) :
 
 			// Return.
 			return acf_get_field_type( 'select' )->format_value( $value, $post_id, $field );
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			$schema = array(
+				'type'     => array( 'string', 'array', 'null' ),
+				'required' => isset( $field['required'] ) && $field['required'],
+				'items'    => array(
+					'type' => 'string',
+				),
+			);
+
+			if ( isset( $field['default_value'] ) && '' !== $field['default_value'] ) {
+				$schema['default'] = $field['default_value'];
+			}
+
+			// If we allow custom values, nothing else to do here.
+			if ( ! empty( $field['allow_custom'] ) ) {
+				return $schema;
+			}
+
+			/**
+			 * If a user has defined keys for the checkboxes,
+			 * we should use the keys for the available options to POST to,
+			 * since they are what is displayed in GET requests.
+			 */
+			$checkbox_keys = array_diff(
+				array_keys( $field['choices'] ),
+				array_values( $field['choices'] )
+			);
+
+			$schema['items']['enum'] = empty( $checkbox_keys ) ? $field['choices'] : $checkbox_keys;
+
+			return $schema;
 		}
 
 	}

@@ -240,7 +240,7 @@ if ( ! class_exists( 'acf_admin_tools' ) ) :
 				}
 
 				// add metabox
-				add_meta_box( 'acf-admin-tool-' . $tool->name, $tool->title, array( $this, 'metabox_html' ), $screen->id, 'normal', 'default', array( 'tool' => $tool->name ) );
+				add_meta_box( 'acf-admin-tool-' . $tool->name, acf_esc_html( $tool->title ), array( $this, 'metabox_html' ), $screen->id, 'normal', 'default', array( 'tool' => $tool->name ) );
 
 			}
 
@@ -289,12 +289,12 @@ endif; // class_exists check
 *
 *  alias of acf()->admin_tools->register_tool()
 *
-*  @type	function
-*  @date	31/5/17
-*  @since	5.6.0
+*  @type    function
+*  @date    31/5/17
+*  @since   5.6.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_register_admin_tool( $class ) {
@@ -309,12 +309,12 @@ function acf_register_admin_tool( $class ) {
 *
 *  This function will return the admin URL to the tools page
 *
-*  @type	function
-*  @date	31/5/17
-*  @since	5.6.0
+*  @type    function
+*  @date    31/5/17
+*  @since   5.6.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_get_admin_tools_url() {
@@ -329,12 +329,12 @@ function acf_get_admin_tools_url() {
 *
 *  This function will return the admin URL to the tools page
 *
-*  @type	function
-*  @date	31/5/17
-*  @since	5.6.0
+*  @type    function
+*  @date    31/5/17
+*  @since   5.6.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_get_admin_tool_url( $tool = '' ) {

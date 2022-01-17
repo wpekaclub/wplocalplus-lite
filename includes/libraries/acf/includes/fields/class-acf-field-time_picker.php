@@ -46,14 +46,14 @@ if ( ! class_exists( 'acf_field_time_picker' ) ) :
 
 		function render_field( $field ) {
 
-			// format value
+			// Set value.
 			$display_value = '';
 
 			if ( $field['value'] ) {
 				$display_value = acf_format_date( $field['value'], $field['display_format'] );
 			}
 
-			// vars
+			// Elements.
 			$div          = array(
 				'class'            => 'acf-time-picker acf-input-wrap',
 				'data-time_format' => acf_convert_time_to_js( $field['display_format'] ),
@@ -66,12 +66,18 @@ if ( ! class_exists( 'acf_field_time_picker' ) ) :
 				'value' => $field['value'],
 			);
 			$text_input   = array(
-				'class' => 'input',
+				'class' => $field['class'] . ' input',
 				'type'  => 'text',
 				'value' => $display_value,
 			);
+			foreach ( array( 'readonly', 'disabled' ) as $k ) {
+				if ( ! empty( $field[ $k ] ) ) {
+					$hidden_input[ $k ] = $k;
+					$text_input[ $k ]   = $k;
+				}
+			}
 
-			// html
+			// Output.
 			?>
 		<div <?php acf_esc_attr_e( $div ); ?>>
 			<?php acf_hidden_input( $hidden_input ); ?>
@@ -98,8 +104,8 @@ if ( ! class_exists( 'acf_field_time_picker' ) ) :
 		function render_field_settings( $field ) {
 
 			// vars
-			$g_i_a = date( 'g:i a' );
-			$H_i_s = date( 'H:i:s' );
+			$g_i_a = date_i18n( 'g:i a' );
+			$H_i_s = date_i18n( 'H:i:s' );
 
 			// display_format
 			acf_render_field_setting(
@@ -160,6 +166,43 @@ if ( ! class_exists( 'acf_field_time_picker' ) ) :
 
 		}
 
+		/**
+		 *  This filter is applied to the $field after it is loaded from the database
+		 *  and ensures the return and display values are set.
+		 *
+		 *  @type    filter
+		 *  @since   5.11.0
+		 *  @date    28/09/21
+		 *
+		 *  @param array $field The field array holding all the field options.
+		 *
+		 *  @return array
+		 */
+		function load_field( $field ) {
+			if ( empty( $field['display_format'] ) ) {
+				$field['display_format'] = $this->defaults['display_format'];
+			}
+
+			if ( empty( $field['return_format'] ) ) {
+				$field['return_format'] = $this->defaults['return_format'];
+			}
+
+			return $field;
+        }
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			return array(
+				'type'        => array( 'string', 'null' ),
+				'description' => 'A `H:i:s` formatted time string.',
+				'required'    => ! empty( $field['required'] ),
+			);
+		}
 	}
 
 

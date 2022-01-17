@@ -128,7 +128,7 @@ if ( ! class_exists( 'ACF_Form_Post' ) ) :
 					);
 
 					// Add the meta box.
-					add_meta_box( $id, $title, array( $this, 'render_meta_box' ), $post_type, $context, $priority, array( 'field_group' => $field_group ) );
+					add_meta_box( $id, acf_esc_html( $title ), array( $this, 'render_meta_box' ), $post_type, $context, $priority, array( 'field_group' => $field_group ) );
 
 				}
 

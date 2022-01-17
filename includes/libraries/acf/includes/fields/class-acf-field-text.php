@@ -164,12 +164,28 @@ if ( ! class_exists( 'acf_field_text' ) ) :
 		function validate_value( $valid, $value, $field, $input ) {
 
 			// Check maxlength
-			if ( $field['maxlength'] && mb_strlen( wp_unslash( $value ) ) > $field['maxlength'] ) {
+			if ( $field['maxlength'] && ( acf_strlen( $value ) > $field['maxlength'] ) ) {
 				return sprintf( __( 'Value must not exceed %d characters', 'acf' ), $field['maxlength'] );
 			}
 
 			// Return.
 			return $valid;
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		function get_rest_schema( array $field ) {
+			$schema = parent::get_rest_schema( $field );
+
+			if ( ! empty( $field['maxlength'] ) ) {
+				$schema['maxLength'] = (int) $field['maxlength'];
+			}
+
+			return $schema;
 		}
 	}
 

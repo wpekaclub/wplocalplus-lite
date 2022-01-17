@@ -5,9 +5,9 @@
 *
 *  All the logic for 3rd party functionality
 *
-*  @class 		acf_third_party
-*  @package		ACF
-*  @subpackage	Core
+*  @class       acf_third_party
+*  @package     ACF
+*  @subpackage  Core
 */
 
 if ( ! class_exists( 'acf_third_party' ) ) :
@@ -132,7 +132,7 @@ if ( ! class_exists( 'acf_third_party' ) ) :
 					$title = 'ACF: ' . $field_group['title'];
 
 					// add meta box
-					add_meta_box( $id, $title, '__return_true', $post_type );
+					add_meta_box( $id, acf_esc_html( $title ), '__return_true', $post_type );
 
 				}
 			}

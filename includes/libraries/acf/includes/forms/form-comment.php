@@ -5,9 +5,9 @@
 *
 *  All the logic for adding fields to comments
 *
-*  @class 		acf_form_comment
-*  @package		ACF
-*  @subpackage	Forms
+*  @class       acf_form_comment
+*  @package     ACF
+*  @subpackage  Forms
 */
 
 if ( ! class_exists( 'acf_form_comment' ) ) :

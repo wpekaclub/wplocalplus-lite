@@ -221,12 +221,12 @@ endif; // class_exists check
 *
 *  alias of acf()->validation->function()
 *
-*  @type	function
-*  @date	6/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    6/10/13
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_add_validation_error( $input, $message = '' ) {
@@ -259,12 +259,12 @@ function acf_reset_validation_errors() {
 *
 *  This function will validate $_POST data and add errors
 *
-*  @type	function
-*  @date	25/11/2013
-*  @since	5.0.0
+*  @type    function
+*  @date    25/11/2013
+*  @since   5.0.0
 *
-*  @param	$show_errors (boolean) if true, errors will be shown via a wp_die screen
-*  @return	(boolean)
+*  @param   $show_errors (boolean) if true, errors will be shown via a wp_die screen
+*  @return  (boolean)
 */
 
 function acf_validate_save_post( $show_errors = false ) {
@@ -308,13 +308,13 @@ function acf_validate_save_post( $show_errors = false ) {
 *
 *  This function will validate an array of field values
 *
-*  @type	function
-*  @date	6/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    6/10/13
+*  @since   5.0.0
 *
-*  @param	values (array)
-*  @param	$input_prefix (string)
-*  @return	n/a
+*  @param   values (array)
+*  @param   $input_prefix (string)
+*  @return  n/a
 */
 
 function acf_validate_values( $values, $input_prefix = '' ) {
@@ -349,12 +349,12 @@ function acf_validate_values( $values, $input_prefix = '' ) {
 *
 *  This function will validate a field's value
 *
-*  @type	function
-*  @date	6/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    6/10/13
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_validate_value( $value, $field, $input ) {

@@ -605,12 +605,12 @@ endif; // class_exists check
 *
 *  alias of acf()->form->functions
 *
-*  @type	function
-*  @date	11/06/2014
-*  @since	5.0.0
+*  @type    function
+*  @date    11/06/2014
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 
@@ -628,7 +628,7 @@ function acf_form( $args = array() ) {
 
 function acf_get_form( $id = '' ) {
 
-	acf()->form_front->get_form( $id );
+	return acf()->form_front->get_form( $id );
 
 }
 

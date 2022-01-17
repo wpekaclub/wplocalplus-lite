@@ -17,12 +17,12 @@ if ( ! class_exists( 'acf_fields' ) ) :
 		*
 		*  This function will setup the class functionality
 		*
-		*  @type	function
-		*  @date	5/03/2014
-		*  @since	5.4.0
+		*  @type    function
+		*  @date    5/03/2014
+		*  @since   5.4.0
 		*
-		*  @param	n/a
-		*  @return	n/a
+		*  @param   n/a
+		*  @return  n/a
 		*/
 
 		function __construct() {
@@ -35,12 +35,12 @@ if ( ! class_exists( 'acf_fields' ) ) :
 		*
 		*  This function will register a field type instance
 		*
-		*  @type	function
-		*  @date	6/07/2016
-		*  @since	5.4.0
+		*  @type    function
+		*  @date    6/07/2016
+		*  @since   5.4.0
 		*
-		*  @param	$class (string)
-		*  @return	n/a
+		*  @param   $class (string)
+		*  @return  n/a
 		*/
 
 		function register_field_type( $class ) {
@@ -62,12 +62,12 @@ if ( ! class_exists( 'acf_fields' ) ) :
 		*
 		*  This function will return a field type instance
 		*
-		*  @type	function
-		*  @date	6/07/2016
-		*  @since	5.4.0
+		*  @type    function
+		*  @date    6/07/2016
+		*  @since   5.4.0
 		*
-		*  @param	$name (string)
-		*  @return	(mixed)
+		*  @param   $name (string)
+		*  @return  (mixed)
 		*/
 
 		function get_field_type( $name ) {
@@ -80,12 +80,12 @@ if ( ! class_exists( 'acf_fields' ) ) :
 		*
 		*  This function will return true if a field type exists
 		*
-		*  @type	function
-		*  @date	6/07/2016
-		*  @since	5.4.0
+		*  @type    function
+		*  @date    6/07/2016
+		*  @since   5.4.0
 		*
-		*  @param	$name (string)
-		*  @return	(mixed)
+		*  @param   $name (string)
+		*  @return  (mixed)
 		*/
 
 		function is_field_type( $name ) {
@@ -99,12 +99,12 @@ if ( ! class_exists( 'acf_fields' ) ) :
 		*  This function will store a basic array of info about the field type
 		*  to later be overriden by the above register_field_type function
 		*
-		*  @type	function
-		*  @date	29/5/17
-		*  @since	5.6.0
+		*  @type    function
+		*  @date    29/5/17
+		*  @since   5.6.0
 		*
-		*  @param	$info (array)
-		*  @return	n/a
+		*  @param   $info (array)
+		*  @return  n/a
 		*/
 
 		function register_field_type_info( $info ) {
@@ -120,12 +120,12 @@ if ( ! class_exists( 'acf_fields' ) ) :
 		*
 		*  This function will return an array of all field types
 		*
-		*  @type	function
-		*  @date	6/07/2016
-		*  @since	5.4.0
+		*  @type    function
+		*  @date    6/07/2016
+		*  @since   5.4.0
 		*
-		*  @param	$name (string)
-		*  @return	(mixed)
+		*  @param   $name (string)
+		*  @return  (mixed)
 		*/
 
 		function get_field_types() {
@@ -145,12 +145,12 @@ endif; // class_exists check
 *
 *  alias of acf()->fields->register_field_type()
 *
-*  @type	function
-*  @date	31/5/17
-*  @since	5.6.0
+*  @type    function
+*  @date    31/5/17
+*  @since   5.6.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_register_field_type( $class ) {
@@ -163,12 +163,12 @@ function acf_register_field_type( $class ) {
 *
 *  alias of acf()->fields->register_field_type_info()
 *
-*  @type	function
-*  @date	31/5/17
-*  @since	5.6.0
+*  @type    function
+*  @date    31/5/17
+*  @since   5.6.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_register_field_type_info( $info ) {
@@ -181,12 +181,12 @@ function acf_register_field_type_info( $info ) {
 *
 *  alias of acf()->fields->get_field_type()
 *
-*  @type	function
-*  @date	31/5/17
-*  @since	5.6.0
+*  @type    function
+*  @date    31/5/17
+*  @since   5.6.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_get_field_type( $name ) {
@@ -199,12 +199,12 @@ function acf_get_field_type( $name ) {
 *
 *  alias of acf()->fields->get_field_types()
 *
-*  @type	function
-*  @date	31/5/17
-*  @since	5.6.0
+*  @type    function
+*  @date    31/5/17
+*  @since   5.6.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_get_field_types( $args = array() ) {
@@ -213,7 +213,7 @@ function acf_get_field_types( $args = array() ) {
 	$args = wp_parse_args(
 		$args,
 		array(
-			'public' => true, // true, false
+			'public' => true,    // true, false
 		)
 	);
 
@@ -263,12 +263,12 @@ function acf_get_field_types_info( $args = array() ) {
 *
 *  alias of acf()->fields->is_field_type()
 *
-*  @type	function
-*  @date	31/5/17
-*  @since	5.6.0
+*  @type    function
+*  @date    31/5/17
+*  @since   5.6.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function acf_is_field_type( $name = '' ) {
@@ -281,12 +281,12 @@ function acf_is_field_type( $name = '' ) {
 *
 *  This function will return a field type's property
 *
-*  @type	function
-*  @date	1/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    1/10/13
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	(array)
+*  @param   n/a
+*  @return  (array)
 */
 
 function acf_get_field_type_prop( $name = '', $prop = '' ) {
@@ -300,12 +300,12 @@ function acf_get_field_type_prop( $name = '', $prop = '' ) {
 *
 *  This function will return the label of a field type
 *
-*  @type	function
-*  @date	1/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    1/10/13
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	(array)
+*  @param   n/a
+*  @return  (array)
 */
 
 function acf_get_field_type_label( $name = '' ) {
@@ -319,12 +319,12 @@ function acf_get_field_type_label( $name = '' ) {
 *
 *  deprecated in favour of acf_is_field_type()
 *
-*  @type	function
-*  @date	1/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    1/10/13
+*  @since   5.0.0
 *
-*  @param	$type (string)
-*  @return	(boolean)
+*  @param   $type (string)
+*  @return  (boolean)
 */
 
 function acf_field_type_exists( $type = '' ) {
@@ -337,12 +337,12 @@ function acf_field_type_exists( $type = '' ) {
 *
 *  Returns an multi-dimentional array of field types "name => label" grouped by category
 *
-*  @type	function
-*  @date	1/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    1/10/13
+*  @since   5.0.0
 *
-*  @param	n/a
-*  @return	(array)
+*  @param   n/a
+*  @return  (array)
 */
 
 function acf_get_grouped_field_types() {

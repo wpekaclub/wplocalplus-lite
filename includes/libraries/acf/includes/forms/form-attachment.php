@@ -5,9 +5,9 @@
 *
 *  All the logic for adding fields to attachments
 *
-*  @class 		acf_form_attachment
-*  @package		ACF
-*  @subpackage	Forms
+*  @class       acf_form_attachment
+*  @package     ACF
+*  @subpackage  Forms
 */
 
 if ( ! class_exists( 'acf_form_attachment' ) ) :
@@ -130,12 +130,14 @@ acf.unload.active = 0;
 			$is_page = acf_is_screen( 'attachment' );
 			$post_id = $post->ID;
 			$el      = 'tr';
-			$args    = array(
-				'attachment' => $post_id,
-			);
 
 			// get field groups
-			$field_groups = acf_get_field_groups( $args );
+			$field_groups = acf_get_field_groups(
+				array(
+					'attachment_id' => $post_id,
+					'attachment'    => $post_id, // Leave for backwards compatibility
+				)
+			);
 
 			// render
 			if ( ! empty( $field_groups ) ) {
@@ -156,17 +158,17 @@ acf.unload.active = 0;
 				// loop
 				foreach ( $field_groups as $field_group ) {
 
-					// load fields
-					$fields = acf_get_fields( $field_group );
+						// load fields
+						$fields = acf_get_fields( $field_group );
 
-					// override instruction placement for modal
+						// override instruction placement for modal
 					if ( ! $is_page ) {
 
 						$field_group['instruction_placement'] = 'field';
 					}
 
-					// render
-					acf_render_fields( $fields, $post_id, $el, $field_group['instruction_placement'] );
+						// render
+						acf_render_fields( $fields, $post_id, $el, $field_group['instruction_placement'] );
 
 				}
 

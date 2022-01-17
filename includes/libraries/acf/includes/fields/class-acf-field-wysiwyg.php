@@ -55,37 +55,25 @@ if ( ! class_exists( 'acf_field_wysiwyg' ) ) :
 
 		function add_filters() {
 
-			// wp-includes/class-wp-embed.php
-			if ( ! empty( $GLOBALS['wp_embed'] ) ) {
+			// WordPress 5.5 introduced new function for applying image tags.
+			$wp_filter_content_tags = function_exists( 'wp_filter_content_tags' ) ? 'wp_filter_content_tags' : 'wp_make_content_images_responsive';
 
-				add_filter( 'acf_the_content', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 );
-				add_filter( 'acf_the_content', array( $GLOBALS['wp_embed'], 'autoembed' ), 8 );
-
-			}
-
-			// wp-includes/default-filters.php
+			// Mimic filters added to "the_content" in "wp-includes/default-filters.php".
 			add_filter( 'acf_the_content', 'capital_P_dangit', 11 );
+			// add_filter( 'acf_the_content', 'do_blocks', 9 ); Not yet supported.
 			add_filter( 'acf_the_content', 'wptexturize' );
 			add_filter( 'acf_the_content', 'convert_smilies', 20 );
-
-			// Removed in 4.4
-			if ( acf_version_compare( 'wp', '<', '4.4' ) ) {
-				add_filter( 'acf_the_content', 'convert_chars' );
-			}
-
 			add_filter( 'acf_the_content', 'wpautop' );
 			add_filter( 'acf_the_content', 'shortcode_unautop' );
-
-			// should only be for the_content (causes double image on attachment page)
-			// add_filter( 'acf_the_content', 'prepend_attachment' );
-
-			// Added in 4.4
-			if ( function_exists( 'wp_make_content_images_responsive' ) ) {
-				add_filter( 'acf_the_content', 'wp_make_content_images_responsive' );
-			}
-
+			// add_filter( 'acf_the_content', 'prepend_attachment' ); Causes double image on attachment page.
+			add_filter( 'acf_the_content', $wp_filter_content_tags );
 			add_filter( 'acf_the_content', 'do_shortcode', 11 );
 
+			// Mimic filters added to "the_content" in "wp-includes/class-wp-embed.php"
+			if ( isset( $GLOBALS['wp_embed'] ) ) {
+				add_filter( 'acf_the_content', array( $GLOBALS['wp_embed'], 'run_shortcode' ), 8 );
+				add_filter( 'acf_the_content', array( $GLOBALS['wp_embed'], 'autoembed' ), 8 );
+			}
 		}
 
 
@@ -191,18 +179,15 @@ if ( ! class_exists( 'acf_field_wysiwyg' ) ) :
 			);
 		}
 
-		/*
-		*  render_field()
-		*
-		*  Create the HTML interface for your field
-		*
-		*  @param   $field - an array holding all the field's data
-		*
-		*  @type    action
-		*  @since   3.6
-		*  @date    23/01/13
-		*/
-
+		/**
+		 * Create the HTML interface for your field
+		 *
+		 * @param array $field An array holding all the field's data
+		 *
+		 * @type    action
+		 * @since   3.6
+		 * @date    23/01/13
+		 */
 		function render_field( $field ) {
 
 			// enqueue
@@ -212,7 +197,6 @@ if ( ! class_exists( 'acf_field_wysiwyg' ) ) :
 			$id             = uniqid( 'acf-editor-' );
 			$default_editor = 'html';
 			$show_tabs      = true;
-			$button         = '';
 
 			// get height
 			$height = acf_get_user_setting( 'wysiwyg_height', 300 );
@@ -241,7 +225,7 @@ if ( ! class_exists( 'acf_field_wysiwyg' ) ) :
 
 			}
 
-			// must be logged in tp upload
+			// must be logged in to upload
 			if ( ! current_user_can( 'upload_files' ) ) {
 
 				$field['media_upload'] = 0;
@@ -251,30 +235,10 @@ if ( ! class_exists( 'acf_field_wysiwyg' ) ) :
 			// mode
 			$switch_class = ( $default_editor === 'html' ) ? 'html-active' : 'tmce-active';
 
-			// filter value for editor
-			remove_filter( 'acf_the_editor_content', 'format_for_editor', 10, 2 );
-			remove_filter( 'acf_the_editor_content', 'wp_htmledit_pre', 10, 1 );
-			remove_filter( 'acf_the_editor_content', 'wp_richedit_pre', 10, 1 );
-
-			// WP 4.3
-			if ( acf_version_compare( 'wp', '>=', '4.3' ) ) {
-
-				add_filter( 'acf_the_editor_content', 'format_for_editor', 10, 2 );
-
-				$button = 'data-wp-editor-id="' . $id . '"';
-
-				// WP < 4.3
-			} else {
-
-				$function = ( $default_editor === 'html' ) ? 'wp_htmledit_pre' : 'wp_richedit_pre';
-
-				add_filter( 'acf_the_editor_content', $function, 10, 1 );
-
-				$button = 'onclick="switchEditors.switchto(this);"';
-
-			}
-
 			// filter
+			add_filter( 'acf_the_editor_content', 'format_for_editor', 10, 2 );
+
+			$field['value'] = is_string( $field['value'] ) ? $field['value'] : '';
 			$field['value'] = apply_filters( 'acf_the_editor_content', $field['value'], $default_editor );
 
 			// attr
@@ -302,24 +266,29 @@ if ( ! class_exists( 'acf_field_wysiwyg' ) ) :
 
 			?>
 		<div <?php acf_esc_attr_e( $wrap ); ?>>
-			<div id="wp-<?php echo $id; ?>-editor-tools" class="wp-editor-tools hide-if-no-js">
+			<div id="wp-<?php echo esc_attr( $id ); ?>-editor-tools" class="wp-editor-tools hide-if-no-js">
 				<?php if ( $field['media_upload'] ) : ?>
-				<div id="wp-<?php echo $id; ?>-media-buttons" class="wp-media-buttons">
-					<?php do_action( 'media_buttons', $id ); ?>
+				<div id="wp-<?php echo esc_attr( $id ); ?>-media-buttons" class="wp-media-buttons">
+					<?php
+					if ( ! function_exists( 'media_buttons' ) ) {
+						require ABSPATH . 'wp-admin/includes/media.php';
+					}
+					do_action( 'media_buttons', $id );
+					?>
 				</div>
 				<?php endif; ?>
-				<?php if ( user_can_richedit() && $show_tabs ) : ?>
+					<?php if ( user_can_richedit() && $show_tabs ) : ?>
 					<div class="wp-editor-tabs">
-						<button id="<?php echo $id; ?>-tmce" class="wp-switch-editor switch-tmce" <?php echo $button; ?> type="button"><?php echo __( 'Visual', 'acf' ); ?></button>
-						<button id="<?php echo $id; ?>-html" class="wp-switch-editor switch-html" <?php echo $button; ?> type="button"><?php echo _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'acf' ); ?></button>
+						<button id="<?php echo esc_attr( $id ); ?>-tmce" class="wp-switch-editor switch-tmce" data-wp-editor-id="<?php echo esc_attr( $id ); ?>" type="button"><?php echo __( 'Visual', 'acf' ); ?></button>
+						<button id="<?php echo esc_attr( $id ); ?>-html" class="wp-switch-editor switch-html" data-wp-editor-id="<?php echo esc_attr( $id ); ?>" type="button"><?php echo _x( 'Text', 'Name for the Text editor tab (formerly HTML)', 'acf' ); ?></button>
 					</div>
 				<?php endif; ?>
 			</div>
-			<div id="wp-<?php echo $id; ?>-editor-container" class="wp-editor-container">
-				<?php if ( $field['delay'] ) : ?>
+			<div id="wp-<?php echo esc_attr( $id ); ?>-editor-container" class="wp-editor-container">
+					<?php if ( $field['delay'] ) : ?>
 					<div class="acf-editor-toolbar"><?php _e( 'Click to initialize TinyMCE', 'acf' ); ?></div>
 				<?php endif; ?>
-				<?php printf( $textarea, $field['value'] ); ?>
+					<?php printf( $textarea, $field['value'] ); ?>
 			</div>
 		</div>
 			<?php
@@ -419,7 +388,7 @@ if ( ! class_exists( 'acf_field_wysiwyg' ) ) :
 				$field,
 				array(
 					'label'        => __( 'Delay initialization?', 'acf' ),
-					'instructions' => __( 'TinyMCE will not be initalized until field is clicked', 'acf' ),
+					'instructions' => __( 'TinyMCE will not be initialized until field is clicked', 'acf' ),
 					'name'         => 'delay',
 					'type'         => 'true_false',
 					'ui'           => 1,
@@ -433,39 +402,29 @@ if ( ! class_exists( 'acf_field_wysiwyg' ) ) :
 
 		}
 
-
-		/*
-		*  format_value()
-		*
-		*  This filter is appied to the $value after it is loaded from the db and before it is returned to the template
-		*
-		*  @type    filter
-		*  @since   3.6
-		*  @date    23/01/13
-		*
-		*  @param   $value (mixed) the value which was loaded from the database
-		*  @param   $post_id (mixed) the $post_id from which the value was loaded
-		*  @param   $field (array) the field array holding all the field options
-		*
-		*  @return  $value (mixed) the modified value
-		*/
-
+		/**
+		 * This filter is applied to the $value after it is loaded from the db, and before it is returned to the template
+		 *
+		 * @type    filter
+		 * @since   3.6
+		 * @date    23/01/13
+		 *
+		 * @param mixed $value   The value which was loaded from the database
+		 * @param mixed $post_id The $post_id from which the value was loaded
+		 * @param array $field   The field array holding all the field options
+		 *
+		 * @return mixed $value The modified value
+		 */
 		function format_value( $value, $post_id, $field ) {
-
-			// bail early if no value
-			if ( empty( $value ) ) {
-
+			// Bail early if no value or not a string.
+			if ( empty( $value ) || ! is_string( $value ) ) {
 				return $value;
-
 			}
 
-			// apply filters
 			$value = apply_filters( 'acf_the_content', $value );
 
-			// follow the_content function in /wp-includes/post-template.php
-			$value = str_replace( ']]>', ']]&gt;', $value );
-
-			return $value;
+			// Follow the_content function in /wp-includes/post-template.php
+			return str_replace( ']]>', ']]&gt;', $value );
 		}
 
 	}

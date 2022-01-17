@@ -105,24 +105,28 @@ if ( ! class_exists( 'acf_field_range' ) ) :
 			// range
 			$html .= acf_get_text_input( $atts );
 
-			// calculate input width based on character length (+1 char if using decimals)
-			$len = strlen( (string) $field['max'] );
-			if ( $atts['step'] < 1 ) {
-				$len++;
+			// Calculate input width based on the largest possible input character length.
+			// Also take into account the step size for decimal steps minus - 1.5 chars for leading "0.".
+			$len = max(
+				strlen( strval( $field['min'] ) ),
+				strlen( strval( $field['max'] ) )
+			);
+			if ( floatval( $atts['step'] ) < 1 ) {
+				$len += strlen( strval( $field['step'] ) ) - 1.5;
 			}
 
-			// input
-			$html .= acf_get_text_input(
-				array(
-					'type'  => 'number',
-					'id'    => $atts['id'] . '-alt',
-					'value' => $atts['value'],
-					'step'  => $atts['step'],
-					// 'min' => $atts['min'], // removed to avoid browser validation errors
-					// 'max' => $atts['max'],
-					'style' => 'width: ' . ( 1.8 + $len * 0.7 ) . 'em;',
-				)
-			);
+				// input
+				$html .= acf_get_text_input(
+					array(
+						'type'  => 'number',
+						'id'    => $atts['id'] . '-alt',
+						'value' => $atts['value'],
+						'step'  => $atts['step'],
+						// 'min' => $atts['min'], // removed to avoid browser validation errors
+						// 'max' => $atts['max'],
+						'style' => 'width: ' . ( 1.8 + $len * 0.7 ) . 'em;',
+					)
+				);
 
 				// append
 			if ( $field['append'] !== '' ) {
@@ -221,6 +225,39 @@ if ( ! class_exists( 'acf_field_range' ) ) :
 				)
 			);
 
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			$schema = array(
+				'type'     => array( 'number', 'null' ),
+				'required' => ! empty( $field['required'] ),
+				'minimum'  => empty( $field['min'] ) ? 0 : (int) $field['min'],
+				'maximum'  => empty( $field['max'] ) ? 100 : (int) $field['max'],
+			);
+
+			if ( isset( $field['default_value'] ) && is_numeric( $field['default_value'] ) ) {
+				$schema['default'] = (int) $field['default_value'];
+			}
+
+			return $schema;
+		}
+
+		/**
+		 * Apply basic formatting to prepare the value for default REST output.
+		 *
+		 * @param mixed      $value
+		 * @param string|int $post_id
+		 * @param array      $field
+		 * @return mixed
+		 */
+		public function format_value_for_rest( $value, $post_id, array $field ) {
+			return acf_format_numerics( $value );
 		}
 
 

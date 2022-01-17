@@ -77,7 +77,7 @@
                             value: attributes.type,
                             label: __( 'Place Type' ),
                             onChange: changeType,
-                            type: 'string',
+                            type: 'array',
                             options: place_types,
                         }),
                         createElement(SelectControl, {
@@ -85,7 +85,7 @@
                             value: attributes.location,
                             label: __( 'Location' ),
                             onChange: changeLocation,
-                            type: 'string',
+                            type: 'array',
                             options: locations,
                         }),
                         createElement(TextControl, {

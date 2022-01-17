@@ -27,6 +27,7 @@ if ( ! class_exists( 'ACF_Compatibility' ) ) :
 			add_filter( 'acf/validate_field/type=relationship', array( $this, 'validate_relationship_field' ), 20, 1 );
 			add_filter( 'acf/validate_field/type=post_object', array( $this, 'validate_relationship_field' ), 20, 1 );
 			add_filter( 'acf/validate_field/type=page_link', array( $this, 'validate_relationship_field' ), 20, 1 );
+			add_filter( 'acf/validate_field/type=image', array( $this, 'validate_image_field' ), 20, 1 );
 			add_filter( 'acf/validate_field/type=file', array( $this, 'validate_image_field' ), 20, 1 );
 			add_filter( 'acf/validate_field/type=wysiwyg', array( $this, 'validate_wysiwyg_field' ), 20, 1 );
 			add_filter( 'acf/validate_field/type=date_picker', array( $this, 'validate_date_picker_field' ), 20, 1 );
@@ -361,12 +362,12 @@ if ( ! class_exists( 'ACF_Compatibility' ) ) :
 		*
 		*  This function will provide compatibility with ACF4 field groups
 		*
-		*  @type	function
-		*  @date	23/04/2014
-		*  @since	5.0.0
+		*  @type    function
+		*  @date    23/04/2014
+		*  @since   5.0.0
 		*
-		*  @param	$field_group (array)
-		*  @return	$field_group
+		*  @param   $field_group (array)
+		*  @return  $field_group
 		*/
 		function validate_field_group( $field_group ) {
 
@@ -476,11 +477,11 @@ endif; // class_exists check
  *
  * Returns true if compatibility is enabled for the given component.
  *
- * @date	20/1/15
- * @since	5.1.5
+ * @date    20/1/15
+ * @since   5.1.5
  *
- * @param	string $name The name of the component to check.
- * @return	bool
+ * @param   string $name The name of the component to check.
+ * @return  bool
  */
 function acf_get_compatibility( $name ) {
 	return apply_filters( "acf/compatibility/{$name}", false );

@@ -40,18 +40,16 @@ function acf_get_reference( $field_name, $post_id ) {
 }
 
 /**
- * acf_get_value
- *
  * Retrieves the value for a given field and post_id.
  *
  * @date    28/09/13
  * @since   5.0.0
  *
- * @param   (int|string) $post_id The post id.
- * @param   array        $field The field array.
- * @return  mixed.
+ * @param   int|string $post_id The post id.
+ * @param   array      $field The field array.
+ * @return  mixed
  */
-function acf_get_value( $post_id = 0, $field ) {
+function acf_get_value( $post_id, $field ) {
 
 	// Allow filter to short-circuit load_value logic.
 	$value = apply_filters( 'acf/pre_load_value', null, $post_id, $field );
@@ -61,6 +59,18 @@ function acf_get_value( $post_id = 0, $field ) {
 
 	// Get field name.
 	$field_name = $field['name'];
+
+	// If we still don't have a proper field array, the field doesn't exist currently.
+	if ( empty( $field['type'] ) && empty( $field['key'] ) ) {
+		//  Get field ID & type.
+		$decoded = acf_decode_post_id( $post_id );
+
+		if ( apply_filters( 'acf/prevent_access_to_unknown_fields', false ) || ( 'option' === $decoded['type'] && 'options' !== $decoded['id'] ) ) {
+			return null;
+		}
+
+		do_action( 'acf/get_invalid_field_value', $field, __FUNCTION__ );
+	}
 
 	// Check store.
 	$store = acf_get_store( 'values' );
@@ -163,7 +173,7 @@ acf_add_filter_variations( 'acf/format_value', array( 'type', 'name', 'key' ), 2
  * @param   array        $field The field array.
  * @return  bool.
  */
-function acf_update_value( $value = null, $post_id = 0, $field ) {
+function acf_update_value( $value, $post_id, $field ) {
 
 	// Allow filter to short-circuit update_value logic.
 	$check = apply_filters( 'acf/pre_update_value', null, $value, $post_id, $field );
@@ -217,7 +227,7 @@ acf_add_filter_variations( 'acf/update_value', array( 'type', 'name', 'key' ), 2
  * @param   (int|string)                     $post_id The post id.
  * @return  void
  */
-function acf_update_values( $values = array(), $post_id = 0 ) {
+function acf_update_values( $values, $post_id ) {
 
 	// Loop over values.
 	foreach ( $values as $key => $value ) {
@@ -324,3 +334,26 @@ function acf_preview_value( $value, $post_id, $field ) {
 
 // Register variation.
 acf_add_filter_variations( 'acf/preview_value', array( 'type', 'name', 'key' ), 2 );
+
+/**
+ * Potentially log an error if a field doesn't exist when we expect it to.
+ *
+ * @param array  $field    An array representing the field that a value was requested for.
+ * @param string $function The function that noticed the problem.
+ *
+ * @return void
+ */
+function acf_log_invalid_field_notice( $field, $function ) {
+	// If "init" has fired, ACF probably wasn't initialized early.
+	if ( did_action( 'init' ) ) {
+		return;
+	}
+
+	$error_text = sprintf(
+		__( '<strong>%1$s</strong> - We\'ve detected one or more calls to retrieve ACF field values before ACF has been initialized. This is not supported and can result in malformed or missing data. <a href="%2$s" target="_blank">Learn how to fix this</a>.', 'acf' ),
+		acf_get_setting( 'name' ),
+		'https://www.advancedcustomfields.com/resources/acf-field-functions/'
+	);
+	_doing_it_wrong( $function, $error_text, '5.11.1' );
+}
+add_action( 'acf/get_invalid_field_value', 'acf_log_invalid_field_notice', 10, 2 );

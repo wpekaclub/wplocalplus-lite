@@ -117,11 +117,11 @@ if ( ! class_exists( 'ACF_Data' ) ) :
 		 *
 		 * Similar to has() but does not check aliases.
 		 *
-		 * @date 7/2/19
-		 * @since    5.7.11
+		 * @date    7/2/19
+		 * @since   5.7.11
 		 *
-		 * @param    type $var Description. Default.
-		 * @return   type Description.
+		 * @param   type $var Description. Default.
+		 * @return  type Description.
 		 */
 		function is( $key = '' ) {
 			return isset( $this->data[ $key ] );

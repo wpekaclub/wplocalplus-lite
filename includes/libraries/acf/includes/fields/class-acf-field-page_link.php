@@ -138,41 +138,34 @@ if ( ! class_exists( 'acf_field_page_link' ) ) :
 			// add archives to $results
 			if ( $field['allow_archives'] && $args['paged'] == 1 ) {
 
-				$archives   = array();
-				$archives[] = array(
-					'id'   => home_url(),
-					'text' => home_url(),
-				);
-
+				// Generate unique list of URLs.
+				$links   = array();
+				$links[] = home_url();
 				foreach ( $args['post_type'] as $post_type ) {
-
-					// vars
-					$archive_link = get_post_type_archive_link( $post_type );
-
-					// bail ealry if no link
-					if ( ! $archive_link ) {
-						continue;
-					}
-
-					// bail early if no search match
-					if ( $is_search && stripos( $archive_link, $s ) === false ) {
-						continue;
-					}
-
-					// append
-					$archives[] = array(
-						'id'   => $archive_link,
-						'text' => $archive_link,
-					);
-
+					$links[] = get_post_type_archive_link( $post_type );
 				}
+				$links = array_filter( $links );
+				$links = array_unique( $links );
 
-				// append
-				$results[] = array(
-					'text'     => __( 'Archives', 'acf' ),
-					'children' => $archives,
-				);
+				// Convert list into choices.
+				$children = array();
+				foreach ( $links as $link ) {
 
+					// Ignore if search does not match.
+					if ( $is_search && stripos( $link, $s ) === false ) {
+						continue;
+					}
+					$children[] = array(
+						'id'   => $link,
+						'text' => $link,
+					);
+				}
+				if ( $children ) {
+					$results[] = array(
+						'text'     => __( 'Archives', 'acf' ),
+						'children' => $children,
+					);
+				}
 			}
 
 			// get posts grouped by post type
@@ -200,7 +193,7 @@ if ( ! class_exists( 'acf_field_page_link' ) ) :
 					}
 
 					// order posts by search
-					if ( $is_search && empty( $args['orderby'] ) ) {
+					if ( $is_search && empty( $args['orderby'] ) && isset( $args['s'] ) ) {
 
 						$posts = acf_order_by_search( $posts, $args['s'] );
 
@@ -624,6 +617,91 @@ if ( ! class_exists( 'acf_field_page_link' ) ) :
 
 			// Return value.
 			return $value;
+		}
+
+		/**
+		 * Validates page link fields updated via the REST API.
+		 *
+		 * @param bool  $valid
+		 * @param int   $value
+		 * @param array $field
+		 *
+		 * @return bool|WP_Error
+		 */
+		public function validate_rest_value( $valid, $value, $field ) {
+			return acf_get_field_type( 'post_object' )->validate_rest_value( $valid, $value, $field );
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			$schema = array(
+				'type'     => array( 'integer', 'array', 'null' ),
+				'required' => ! empty( $field['required'] ),
+				'items'    => array(
+					'type' => array( 'integer' ),
+				),
+			);
+
+			if ( empty( $field['allow_null'] ) ) {
+				$schema['minItems'] = 1;
+			}
+
+			if ( ! empty( $field['allow_archives'] ) ) {
+				$schema['type'][]          = 'string';
+				$schema['items']['type'][] = 'string';
+			}
+
+			if ( empty( $field['multiple'] ) ) {
+				$schema['maxItems'] = 1;
+			}
+
+			return $schema;
+		}
+
+		/**
+		 * @see \acf_field::get_rest_links()
+		 * @param mixed      $value The raw (unformatted) field value.
+		 * @param int|string $post_id
+		 * @param array      $field
+		 * @return array
+		 */
+		public function get_rest_links( $value, $post_id, array $field ) {
+			$links = array();
+
+			if ( empty( $value ) ) {
+				return $links;
+			}
+
+			foreach ( (array) $value as $object_id ) {
+				if ( ! $post_type = get_post_type( $object_id ) or ! $post_type = get_post_type_object( $post_type ) ) {
+					continue;
+				}
+				$rest_base = acf_get_object_type_rest_base( $post_type );
+				$links[]   = array(
+					'rel'        => $post_type->name === 'attachment' ? 'acf:attachment' : 'acf:post',
+					'href'       => rest_url( sprintf( '/wp/v2/%s/%s', $rest_base, $object_id ) ),
+					'embeddable' => true,
+				);
+			}
+
+			return $links;
+		}
+
+		/**
+		 * Apply basic formatting to prepare the value for default REST output.
+		 *
+		 * @param mixed      $value
+		 * @param string|int $post_id
+		 * @param array      $field
+		 * @return mixed
+		 */
+		public function format_value_for_rest( $value, $post_id, array $field ) {
+			return acf_format_numerics( $value );
 		}
 
 	}

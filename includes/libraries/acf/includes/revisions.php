@@ -170,13 +170,13 @@ if ( ! class_exists( 'acf_revisions' ) ) :
 				$value = $value[0];
 				$key   = $key[0];
 
-				// bail early if $key is a not a field_key
-				if ( ! acf_is_field_key( $key ) ) {
+				// Load field.
+				$field = acf_get_field( $key );
+				if ( ! $field ) {
 					continue;
 				}
 
 				// get field
-				$field       = acf_get_field( $key );
 				$field_title = $field['label'] . ' (' . $name . ')';
 				$field_order = $field['menu_order'];
 				$ancestors   = acf_get_field_ancestors( $field );
@@ -404,12 +404,12 @@ endif; // class_exists check
 *
 *  This function will copy meta from a post to it's latest revision
 *
-*  @type	function
-*  @date	26/09/2016
-*  @since	5.4.0
+*  @type    function
+*  @date    26/09/2016
+*  @since   5.4.0
 *
-*  @param	$post_id (int)
-*  @return	n/a
+*  @param   $post_id (int)
+*  @return  n/a
 */
 
 function acf_save_post_revision( $post_id = 0 ) {
@@ -432,12 +432,12 @@ function acf_save_post_revision( $post_id = 0 ) {
 *
 *  This function will return the latest revision for a given post
 *
-*  @type	function
-*  @date	25/06/2016
-*  @since	5.3.8
+*  @type    function
+*  @date    25/06/2016
+*  @since   5.3.8
 *
-*  @param	$post_id (int)
-*  @return	$post_id (int)
+*  @param   $post_id (int)
+*  @return  $post_id (int)
 */
 
 function acf_get_post_latest_revision( $post_id ) {

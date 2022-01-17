@@ -7,14 +7,14 @@
 *  There is a 3rd parameter to turn on/off formating. This means that an image field will not use
 *  its 'return option' to format the value but return only what was saved in the database
 *
-*  @type	function
-*  @since	3.6
-*  @date	29/01/13
+*  @type    function
+*  @since   3.6
+*  @date    29/01/13
 *
-*  @param	$selector (string) the field name or key
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @param	$format_value (boolean) whether or not to format the value as described above
-*  @return	(mixed)
+*  @param   $selector (string) the field name or key
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @param   $format_value (boolean) whether or not to format the value as described above
+*  @return  (mixed)
 */
 
 function get_field( $selector, $post_id = false, $format_value = true ) {
@@ -63,13 +63,13 @@ function get_field( $selector, $post_id = false, $format_value = true ) {
 *
 *  This function is the same as echo get_field().
 *
-*  @type	function
-*  @since	1.0.3
-*  @date	29/01/13
+*  @type    function
+*  @since   1.0.3
+*  @date    29/01/13
 *
-*  @param	$selector (string) the field name or key
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @return	n/a
+*  @param   $selector (string) the field name or key
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @return  n/a
 */
 
 function the_field( $selector, $post_id = false, $format_value = true ) {
@@ -86,59 +86,41 @@ function the_field( $selector, $post_id = false, $format_value = true ) {
 
 }
 
-
-/*
-*  get_field_object()
-*
-*  This function will return an array containing all the field data for a given field_name
-*
-*  @type	function
-*  @since	3.6
-*  @date	3/02/13
-*
-*  @param	$selector (string) the field name or key
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @param	$format_value (boolean) whether or not to format the field value
-*  @param	$load_value (boolean) whether or not to load the field value
-*  @return	$field (array)
-*/
-
+/**
+ * This function will return an array containing all the field data for a given field_name.
+ *
+ * @since 3.6
+ * @date  3/02/13
+ *
+ * @param string $selector     The field name or key.
+ * @param mixed  $post_id      The post_id of which the value is saved against.
+ * @param bool   $format_value Whether to format the field value.
+ * @param bool   $load_value   Whether to load the field value.
+ *
+ * @return array $field
+ */
 function get_field_object( $selector, $post_id = false, $format_value = true, $load_value = true ) {
-
-	// compatibilty
-	if ( is_array( $format_value ) ) {
-		extract( $format_value );
+	// Compatibility with ACF ~4.
+	if ( is_array( $format_value ) && isset( $format_value['format_value'] ) ) {
+		$format_value = $format_value['format_value'];
 	}
 
-	// get valid post_id
 	$post_id = acf_get_valid_post_id( $post_id );
+	$field   = acf_maybe_get_field( $selector, $post_id );
 
-	// get field key
-	$field = acf_maybe_get_field( $selector, $post_id );
-
-	// bail early if no field found
 	if ( ! $field ) {
 		return false;
 	}
 
-	// load value
 	if ( $load_value ) {
-
 		$field['value'] = acf_get_value( $post_id, $field );
-
 	}
 
-	// format value
 	if ( $format_value ) {
-
-		// get value for field
 		$field['value'] = acf_format_value( $field['value'], $post_id, $field );
-
 	}
 
-	// return
 	return $field;
-
 }
 
 /*
@@ -147,14 +129,14 @@ function get_field_object( $selector, $post_id = false, $format_value = true, $l
 *  This function will return a field for the given selector.
 *  It will also review the field_reference to ensure the correct field is returned which makes it useful for the template API
 *
-*  @type	function
-*  @date	4/08/2015
-*  @since	5.2.3
+*  @type    function
+*  @date    4/08/2015
+*  @since   5.2.3
 *
-*  @param	$selector (mixed) identifyer of field. Can be an ID, key, name or post object
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @param	$strict (boolean) if true, return a field only when a field key is found.
-*  @return	$field (array)
+*  @param   $selector (mixed) identifyer of field. Can be an ID, key, name or post object
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @param   $strict (boolean) if true, return a field only when a field key is found.
+*  @return  $field (array)
 */
 function acf_maybe_get_field( $selector, $post_id = false, $strict = true ) {
 
@@ -187,12 +169,12 @@ function acf_maybe_get_field( $selector, $post_id = false, $strict = true ) {
 *
 *  This function will attempt to find a sub field
 *
-*  @type	function
-*  @date	3/10/2016
-*  @since	5.4.0
+*  @type    function
+*  @date    3/10/2016
+*  @since   5.4.0
 *
-*  @param	$post_id (int)
-*  @return	$post_id (int)
+*  @param   $post_id (int)
+*  @return  $post_id (int)
 */
 
 function acf_maybe_get_sub_field( $selectors, $post_id = false, $strict = true ) {
@@ -246,13 +228,13 @@ function acf_maybe_get_sub_field( $selectors, $post_id = false, $strict = true )
 *  This function will return an array containing all the custom field values for a specific post_id.
 *  The function is not very elegant and wastes a lot of PHP memory / SQL queries if you are not using all the values.
 *
-*  @type	function
-*  @since	3.6
-*  @date	29/01/13
+*  @type    function
+*  @since   3.6
+*  @date    29/01/13
 *
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @param	$format_value (boolean) whether or not to format the field value
-*  @return	(array)	associative array where field name => field value
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @param   $format_value (boolean) whether or not to format the field value
+*  @return  (array) associative array where field name => field value
 */
 
 function get_fields( $post_id = false, $format_value = true ) {
@@ -285,14 +267,14 @@ function get_fields( $post_id = false, $format_value = true ) {
 *  This function will return an array containing all the custom field objects for a specific post_id.
 *  The function is not very elegant and wastes a lot of PHP memory / SQL queries if you are not using all the fields / values.
 *
-*  @type	function
-*  @since	3.6
-*  @date	29/01/13
+*  @type    function
+*  @since   3.6
+*  @date    29/01/13
 *
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @param	$format_value (boolean) whether or not to format the field value
-*  @param	$load_value (boolean) whether or not to load the field value
-*  @return	(array)	associative array where field name => field
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @param   $format_value (boolean) whether or not to format the field value
+*  @param   $load_value (boolean) whether or not to load the field value
+*  @return  (array) associative array where field name => field
 */
 
 function get_field_objects( $post_id = false, $format_value = true, $load_value = true ) {
@@ -353,189 +335,140 @@ function get_field_objects( $post_id = false, $format_value = true, $load_value 
 }
 
 
-/*
-*  have_rows
-*
-*  This function will instantiate a global variable containing the rows of a repeater or flexible content field,
-*  after which, it will determine if another row exists to loop through
-*
-*  @type	function
-*  @date	2/09/13
-*  @since	4.3.0
-*
-*  @param	$field_name (string) the field name
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @return	(boolean)
-*/
-
+/**
+ * have_rows
+ *
+ * Checks if a field (such as Repeater or Flexible Content) has any rows of data to loop over.
+ * This function is intended to be used in conjunction with the_row() to step through available values.
+ *
+ * @date    2/09/13
+ * @since   4.3.0
+ *
+ * @param   string $selector The field name or field key.
+ * @param   mixed  $post_id The post ID where the value is saved. Defaults to the current post.
+ * @return  bool
+ */
 function have_rows( $selector, $post_id = false ) {
 
-	// reference
+	// Validate and backup $post_id.
 	$_post_id = $post_id;
+	$post_id  = acf_get_valid_post_id( $post_id );
 
-	// filter post_id
-	$post_id = acf_get_valid_post_id( $post_id );
+	// Vars.
+	$key         = "selector={$selector}/post_id={$post_id}";
+	$active_loop = acf_get_loop( 'active' );
+	$prev_loop   = acf_get_loop( 'previous' );
+	$new_loop    = false;
+	$sub_field   = false;
 
-	// vars
-	$key             = "selector={$selector}/post_id={$post_id}";
-	$active_loop     = acf_get_loop( 'active' );
-	$previous_loop   = acf_get_loop( 'previous' );
-	$new_parent_loop = false;
-	$new_child_loop  = false;
-	$sub_field       = false;
-	$sub_exists      = false;
-	$change          = false;
-
-	// no active loops
+	// Check if no active loop.
 	if ( ! $active_loop ) {
+		$new_loop = 'parent';
 
-		// create a new loop
-		$new_parent_loop = true;
+		// Detect "change" compared to the active loop.
+	} elseif ( $key !== $active_loop['key'] ) {
 
-		// loop has changed
-	} elseif ( $active_loop['key'] != $key ) {
+		// Find sub field and check if a sub value exists.
+		$sub_field_exists = false;
+		$sub_field        = acf_get_sub_field( $selector, $active_loop['field'] );
+		if ( $sub_field ) {
+			$sub_field_exists = isset( $active_loop['value'][ $active_loop['i'] ][ $sub_field['key'] ] );
+		}
 
-		// detect change
+		// Detect change in post_id.
 		if ( $post_id != $active_loop['post_id'] ) {
 
-			$change = 'post_id';
+			// Case: Change in $post_id was due to this being a nested loop and not specifying the $post_id.
+			// Action: Move down one level into a new loop.
+			if ( empty( $_post_id ) && $sub_field_exists ) {
+				$new_loop = 'child';
 
+				// Case: Change in $post_id was due to a nested loop ending.
+				// Action: move up one level through the loops.
+			} elseif ( $prev_loop && $prev_loop['post_id'] == $post_id ) {
+				acf_remove_loop( 'active' );
+				$active_loop = $prev_loop;
+
+				// Case: Chang in $post_id is the most obvious, used in an WP_Query loop with multiple $post objects.
+				// Action: leave this current loop alone and create a new parent loop.
+			} else {
+				$new_loop = 'parent';
+			}
+
+			// Detect change in selector.
 		} elseif ( $selector != $active_loop['selector'] ) {
 
-			$change = 'selector';
+			// Case: Change in $field_name was due to this being a nested loop.
+			// Action: move down one level into a new loop.
+			if ( $sub_field_exists ) {
+				$new_loop = 'child';
 
-		} else {
-
-			// key has changed due to a technicallity, however, the post_id and selector are the same
-
-		}
-
-		// attempt to find sub field
-		$sub_field = acf_get_sub_field( $selector, $active_loop['field'] );
-
-		if ( $sub_field ) {
-
-			$sub_exists = isset( $active_loop['value'][ $active_loop['i'] ][ $sub_field['key'] ] );
-
-		}
-
-		// If post_id has changed, this is most likely an archive loop
-		if ( $change == 'post_id' ) {
-
-			if ( empty( $_post_id ) && $sub_exists ) {
-
-				// case: Change in $post_id was due to this being a nested loop and not specifying the $post_id
-				// action: move down one level into a new loop
-				$new_child_loop = true;
-
-			} elseif ( $previous_loop && $previous_loop['post_id'] == $post_id ) {
-
-				// case: Change in $post_id was due to a nested loop ending
-				// action: move up one level through the loops
+				// Case: Change in $field_name was due to a nested loop ending.
+				// Action: move up one level through the loops.
+			} elseif ( $prev_loop && $prev_loop['selector'] == $selector && $prev_loop['post_id'] == $post_id ) {
 				acf_remove_loop( 'active' );
-				$active_loop = $previous_loop;
+				$active_loop = $prev_loop;
 
+				// Case: Change in $field_name is the most obvious, this is a new loop for a different field within the $post.
+				// Action: leave this current loop alone and create a new parent loop.
 			} else {
-
-				// case: Chang in $post_id is the most obvious, used in an WP_Query loop with multiple $post objects
-				// action: leave this current loop alone and create a new parent loop
-				$new_parent_loop = true;
-
-			}
-		} elseif ( $change == 'selector' ) {
-
-			if ( $sub_exists ) {
-
-				// case: Change in $field_name was due to this being a nested loop
-				// action: move down one level into a new loop
-				$new_child_loop = true;
-
-			} elseif ( $previous_loop && $previous_loop['selector'] == $selector && $previous_loop['post_id'] == $post_id ) {
-
-				// case: Change in $field_name was due to a nested loop ending
-				// action: move up one level through the loops
-				acf_remove_loop( 'active' );
-				$active_loop = $previous_loop;
-
-			} else {
-
-				// case: Chang in $field_name is the most obvious, this is a new loop for a different field within the $post
-				// action: leave this current loop alone and create a new parent loop
-				$new_parent_loop = true;
-
+				$new_loop = 'parent';
 			}
 		}
-
-		// loop is the same
-	} else {
-
-		// do nothing
-
 	}
 
-	// add loop
-	if ( $new_parent_loop || $new_child_loop ) {
+	// Add loop if required.
+	if ( $new_loop ) {
+		$args = array(
+			'key'      => $key,
+			'selector' => $selector,
+			'post_id'  => $post_id,
+			'name'     => null,
+			'value'    => null,
+			'field'    => null,
+			'i'        => -1,
+		);
 
-		// vars
-		$field = null;
-		$value = null;
-		$name  = '';
-
-		// parent loop
-		if ( $new_parent_loop ) {
-
+		// Case: Parent loop.
+		if ( $new_loop === 'parent' ) {
 			$field = get_field_object( $selector, $post_id, false );
-			$value = acf_extract_var( $field, 'value' );
-			$name  = $field['name'];
+			if ( $field ) {
+				$args['field'] = $field;
+				$args['value'] = $field['value'];
+				$args['name']  = $field['name'];
+				unset( $args['field']['value'] );
+			}
 
-			// child loop
+			// Case: Child loop ($sub_field must exist).
 		} else {
-
-			$field   = $sub_field;
-			$value   = $active_loop['value'][ $active_loop['i'] ][ $sub_field['key'] ];
-			$name    = $active_loop['name'] . '_' . $active_loop['i'] . '_' . $sub_field['name'];
-			$post_id = $active_loop['post_id'];
-
+			$args['field']   = $sub_field;
+			$args['value']   = $active_loop['value'][ $active_loop['i'] ][ $sub_field['key'] ];
+			$args['name']    = "{$active_loop['name']}_{$active_loop['i']}_{$sub_field['name']}";
+			$args['post_id'] = $active_loop['post_id'];
 		}
 
-		// bail early if value is either empty or a non array
-		if ( ! acf_is_array( $value ) ) {
+		// Bail early if value is either empty or a non array.
+		if ( ! $args['value'] || ! is_array( $args['value'] ) ) {
 			return false;
 		}
 
-		// allow for non repeatable data (group)
-		if ( acf_get_field_type_prop( $field['type'], 'have_rows' ) === 'single' ) {
-			$value = array( $value );
+		// Allow for non repeatable data for Group and Clone fields.
+		if ( acf_get_field_type_prop( $args['field']['type'], 'have_rows' ) === 'single' ) {
+			$args['value'] = array( $args['value'] );
 		}
 
-		// add loop
-		$active_loop = acf_add_loop(
-			array(
-				'selector' => $selector,
-				'name'     => $name, // used by update_sub_field
-				'value'    => $value,
-				'field'    => $field,
-				'i'        => -1,
-				'post_id'  => $post_id,
-				'key'      => $key,
-			)
-		);
-
+		// Add loop.
+		$active_loop = acf_add_loop( $args );
 	}
 
-	// return true if next row exists
+	// Return true if next row exists.
 	if ( $active_loop && isset( $active_loop['value'][ $active_loop['i'] + 1 ] ) ) {
-
 		return true;
-
 	}
 
-	// no next row!
+	// Return false if no next row.
 	acf_remove_loop( 'active' );
-
-	// return
 	return false;
-
 }
 
 
@@ -544,12 +477,12 @@ function have_rows( $selector, $post_id = false ) {
 *
 *  This function will progress the global repeater or flexible content value 1 row
 *
-*  @type	function
-*  @date	2/09/13
-*  @since	4.3.0
+*  @type    function
+*  @date    2/09/13
+*  @since   4.3.0
 *
-*  @param	N/A
-*  @return	(array) the current row data
+*  @param   N/A
+*  @return  (array) the current row data
 */
 
 function the_row( $format = false ) {
@@ -639,12 +572,12 @@ function the_row_index() {
 *
 *  This function is used inside a 'has_sub_field' while loop to return a sub field object
 *
-*  @type	function
-*  @date	16/05/2016
-*  @since	5.3.8
+*  @type    function
+*  @date    16/05/2016
+*  @since   5.3.8
 *
-*  @param	$selector (string)
-*  @return	(array)
+*  @param   $selector (string)
+*  @return  (array)
 */
 
 function get_row_sub_field( $selector ) {
@@ -679,12 +612,12 @@ function get_row_sub_field( $selector ) {
 *
 *  This function is used inside a 'has_sub_field' while loop to return a sub field value
 *
-*  @type	function
-*  @date	16/05/2016
-*  @since	5.3.8
+*  @type    function
+*  @date    16/05/2016
+*  @since   5.3.8
 *
-*  @param	$selector (string)
-*  @return	(mixed)
+*  @param   $selector (string)
+*  @return  (mixed)
 */
 
 function get_row_sub_value( $selector ) {
@@ -716,12 +649,12 @@ function get_row_sub_value( $selector ) {
 *  This function will find the current loop and unset it from the global array.
 *  To bo used when loop finishes or a break is used
 *
-*  @type	function
-*  @date	26/10/13
-*  @since	5.0.0
+*  @type    function
+*  @date    26/10/13
+*  @since   5.0.0
 *
-*  @param	$hard_reset (boolean) completely wipe the global variable, or just unset the active row
-*  @return	(boolean)
+*  @param   $hard_reset (boolean) completely wipe the global variable, or just unset the active row
+*  @return  (boolean)
 */
 
 function reset_rows() {
@@ -742,13 +675,13 @@ function reset_rows() {
 *  When using a repeater or flexible content field, it will loop through the rows until
 *  there are none left or a break is detected
 *
-*  @type	function
-*  @since	1.0.3
-*  @date	29/01/13
+*  @type    function
+*  @since   1.0.3
+*  @date    29/01/13
 *
-*  @param	$field_name (string) the field name
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @return	(boolean)
+*  @param   $field_name (string) the field name
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @return  (boolean)
 */
 
 function has_sub_field( $field_name, $post_id = false ) {
@@ -780,12 +713,12 @@ function has_sub_fields( $field_name, $post_id = false ) {
 *
 *  This function is used inside a 'has_sub_field' while loop to return a sub field value
 *
-*  @type	function
-*  @since	1.0.3
-*  @date	29/01/13
+*  @type    function
+*  @since   1.0.3
+*  @date    29/01/13
 *
-*  @param	$field_name (string) the field name
-*  @return	(mixed)
+*  @param   $field_name (string) the field name
+*  @return  (mixed)
 */
 
 function get_sub_field( $selector = '', $format_value = true ) {
@@ -809,12 +742,12 @@ function get_sub_field( $selector = '', $format_value = true ) {
 *
 *  This function is the same as echo get_sub_field
 *
-*  @type	function
-*  @since	1.0.3
-*  @date	29/01/13
+*  @type    function
+*  @since   1.0.3
+*  @date    29/01/13
 *
-*  @param	$field_name (string) the field name
-*  @return	n/a
+*  @param   $field_name (string) the field name
+*  @return  n/a
 */
 
 function the_sub_field( $field_name, $format_value = true ) {
@@ -836,11 +769,11 @@ function the_sub_field( $field_name, $format_value = true ) {
 *
 *  This function is used inside a 'has_sub_field' while loop to return a sub field object
 *
-*  @type	function
-*  @since	3.5.8.1
-*  @date	29/01/13
+*  @type    function
+*  @since   3.5.8.1
+*  @date    29/01/13
 *
-*  @param	$child_name (string) the field name
+*  @param   $child_name (string) the field name
 *  @return  (array)
 */
 
@@ -888,12 +821,12 @@ function get_sub_field_object( $selector, $format_value = true, $load_value = tr
 *
 *  This function will return a string representation of the current row layout within a 'have_rows' loop
 *
-*  @type	function
-*  @since	3.0.6
-*  @date	29/01/13
+*  @type    function
+*  @since   3.0.6
+*  @date    29/01/13
 *
-*  @param	n/a
-*  @return	(string)
+*  @param   n/a
+*  @return  (string)
 */
 
 function get_row_layout() {
@@ -913,52 +846,55 @@ function get_row_layout() {
 
 }
 
-
-/*
-*  acf_shortcode()
-*
-*  This function is used to add basic shortcode support for the ACF plugin
-*  eg. [acf field="heading" post_id="123" format_value="1"]
-*
-*  @type	function
-*  @since	1.1.1
-*  @date	29/01/13
-*
-*  @param	$field (string) the field name or key
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @param	$format_value (boolean) whether or not to format the field value
-*  @return	(string)
-*/
-
+/**
+ * This function is used to add basic shortcode support for the ACF plugin
+ * eg. [acf field="heading" post_id="123" format_value="1"]
+ *
+ * @since 1.1.1
+ * @date  29/01/13
+ *
+ * @param array $atts The shortcode attributes.
+ *
+ * @return string
+ */
 function acf_shortcode( $atts ) {
-
-	// extract attributs
-	extract(
-		shortcode_atts(
-			array(
-				'field'        => '',
-				'post_id'      => false,
-				'format_value' => true,
-			),
-			$atts
-		)
-	);
-
-	// get value and return it
-	$value = get_field( $field, $post_id, $format_value );
-
-	// array
-	if ( is_array( $value ) ) {
-
-		$value = @implode( ', ', $value );
-
+	// Mitigate issue where some AJAX requests can return ACF field data.
+	$capability = apply_filters( 'acf/ajax/shortcode_capability', 'edit_posts' );
+	if ( wp_doing_ajax() && ( $capability !== false ) && ! current_user_can( $capability ) ) {
+		return;
 	}
 
-	// return
+	$atts = shortcode_atts(
+		array(
+			'field'        => '',
+			'post_id'      => false,
+			'format_value' => true,
+		),
+		$atts,
+		'acf'
+	);
+
+	$access_already_prevented = apply_filters( 'acf/prevent_access_to_unknown_fields', false );
+	$filter_applied           = false;
+
+	if ( ! $access_already_prevented ) {
+		$filter_applied = true;
+		add_filter( 'acf/prevent_access_to_unknown_fields', '__return_true' );
+	}
+
+	// Try to get the field value.
+	$value = get_field( $atts['field'], $atts['post_id'], $atts['format_value'] );
+
+	if ( $filter_applied ) {
+		remove_filter( 'acf/prevent_access_to_unknown_fields', '__return_true' );
+	}
+
+	if ( is_array( $value ) ) {
+		$value = @implode( ', ', $value );
+	}
+
 	return $value;
-
 }
-
 add_shortcode( 'acf', 'acf_shortcode' );
 
 
@@ -967,14 +903,14 @@ add_shortcode( 'acf', 'acf_shortcode' );
 *
 *  This function will update a value in the database
 *
-*  @type	function
-*  @since	3.1.9
-*  @date	29/01/13
+*  @type    function
+*  @since   3.1.9
+*  @date    29/01/13
 *
-*  @param	$selector (string) the field name or key
-*  @param	$value (mixed) the value to save in the database
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @return	(boolean)
+*  @param   $selector (string) the field name or key
+*  @param   $value (mixed) the value to save in the database
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @return  (boolean)
 */
 
 function update_field( $selector, $value, $post_id = false ) {
@@ -1009,14 +945,14 @@ function update_field( $selector, $value, $post_id = false ) {
 *
 *  This function will update a value of a sub field in the database
 *
-*  @type	function
-*  @date	2/04/2014
-*  @since	5.0.0
+*  @type    function
+*  @date    2/04/2014
+*  @since   5.0.0
 *
-*  @param	$selector (mixed) the sub field name or key, or an array of ancestors
-*  @param	$value (mixed) the value to save in the database
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @return	(boolean)
+*  @param   $selector (mixed) the sub field name or key, or an array of ancestors
+*  @param   $value (mixed) the value to save in the database
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @return  (boolean)
 */
 
 function update_sub_field( $selector, $value, $post_id = false ) {
@@ -1053,13 +989,13 @@ function update_sub_field( $selector, $value, $post_id = false ) {
 *
 *  This function will remove a value from the database
 *
-*  @type	function
-*  @since	3.1.9
-*  @date	29/01/13
+*  @type    function
+*  @since   3.1.9
+*  @date    29/01/13
 *
-*  @param	$selector (string) the field name or key
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @return	(boolean)
+*  @param   $selector (string) the field name or key
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @return  (boolean)
 */
 
 function delete_field( $selector, $post_id = false ) {
@@ -1071,7 +1007,7 @@ function delete_field( $selector, $post_id = false ) {
 	$field = acf_maybe_get_field( $selector, $post_id );
 
 	// delete
-	return acf_delete_value( $post_id, $field );
+	return $field ? acf_delete_value( $post_id, $field ) : false;
 
 }
 
@@ -1081,14 +1017,14 @@ function delete_field( $selector, $post_id = false ) {
 *
 *  This function will delete a value of a sub field in the database
 *
-*  @type	function
-*  @date	2/04/2014
-*  @since	5.0.0
+*  @type    function
+*  @date    2/04/2014
+*  @since   5.0.0
 *
-*  @param	$selector (mixed) the sub field name or key, or an array of ancestors
-*  @param	$value (mixed) the value to save in the database
-*  @param	$post_id (mixed) the post_id of which the value is saved against
-*  @return	(boolean)
+*  @param   $selector (mixed) the sub field name or key, or an array of ancestors
+*  @param   $value (mixed) the value to save in the database
+*  @param   $post_id (mixed) the post_id of which the value is saved against
+*  @return  (boolean)
 */
 
 function delete_sub_field( $selector, $post_id = false ) {
@@ -1103,14 +1039,14 @@ function delete_sub_field( $selector, $post_id = false ) {
 *
 *  This function will add a row of data to a field
 *
-*  @type	function
-*  @date	16/10/2015
-*  @since	5.2.3
+*  @type    function
+*  @date    16/10/2015
+*  @since   5.2.3
 *
-*  @param	$selector (string)
-*  @param	$row (array)
-*  @param	$post_id (mixed)
-*  @return	(boolean)
+*  @param   $selector (string)
+*  @param   $row (array)
+*  @param   $post_id (mixed)
+*  @return  (boolean)
 */
 
 function add_row( $selector, $row = false, $post_id = false ) {
@@ -1149,14 +1085,14 @@ function add_row( $selector, $row = false, $post_id = false ) {
 *
 *  This function will add a row of data to a field
 *
-*  @type	function
-*  @date	16/10/2015
-*  @since	5.2.3
+*  @type    function
+*  @date    16/10/2015
+*  @since   5.2.3
 *
-*  @param	$selector (string)
-*  @param	$row (array)
-*  @param	$post_id (mixed)
-*  @return	(boolean)
+*  @param   $selector (string)
+*  @param   $row (array)
+*  @param   $post_id (mixed)
+*  @return  (boolean)
 */
 
 function add_sub_row( $selector, $row = false, $post_id = false ) {
@@ -1205,15 +1141,15 @@ function add_sub_row( $selector, $row = false, $post_id = false ) {
 *
 *  This function will update a row of data to a field
 *
-*  @type	function
-*  @date	19/10/2015
-*  @since	5.2.3
+*  @type    function
+*  @date    19/10/2015
+*  @since   5.2.3
 *
-*  @param	$selector (string)
-*  @param	$i (int)
-*  @param	$row (array)
-*  @param	$post_id (mixed)
-*  @return	(boolean)
+*  @param   $selector (string)
+*  @param   $i (int)
+*  @param   $row (array)
+*  @param   $post_id (mixed)
+*  @return  (boolean)
 */
 
 function update_row( $selector, $i = 1, $row = false, $post_id = false ) {
@@ -1256,14 +1192,14 @@ function update_row( $selector, $i = 1, $row = false, $post_id = false ) {
 *
 *  This function will add a row of data to a field
 *
-*  @type	function
-*  @date	16/10/2015
-*  @since	5.2.3
+*  @type    function
+*  @date    16/10/2015
+*  @since   5.2.3
 *
-*  @param	$selector (string)
-*  @param	$row (array)
-*  @param	$post_id (mixed)
-*  @return	(boolean)
+*  @param   $selector (string)
+*  @param   $row (array)
+*  @param   $post_id (mixed)
+*  @return  (boolean)
 */
 
 function update_sub_row( $selector, $i = 1, $row = false, $post_id = false ) {
@@ -1314,14 +1250,14 @@ function update_sub_row( $selector, $i = 1, $row = false, $post_id = false ) {
 *
 *  This function will delete a row of data from a field
 *
-*  @type	function
-*  @date	19/10/2015
-*  @since	5.2.3
+*  @type    function
+*  @date    19/10/2015
+*  @since   5.2.3
 *
-*  @param	$selector (string)
-*  @param	$i (int)
-*  @param	$post_id (mixed)
-*  @return	(boolean)
+*  @param   $selector (string)
+*  @param   $i (int)
+*  @param   $post_id (mixed)
+*  @return  (boolean)
 */
 
 function delete_row( $selector, $i = 1, $post_id = false ) {
@@ -1369,14 +1305,14 @@ function delete_row( $selector, $i = 1, $post_id = false ) {
 *
 *  This function will add a row of data to a field
 *
-*  @type	function
-*  @date	16/10/2015
-*  @since	5.2.3
+*  @type    function
+*  @date    16/10/2015
+*  @since   5.2.3
 *
-*  @param	$selector (string)
-*  @param	$row (array)
-*  @param	$post_id (mixed)
-*  @return	(boolean)
+*  @param   $selector (string)
+*  @param   $row (array)
+*  @param   $post_id (mixed)
+*  @return  (boolean)
 */
 
 function delete_sub_row( $selector, $i = 1, $post_id = false ) {
@@ -1432,12 +1368,12 @@ function delete_sub_row( $selector, $i = 1, $post_id = false ) {
 *
 *  These functions are outdated
 *
-*  @type	function
-*  @date	4/03/2014
-*  @since	1.0.0
+*  @type    function
+*  @date    4/03/2014
+*  @since   1.0.0
 *
-*  @param	n/a
-*  @return	n/a
+*  @param   n/a
+*  @return  n/a
 */
 
 function create_field( $field ) {

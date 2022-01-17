@@ -57,7 +57,7 @@ if ( ! class_exists( 'acf_field_select' ) ) :
 
 		function input_admin_enqueue_scripts() {
 
-			// bail ealry if no enqueue
+			// bail early if no enqueue
 			if ( ! acf_get_setting( 'enqueue_select2' ) ) {
 				return;
 			}
@@ -83,7 +83,7 @@ if ( ! class_exists( 'acf_field_select' ) ) :
 			// v4
 			if ( $major == 4 ) {
 
-				$version = '4.0';
+				$version = '4.0.13';
 				$script  = acf_get_url( "assets/inc/select2/4/select2.full{$min}.js" );
 				$style   = acf_get_url( "assets/inc/select2/4/select2{$min}.css" );
 
@@ -324,6 +324,10 @@ if ( ! class_exists( 'acf_field_select' ) ) :
 				);
 			}
 
+			if ( ! empty( $field['query_nonce'] ) ) {
+				$select['data-query-nonce'] = $field['query_nonce'];
+			}
+
 			// append
 			$select['value']   = $value;
 			$select['choices'] = $choices;
@@ -461,16 +465,18 @@ if ( ! class_exists( 'acf_field_select' ) ) :
 		*  @param   $field (array) the field array holding all the field options
 		*  @return  $value
 		*/
-
 		function load_value( $value, $post_id, $field ) {
 
-			// ACF4 null
-			if ( $value === 'null' ) {
-				return false;
+			// Return an array when field is set for multiple.
+			if ( $field['multiple'] ) {
+				if ( acf_is_empty( $value ) ) {
+					return array();
+				}
+				return acf_array( $value );
 			}
 
-			// return
-			return $value;
+			// Otherwise, return a single value.
+			return acf_unarray( $value );
 		}
 
 
@@ -494,6 +500,11 @@ if ( ! class_exists( 'acf_field_select' ) ) :
 			// decode choices (convert to array)
 			$field['choices']       = acf_decode_choices( $field['choices'] );
 			$field['default_value'] = acf_decode_choices( $field['default_value'], true );
+
+			// Convert back to string for single selects.
+			if ( ! $field['multiple'] ) {
+				$field['default_value'] = acf_unarray( $field['default_value'] );
+			}
 
 			// return
 			return $field;
@@ -573,26 +584,15 @@ if ( ! class_exists( 'acf_field_select' ) ) :
 		*
 		*  @return  $value (mixed) the modified value
 		*/
-
 		function format_value( $value, $post_id, $field ) {
-
-			// array
-			if ( acf_is_array( $value ) ) {
-
-				foreach ( $value as $i => $v ) {
-
-					$value[ $i ] = $this->format_value_single( $v, $post_id, $field );
-
+			if ( is_array( $value ) ) {
+				foreach ( $value as $i => $val ) {
+					$value[ $i ] = $this->format_value_single( $val, $post_id, $field );
 				}
 			} else {
-
 				$value = $this->format_value_single( $value, $post_id, $field );
-
 			}
-
-			// return
 			return $value;
-
 		}
 
 
@@ -629,6 +629,87 @@ if ( ! class_exists( 'acf_field_select' ) ) :
 			// return
 			return $value;
 
+		}
+
+		/**
+		 * Validates select fields updated via the REST API.
+		 *
+		 * @param bool  $valid
+		 * @param int   $value
+		 * @param array $field
+		 *
+		 * @return bool|WP_Error
+		 */
+		public function validate_rest_value( $valid, $value, $field ) {
+			// rest_validate_request_arg() handles the other types, we just worry about strings.
+			if ( is_null( $value ) || is_array( $value ) ) {
+				return $valid;
+			}
+
+			$option_keys = array_diff(
+				array_keys( $field['choices'] ),
+				array_values( $field['choices'] )
+			);
+
+			$allowed = empty( $option_keys ) ? $field['choices'] : $option_keys;
+
+			if ( ! in_array( $value, $allowed ) ) {
+				$param = sprintf( '%s[%s]', $field['prefix'], $field['name'] );
+				$data  = array(
+					'param' => $param,
+					'value' => $value,
+				);
+				$error = sprintf(
+					__( '%1$s is not one of %2$s', 'acf' ),
+					$param,
+					implode( ', ', $allowed )
+				);
+
+				return new WP_Error( 'rest_invalid_param', $error, $data );
+			}
+
+			return $valid;
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			/**
+			 * If a user has defined keys for the select options,
+			 * we should use the keys for the available options to POST to,
+			 * since they are what is displayed in GET requests.
+			 */
+			$option_keys = array_diff(
+				array_keys( $field['choices'] ),
+				array_values( $field['choices'] )
+			);
+
+			$schema = array(
+				'type'     => array( 'string', 'array', 'null' ),
+				'required' => ! empty( $field['required'] ),
+				'items'    => array(
+					'type' => array( 'string' ),
+					'enum' => empty( $option_keys ) ? $field['choices'] : $option_keys,
+				),
+			);
+
+			if ( empty( $field['allow_null'] ) ) {
+				$schema['minItems'] = 1;
+			}
+
+			if ( empty( $field['multiple'] ) ) {
+				$schema['maxItems'] = 1;
+			}
+
+			if ( isset( $field['default_value'] ) && '' !== $field['default_value'] ) {
+				$schema['default'] = $field['default_value'];
+			}
+
+			return $schema;
 		}
 
 	}

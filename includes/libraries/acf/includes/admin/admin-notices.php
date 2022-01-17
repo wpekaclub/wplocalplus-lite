@@ -34,9 +34,6 @@ if ( ! class_exists( 'ACF_Admin_Notice' ) ) :
 			/** @type string Text displayed in notice. */
 			'text'        => '',
 
-			/** @type string Optional HTML alternative to text.
-			'html' => '', */
-
 			/** @type string The type of notice (warning, error, success, info). */
 			'type'        => 'info',
 
@@ -56,23 +53,15 @@ if ( ! class_exists( 'ACF_Admin_Notice' ) ) :
 		 *  @return  void
 		 */
 		function render() {
+			$notice_text    = $this->get( 'text' );
+			$notice_type    = $this->get( 'type' );
+			$is_dismissible = $this->get( 'dismissible' );
 
-			// Ensure text contains punctuation.
-			// todo: Remove this after updating translations.
-			$text = $this->get( 'text' );
-			if ( substr( $text, -1 ) !== '.' && substr( $text, -1 ) !== '>' ) {
-				$text .= '.';
-			}
-
-			// Print HTML.
 			printf(
 				'<div class="acf-admin-notice notice notice-%s %s">%s</div>',
-				// Type class.
-				$this->get( 'type' ),
-				// Dismissible class.
-				$this->get( 'dismissible' ) ? 'is-dismissible' : '',
-				// InnerHTML
-				$this->has( 'html' ) ? $this->get( 'html' ) : wpautop( $text )
+				esc_attr( $notice_type ),
+				$is_dismissible ? 'is-dismissible' : '',
+				acf_esc_html( wpautop( acf_punctify( $notice_text ) ) )
 			);
 		}
 	}
@@ -139,13 +128,15 @@ add_action( 'admin_notices', 'acf_render_admin_notices', 99 );
  *
  * @param   string $text The admin notice text.
  * @param   string $class The type of notice (warning, error, success, info).
+ * @param   string $dismissable Is this notification dismissible (default true) (since 5.11.0)
  * @return  ACF_Admin_Notice
  */
-function acf_add_admin_notice( $text = '', $type = 'info' ) {
+function acf_add_admin_notice( $text = '', $type = 'info', $dismissible = true ) {
 	return acf_new_admin_notice(
 		array(
-			'text' => $text,
-			'type' => $type,
+			'text'        => $text,
+			'type'        => $type,
+			'dismissible' => $dismissible,
 		)
 	);
 }
