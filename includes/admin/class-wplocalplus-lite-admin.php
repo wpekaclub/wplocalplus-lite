@@ -173,15 +173,15 @@ class Wplocalplus_Lite_Admin {
 				'attributes'      => array(
 					'list'     => array(
 						'default' => 'wplocal_places',
-						'type'    => 'string,',
+						'type'    => 'string',
 					),
 					'type'     => array(
 						'default' => 'hotels',
-						'type'    => 'string,',
+						'type'    => 'array',
 					),
 					'location' => array(
 						'default' => 'cambridgema',
-						'type'    => 'string,',
+						'type'    => 'array',
 					),
 					'limit'    => array(
 						'default' => 5,
@@ -228,7 +228,7 @@ class Wplocalplus_Lite_Admin {
 	 */
 	public function wplocalplus_lite_highlight_menu() {
 		global $parent_file, $submenu_file, $post_type, $current_screen;
-
+		// The below phpcs ignore comments have been added after referring woocommerce.
 		if ( WPLOCALPLUS_PLACE_POST_TYPE === $post_type ) {
 			$parent_file  = 'wplocalplus-lite'; // phpcs:ignore override ok.
 			$submenu_file = 'edit.php?post_type=' . WPLOCALPLUS_PLACE_POST_TYPE; // phpcs:ignore override ok.
@@ -643,6 +643,7 @@ class Wplocalplus_Lite_Admin {
 				printf(
 					'<option value="%1$s" %2$s>%3$s (%4$s)</option>',
 					esc_attr( $term->slug ),
+					// The below phpcs comment is entered after referring Elementor plugin.
 					( ( isset( $_GET[ $slug ] ) && ( $_GET[ $slug ] === $term->slug ) ) ? ' selected="selected"' : '' ), // phpcs:ignore WordPress.Security.NonceVerification
 					esc_attr( $term->name ),
 					esc_attr( $term->count )
@@ -655,20 +656,20 @@ class Wplocalplus_Lite_Admin {
 			global $wpdb;
 			$sql          = 'SELECT ID, post_title FROM ' . $wpdb->posts . " WHERE post_type='wplocal_places' AND post_parent=0 AND post_status='PUBLISH' ORDER BY post_title";
 			$parent_pages = $wpdb->get_results( $sql, OBJECT_K ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			$select       = '<select name="reviews_parent_places">';
-			$select      .= '<option value="0">All Places</option>';
-			$current      = isset( $_GET['reviews_parent_places'] ) ? sanitize_text_field( wp_unslash( $_GET['reviews_parent_places'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+			echo '<select class="my-number-one-class" name="reviews_parent_places">';
+			echo '<option value="0">All Places</option>';
+			// The below phpcs comment is entered after referring Elementor plugin.
+			$current = isset( $_GET['reviews_parent_places'] ) ? sanitize_text_field( wp_unslash( $_GET['reviews_parent_places'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 			foreach ( $parent_pages as $page ) {
 				/* translators: 1: Place post ID 2: Place Title */
-				$select .= sprintf(
+				printf(
 					'<option value="%s"%s>%s</option>',
-					$page->ID,
+					esc_attr( $page->ID ),
 					$page->ID === $current ? ' selected="selected"' : '',
-					$page->post_title
+					esc_attr( $page->post_title )
 				);
 			}
-			$select .= '</select>';
-			echo $select; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo '</select>';
 		}
 	}
 
@@ -680,6 +681,7 @@ class Wplocalplus_Lite_Admin {
 	 */
 	public function wplocalplus_lite_reviews_posts_filter( $query ) {
 		global $pagenow;
+		// The below phpcs ignore comments have been added after referring woocommerce plugin.
 		if ( is_admin() && 'edit.php' === $pagenow && ! empty( $_GET['reviews_parent_places'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$query->query_vars['post_parent'] = sanitize_text_field( wp_unslash( $_GET['reviews_parent_places'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		}

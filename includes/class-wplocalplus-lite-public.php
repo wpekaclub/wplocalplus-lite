@@ -99,6 +99,7 @@ class Wplocalplus_Lite_Public {
 		 */
 
 		wp_register_script( $this->plugin_name, WPLOCALPLUS_LITE_ASSETS_URL . 'js/wplocalplus-lite-public.js', array( 'jquery' ), $this->version, true );
+		wp_register_script( $this->plugin_name . '-map', WPLOCALPLUS_LITE_ASSETS_URL . 'js/wplocalplus-lite-map.js', array( 'jquery' ), $this->version, true );
 		wp_register_script( $this->plugin_name . '-gmap3', WPLOCALPLUS_LITE_ASSETS_URL . 'libraries/gmap3/gmap3.js', array( 'jquery' ), $this->version, true );
 		wp_register_script( $this->plugin_name . '-fancybox', WPLOCALPLUS_LITE_ASSETS_URL . 'libraries/fancybox/fancybox/jquery.fancybox.pack.js', array( 'jquery' ), $this->version, true );
 		wp_register_script( $this->plugin_name . '-star-rating-svg', WPLOCALPLUS_LITE_ASSETS_URL . 'libraries/star-rating-svg/jquery.star-rating-svg.js', array( 'jquery' ), $this->version, true );
@@ -221,6 +222,7 @@ class Wplocalplus_Lite_Public {
 				'latlon' => $latlon,
 			);
 		}
+		// The below phpcs ignore comment had been added after referring woocommerce plugin.
 		echo paginate_links( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			$paginate_args
 		);
@@ -536,57 +538,14 @@ class Wplocalplus_Lite_Public {
 		} else {
 			$zoom = 4;
 		}
-
-		echo '<script type="text/javascript">';
-		echo 'jQuery(document).ready(function(){
-		    jQuery("#gmap").gmap3({
-		        action:"init",
-		        options:{
-		            center: [' . esc_attr( $center_latitude ) . ',' . esc_attr( $center_longitude ) . '],
-		            zoom:' . esc_attr( $zoom ) . '
-		        }
-		    },
-		    {
-		        action: "addMarkers",';
-		echo 'markers: [' . $market_str . '],'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo 'marker: {
-		            options: {
-		                draggable: false
-		            },
-		            events: {
-		                mouseover: function(marker, event, data) {
-		                    var map = jQuery(this).gmap3("get"),
-		                    infowindow = jQuery(this).gmap3({
-		                        action:"get",
-		                        name:"infowindow"
-		                    });
-		                    if (infowindow){
-                                infowindow.open(map, marker);
-                                infowindow.setContent(data);
-                              } else {
-                                jQuery(this).gmap3({
-                                    action:"addinfowindow", 
-                                    anchor:marker, 
-                                    options:{
-                                        content: data
-                                    }
-                                 });
-                              }
-		                },
-		                mouseout: function() {
-                            var infowindow = jQuery(this).gmap3({
-                                    action:"get", 
-                                    name:"infowindow"
-                                });
-                            if (infowindow){
-                                infowindow.close();
-                            }
-		                }
-		            }
-		        }
-		    })
-		})';
-		echo '</script>';
+		$options_object = array(
+			'center_latitude'  => $center_latitude,
+			'center_longitude' => $center_longitude,
+			'zoom'             => $zoom,
+			'market_str'       => $market_str,
+		);
+		wp_localize_script( $this->plugin_name . '-map', 'obj', $options_object );
+		wp_enqueue_script( $this->plugin_name . '-map' );
 	}
 
 }
