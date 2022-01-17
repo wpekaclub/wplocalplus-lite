@@ -643,6 +643,7 @@ class Wplocalplus_Lite_Admin {
 				printf(
 					'<option value="%1$s" %2$s>%3$s (%4$s)</option>',
 					esc_attr( $term->slug ),
+					// The below phpcs comment is entered after referring Elementor plugin.
 					( ( isset( $_GET[ $slug ] ) && ( $_GET[ $slug ] === $term->slug ) ) ? ' selected="selected"' : '' ), // phpcs:ignore WordPress.Security.NonceVerification
 					esc_attr( $term->name ),
 					esc_attr( $term->count )
@@ -657,6 +658,7 @@ class Wplocalplus_Lite_Admin {
 			$parent_pages = $wpdb->get_results( $sql, OBJECT_K ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			echo '<select class="my-number-one-class" name="reviews_parent_places">';
 			echo '<option value="0">All Places</option>';
+			// The below phpcs comment is entered after referring Elementor plugin.
 			$current = isset( $_GET['reviews_parent_places'] ) ? sanitize_text_field( wp_unslash( $_GET['reviews_parent_places'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 			foreach ( $parent_pages as $page ) {
 				/* translators: 1: Place post ID 2: Place Title */
